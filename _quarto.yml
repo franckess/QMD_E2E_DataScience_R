@@ -1,0 +1,23 @@
+project:
+  type: book
+
+book:
+  title: "QMD_E2R_DataScience_R"
+  author: "Norah Jones"
+  date: "5/7/2024"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+editor: visual
+
