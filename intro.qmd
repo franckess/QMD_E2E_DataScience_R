@@ -62,6 +62,30 @@ Below is a list of items we are going to cover in this book:
 8.  Reinforcement Learning
 9.  Big Data & Cloud Computing
 
+## Why Learning data science?
+
+As more and more businesses move towards digitalization, there is a growing demand for professionals who can analyze and make sense of the vast amounts of data that are being generated. This has created a significant shortage of skilled Data Scientists, making it a highly sought-after and well-compensated profession.
+
+Another point is that,Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.
+
+
+## The Role of R
+
+R is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:
+
+- Data Wrangling: R has a powerful set of libraries that allow you to manipulate and transform data, which is a critical step in any Data Science project.
+
+- Statistical Analysis: R has a rich set of statistical libraries that allow you to perform a wide range of statistical analyses, including hypothesis testing, regression analysis, and time series analysis.
+
+- Data Visualization: R has an extensive set of libraries for creating high-quality data visualizations, such as plots, charts, and graphs, that enable you to communicate insights effectively.
+
+- Machine Learning: R has a comprehensive set of libraries for building and deploying machine learning models, such as decision trees, random forests, and neural networks.
+
+- Reproducibility: R provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.
+
+Overall, R plays a critical role in the Data Science process by providing a powerful and flexible toolset for manipulating, analyzing, and visualizing data, building and deploying machine learning models, and ensuring reproducibility.
+
+
 ## Acknowledgments
 
 This book isn't just the product of the listed authors but is the result of many conversations (in person and online) that we've had with many people in the R community.
