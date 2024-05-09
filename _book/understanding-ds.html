@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.553">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Rene Essomba">
-<title>End To End Data Science With R - 2&nbsp; Summary</title>
+<title>End To End Data Science With R - 1&nbsp; Understanding Data Science As a Career</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -18,40 +18,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -61,8 +27,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
-<link href="./intro.html" rel="prev">
+<link href="./understanding-r-applications.html" rel="next">
+<link href="./introduction.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -107,7 +73,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Introduction to Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-ds.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -119,8 +85,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">End To End Data Science With R</a> 
-        <div class="sidebar-tools-main">
+        <div class="sidebar-tools-main tools-wide">
     <a href="https://www.github.com/franckess/QMD_E2E_DataScience_R" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=%7Curl%7C">
+              <i class="bi bi-bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+</div>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -139,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preface</span></span></a>
+ <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -148,30 +137,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction to Data Science and R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  <a href="./understanding-ds.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></a>
   </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-objects-and-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R Objects And Variables</span></span></a>
+  </div>
+</li>
+      </ul>
 </li>
     </ul>
 </div>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#state-of-data-science" id="toc-state-of-data-science" class="nav-link active" data-scroll-target="#state-of-data-science"><span class="header-section-number">2</span> State of Data Science</a></li>
+  <li><a href="#difference-among-popular-data-careers" id="toc-difference-among-popular-data-careers" class="nav-link" data-scroll-target="#difference-among-popular-data-careers"><span class="header-section-number">3</span> Difference among popular data careers?</a></li>
+  <li><a href="#why-learning-data-science" id="toc-why-learning-data-science" class="nav-link" data-scroll-target="#why-learning-data-science"><span class="header-section-number">4</span> Why Learning data science?</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-ds.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">
-<span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span>
-</h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Introduction to Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-ds.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-understanding-ds" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></span></h1>
 </div>
 
 
@@ -185,17 +195,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><p>In summary, this book has no content whatsoever.</p>
-<div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span> <span class="op">+</span> <span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
+</header><p>We will cover the following topics: - State of Data Science - Difference among popular data careers - Why learning data science?</p>
+<section id="state-of-data-science" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> State of Data Science</h1>
+<p>Data Science is an interdisciplinary field that involves using scientific methods, processes, algorithms, and systems to extract insights and knowledge from structured and unstructured data. It involves collecting and processing large amounts of data, analyzing it to identify patterns and trends, and using those insights to make informed business decisions. A Data Scientist is a professional who has expertise in data analysis, machine learning, statistics, programming, and domain knowledge. They use various statistical and computational techniques to analyse large, complex datasets and derive valuable insights that help organisations make informed decisions. It can be used to optimize operations, improve customer experiences, and develop new products and services. By leveraging Data Science techniques, businesses can gain a competitive edge by making more informed decisions and quickly adapting to changing market conditions.</p>
+<p>Data Science involves several stages, including data collection, data cleaning, data preprocessing, exploratory data analysis, modelling, and evaluation. Data Scientists work with various tools and technologies such as Python, R, SQL, Hadoop, Spark, and Tableau, to name a few.</p>
+</section><section id="difference-among-popular-data-careers" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> Difference among popular data careers?</h1>
+<p>While Data Science is a broad field, there are several roles that one can pursue within it. Here are some of the key differences between Data Engineer, Data Analyst, BI Analyst, and Statistician:</p>
+<table class="table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 31%">
+<col style="width: 34%">
+<col style="width: 16%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">Career</th>
+<th style="text-align: left;">Job Responsibilities</th>
+<th style="text-align: left;">Required Skills</th>
+<th style="text-align: left;">Tools/Technologies</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Data Scientist</td>
+<td style="text-align: left;">Develop and apply statistical or machine learning models to solve business problems; collect, clean, and analyze large datasets; communicate insights to stakeholders</td>
+<td style="text-align: left;">Strong analytical and problem-solving skills; knowledge of statistics, machine learning, and programming languages (Python, R, SQL); familiarity with data visualization techniques</td>
+<td style="text-align: left;">Python, R, SQL, Hadoop, Spark, Tableau, SAS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Data Engineer</td>
+<td style="text-align: left;">Build and maintain data pipelines and infrastructure to support data analysis and machine learning; work with large datasets and distributed systems</td>
+<td style="text-align: left;">Strong programming skills; expertise in databases, data warehousing, and ETL (extract, transform, load) processes; knowledge of cloud computing</td>
+<td style="text-align: left;">Hadoop, Spark, SQL, NoSQL databases, AWS, Azure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Data Analyst</td>
+<td style="text-align: left;">Collect and analyze data to identify trends, patterns, and insights; communicate findings to stakeholders</td>
+<td style="text-align: left;">Strong analytical and problem-solving skills; knowledge of statistics and data visualization techniques; proficiency in Excel</td>
+<td style="text-align: left;">Excel, SQL, Tableau, Power BI</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BI Analyst</td>
+<td style="text-align: left;">Design and develop business intelligence solutions to support decision-making processes; gather and analyze data from multiple sources; create dashboards and reports</td>
+<td style="text-align: left;">Strong analytical and problem-solving skills; expertise in databases and data modeling; knowledge of data visualization techniques</td>
+<td style="text-align: left;">Tableau, Power BI, SQL, Excel</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Statistician</td>
+<td style="text-align: left;">Design and conduct experiments to collect and analyze data; develop statistical models to explain and predict phenomena; communicate findings to stakeholders</td>
+<td style="text-align: left;">Strong analytical and problem-solving skills; expertise in statistical theory and methods; knowledge of programming languages (Python, R, SAS)</td>
+<td style="text-align: left;">Python, R, SAS, SPSS</td>
+</tr>
+</tbody>
+</table>
+<p>While there is some overlap between these roles, each one requires a specific set of skills and expertise. Data Science as a field offers a wide range of career opportunities, and individuals can choose a role that aligns with their interests and strengths.</p>
+</section><section id="why-learning-data-science" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> Why Learning data science?</h1>
+<p>As more and more businesses move towards digitalization, there is a growing demand for professionals who can analyze and make sense of the vast amounts of data that are being generated. This has created a significant shortage of skilled Data Scientists, making it a highly sought-after and well-compensated profession.</p>
+<p>Another point is that,Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.</p>
 
 
-
-</main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -604,13 +665,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
+      <a href="./introduction.html" class="pagination-link" aria-label="Introduction to Data Science and R">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction to Data Science and R</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./understanding-r-applications.html" class="pagination-link" aria-label="Understanding R Applications in Data Science">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -621,7 +682,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/summary.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-ds.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

@@ -6,48 +6,20 @@
 source("_common.R")
 ```
 
-## What you will learn
-
 Data science is an exciting discipline that allows you to transform raw data into understanding, insight, and knowledge. Data science is a vast field, and there's no way you can master it all by reading a single book. This book aims to give you a solid foundation in the most important tools and enough knowledge to find the resources to learn more when necessary. Our model of the steps of a typical data science project looks something like @fig-ds-diagram.
 
 ```{r}
 #| label: fig-ds-diagram
 #| echo: false
 #| fig-cap: |
-#|   In our model of the data science process, you start with data import
-#|   and tidying. Next, you understand your data with an iterative cycle of
-#|   transforming, visualizing, and modeling. You finish the process 
-#|   by communicating your results to other humans.
+#|   Understanding the Data Science Lifecycle. Image taken from 
+#|   https://www.sudeep.co/data-science/2018/02/09/Understanding-the-Data-Science-Lifecycle.html
 #| fig-alt: |
-#|   A diagram displaying the data science cycle: Import -> Tidy -> Understand 
-#|   (which has the phases Transform -> Visualize -> Model in a cycle) -> 
-#|   Communicate. Surrounding all of these is Program.
+#|   A diagram displaying the data science cycle: business understanding -> data mining -> data cleaning -> data exploration -> feature engineering -> predictive model -> visualisation
 #| out.width: NULL
 
-knitr::include_graphics("diagrams/base.png", dpi = 270)
+knitr::include_graphics("diagrams/data_science_lifecycle.png", dpi = 270)
 ```
-
-After reading this book, you'll have the tools to tackle a wide variety of data science challenges using the following skills:
-
--   The ability to import and explore data using R
-
--   A solid understanding of basic statistics and machine learning concepts
-
--   The ability to clean and wrangle data using packages like dplyr and tidyr
-
--   The ability to visualize data using ggplot2
-
--   The ability to build machine learning models to predict outcomes or find patterns in data
-
--   The ability to apply unsupervised learning techniques like clustering and anomaly detection
-
--   An understanding of advanced topics like natural language processing (NLP) and image processing
-
--   The ability to work with big data and scale their analysis using cloud computing platforms
-
--   The ability to apply their skills to a real-world data science project
-
--   An understanding of time series analysis and reinforcement learning
 
 ## How this book is organized
 
@@ -84,9 +56,3 @@ R is a programming language that is widely used in the field of Data Science. It
 - Reproducibility: R provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.
 
 Overall, R plays a critical role in the Data Science process by providing a powerful and flexible toolset for manipulating, analyzing, and visualizing data, building and deploying machine learning models, and ensuring reproducibility.
-
-
-## Acknowledgments
-
-This book isn't just the product of the listed authors but is the result of many conversations (in person and online) that we've had with many people in the R community.
-We're incredibly grateful for all the conversations we've had with y'all; Thank You So Much!

@@ -6,6 +6,7 @@ book:
   title: "End To End Data Science With R"
   author: "Rene Essomba"
   reader-mode: true
+  search: true
   page-footer:
     left: |
       End to End Data Science with R was written by Rene Essomba.
@@ -17,11 +18,17 @@ book:
   repo-url: https://www.github.com/franckess/QMD_E2E_DataScience_R
   repo-branch: main
   repo-actions: [edit, issue]
+  sharing: [twitter, facebook, linkedin]
   chapters:
     - index.qmd
     - intro.qmd
-    - summary.qmd
-    - references.qmd
+    - part: introduction.qmd
+      chapters: 
+        - understanding-ds.qmd
+        - understanding-r-applications.qmd
+        - r-objects-and-variables.qmd
+    #- summary.qmd
+    #- references.qmd
 
 #bibliography: references.bib
 

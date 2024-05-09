@@ -1,0 +1,56 @@
+# Understanding R Applications in Data Science {#sec-understanding-r-applications}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In this lesson, we unpack the role of R in the field of Data Science. We cover the following topics:
+- The Role of `R`
+- `R` vs. Python
+
+# The Role of `R`
+
+`R` is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:
+
+- Data Wrangling: `R` has a powerful set of libraries that allow you to manipulate and transform data, which is a critical step in any Data Science project.
+
+- Statistical Analysis: `R` has a rich set of statistical libraries that allow you to perform a wide range of statistical analyses, including hypothesis testing, regression analysis, and time series analysis.
+
+- Data Visualization: `R` has an extensive set of libraries for creating high-quality data visualizations, such as plots, charts, and graphs, that enable you to communicate insights effectively.
+
+- Machine Learning: `R` has a comprehensive set of libraries for building and deploying machine learning models, such as decision trees, random forests, and neural networks.
+
+- Reproducibility: `R` provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.
+
+## `R` v.s. Python
+
+```{r}
+#| label: fig-ds-whole-game 
+#| echo: false
+#| out.width: NULL
+#| fig-cap: |
+#|   R vs. Python
+#| fig-alt: |
+#|   R vs. Python.
+
+knitr::include_graphics("images/r-vs-python.png", dpi = 270)
+```
+
+You may wondering why we choose `R` over another popular language - Python, in this course. The short answer is the choice ultimately depends on the specific needs of the data scientist and the project at hand.
+
+**Ask yourself: what kind of data scientist you want to become?**
+`R` is hands down the best option when you focus on statistics and probabilities. It has a large community of statisticians that can answer your questions. But, if you want to develop applications that process enormous amounts of data, Python is your best option. It has a more extensive ecosystem of developers, and it’s easier to find people willing to collaborate with you.
+
+**Technical Differences**
+1. Syntax: `R` has a syntax that is tailored for statistical analysis and modelling, with many built-in functions and operators specifically designed for this purpose. Python, on the other hand, has a more general-purpose syntax that can be used for a wide range of tasks beyond statistical analysis.
+
+2. Libraries and Packages: Both `R` and Python have extensive libraries and packages for data science, but they differ in their focus and scope. R has a strong emphasis on statistical modelling and analysis, with packages like ggplot2, dplyr, and tidyr. Python, on the other hand, has a broader range of applications, including web development, scientific computing, and machine learning, with packages like NumPy, Pandas, and Scikit-learn.
+
+3. Community: Both `R` and Python have large and active communities, but they differ in their backgrounds and focus. `R` has historically been used more by statisticians and data analysts, while Python has been more popular among software engineers and developers.
+
+4. Learning Curve: `R` is generally considered to have a steeper learning curve than Python, especially for those who are new to programming. However, once you become familiar with R’s syntax and packages, it can be a very powerful and efficient tool for statistical analysis.
+
+5. Visualisation: `R` has a strong focus on Visualisation, with packages like ggplot2 and lattice that make it easy to create high-quality plots and charts. Python also has Visualisation packages like Matplotlib and Seaborn, but they may require more customisation and tweaking to get the desired output.
+

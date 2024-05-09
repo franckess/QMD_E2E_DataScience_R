@@ -1,0 +1,38 @@
+# Understanding Data Science As a Career {#sec-understanding-ds}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+We will cover the following topics: 
+- State of Data Science 
+- Difference among popular data careers 
+- Why learning data science?
+
+# State of Data Science
+
+Data Science is an interdisciplinary field that involves using scientific methods, processes, algorithms, and systems to extract insights and knowledge from structured and unstructured data. It involves collecting and processing large amounts of data, analyzing it to identify patterns and trends, and using those insights to make informed business decisions. A Data Scientist is a professional who has expertise in data analysis, machine learning, statistics, programming, and domain knowledge. They use various statistical and computational techniques to analyse large, complex datasets and derive valuable insights that help organisations make informed decisions. It can be used to optimize operations, improve customer experiences, and develop new products and services. By leveraging Data Science techniques, businesses can gain a competitive edge by making more informed decisions and quickly adapting to changing market conditions.
+
+Data Science involves several stages, including data collection, data cleaning, data preprocessing, exploratory data analysis, modelling, and evaluation. Data Scientists work with various tools and technologies such as Python, R, SQL, Hadoop, Spark, and Tableau, to name a few.
+
+# Difference among popular data careers?
+
+While Data Science is a broad field, there are several roles that one can pursue within it. Here are some of the key differences between Data Engineer, Data Analyst, BI Analyst, and Statistician:
+
+| Career         | Job Responsibilities                                                                                                                                                  | Required Skills                                                                                                                                                                     | Tools/Technologies                              |
+|:-----------|:----------------------|:------------------------|:-----------|
+| Data Scientist | Develop and apply statistical or machine learning models to solve business problems; collect, clean, and analyze large datasets; communicate insights to stakeholders | Strong analytical and problem-solving skills; knowledge of statistics, machine learning, and programming languages (Python, R, SQL); familiarity with data visualization techniques | Python, R, SQL, Hadoop, Spark, Tableau, SAS     |
+| Data Engineer  | Build and maintain data pipelines and infrastructure to support data analysis and machine learning; work with large datasets and distributed systems                  | Strong programming skills; expertise in databases, data warehousing, and ETL (extract, transform, load) processes; knowledge of cloud computing                                     | Hadoop, Spark, SQL, NoSQL databases, AWS, Azure |
+| Data Analyst   | Collect and analyze data to identify trends, patterns, and insights; communicate findings to stakeholders                                                             | Strong analytical and problem-solving skills; knowledge of statistics and data visualization techniques; proficiency in Excel                                                       | Excel, SQL, Tableau, Power BI                   |
+| BI Analyst     | Design and develop business intelligence solutions to support decision-making processes; gather and analyze data from multiple sources; create dashboards and reports | Strong analytical and problem-solving skills; expertise in databases and data modeling; knowledge of data visualization techniques                                                  | Tableau, Power BI, SQL, Excel                   |
+| Statistician   | Design and conduct experiments to collect and analyze data; develop statistical models to explain and predict phenomena; communicate findings to stakeholders         | Strong analytical and problem-solving skills; expertise in statistical theory and methods; knowledge of programming languages (Python, R, SAS)                                      | Python, R, SAS, SPSS                            |
+
+While there is some overlap between these roles, each one requires a specific set of skills and expertise. Data Science as a field offers a wide range of career opportunities, and individuals can choose a role that aligns with their interests and strengths.
+
+# Why Learning data science?
+
+As more and more businesses move towards digitalization, there is a growing demand for professionals who can analyze and make sense of the vast amounts of data that are being generated. This has created a significant shortage of skilled Data Scientists, making it a highly sought-after and well-compensated profession.
+
+Another point is that,Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.

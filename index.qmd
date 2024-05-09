@@ -1,9 +1,30 @@
-# Preface {# Welcome .unnumbered}
+# Preface {.unnumbered}
 
-This is a Quarto book.
+Welcome to the first edition of "End to End Data Science with R"!
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+After reading this book, you'll have the tools to tackle a wide variety of data science challenges using the following skills:
 
-```{r}
-1 + 1
-```
+-   The ability to import and explore data using R
+
+-   A solid understanding of basic statistics and machine learning concepts
+
+-   The ability to clean and wrangle data using packages like dplyr and tidyr
+
+-   The ability to visualize data using ggplot2
+
+-   The ability to build machine learning models to predict outcomes or find patterns in data
+
+-   The ability to apply unsupervised learning techniques like clustering and anomaly detection
+
+-   An understanding of advanced topics like natural language processing (NLP) and image processing
+
+-   The ability to work with big data and scale their analysis using cloud computing platforms
+
+-   The ability to apply their skills to a real-world data science project
+
+-   An understanding of time series analysis and reinforcement learning
+
+## Acknowledgments
+
+This book isn't just the product of the listed authors but is the result of many conversations (in person and online) that we've had with many people in the R community.
+We're incredibly grateful for all the conversations we've had with y'all; Thank You So Much!

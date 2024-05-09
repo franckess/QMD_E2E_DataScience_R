@@ -1,0 +1,233 @@
+# R Objects And Variables {#sec-r-objects-and-variables} 
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In this lesson, we discuss some important data concepts that are frequently used in this course. We cover the following topics:
+- Basics of R objects
+  - Vector
+  - Matrix
+  - List
+  - Dataframe
+  - Function
+- Type of data
+  - Continuous
+  - Discrete
+  - Binary
+  - Ordinal
+- Data Distribution
+  - Normal distribution
+  - Skewed Distribution
+  
+# Basic `R` Objects
+
+In this section, we will explore the fundamental building blocks of `R` programming, starting with the basic `R` objects. These objects serve as the foundation for data manipulation and analysis in `R`. We will delve into five key types of `R` objects: vectors, matrices, lists, data frames, and functions. Understanding these essential data structures is crucial for anyone looking to harness the power of `R` for data science, statistics, and programming tasks. 
+
+## Vector
+Sequence of data elements of the same type. Each element of the vector is also called a component, member, or value. Vectors are created in `R` using the `c()` function, which stands for combine, and coerces all of its arguments into a single type. The coercion will happen from simpler types into more complex types. That is, if we create a vector which contains logicals, numerics, and characters, as the following example shows, our resulting vector will only contain characters, which are the more complex of the three types. If we create a vector that contains logicals and numerics, our resulting vector will be numeric, again because it's the more complex type.
+
+```{r, }
+my_vector <- c(TRUE, FALSE, -1, 0, 1, "A", "B", NA, NULL, NaN, Inf)
+my_vector
+
+## Find the first element of `my_vector`
+paste("the first element of `my_vector` is:", my_vector[1])
+
+## Find the 5th element of `my_vector`
+paste("the 5th element of `my_vector` is:", my_vector[5])
+
+## Find the firt 3 elements
+paste("the firt 3 elements of `my_vector` are:", my_vector[1:3])
+```
+
+## Matrix
+
+Matrices are commonly used in mathematics and statistics, and much of `R`'s power comes from the various operations you can perform with them. In `R`, a matrix is a vector with two additional attributes, the number of rows and the number of columns. And, since matrices are vectors, they are constrained to a single data type. 
+
+You can use the `matrix` function to create matrices. You may pass it a vector of values, as well as the number of rows and columns the matrix should have. If you specify the vector of values and one of the dimensions, the other one will be calculated for you automatically to be the lowest number that makes sense for the vector you passed. However, you may specify both of them simultaneously if you prefer, which may produce different behavior depending on the vector you passed, as can be seen in the next example.
+
+By default, matrices are constructed column-wise, meaning that the entries can be thought of as starting in the upper-left corner and running down the columns. However, if you prefer to construct it row-wise, you can send the `byrow = TRUE` parameter.
+```{r}
+# Creating a matrix
+my_mat <- matrix(1:6, nrow = 2, byrow = TRUE)
+my_mat
+# Find the element in row 1 and column 2
+my_mat[1, 2]
+# Find the elements in row 1 & 2 and column 3
+my_mat[c(1, 2), 3]
+# Find all the elements in column 2
+my_mat[, 2]
+```
+
+## List
+A list is an ordered collection of objects, like vectors, but lists can actually combine objects of different types. List elements can contain any type of object that exists in R, including data frames and functions. Lists play a central role in `R` due to their flexibility and they are the basis for data frames, object-oriented programming, and other constructs. 
+
+Using the function `list()` helps to explicitly a list. It takes an arbitrary number of arguments, and we can refer to each of those elements by both position, and, in case they are specified, also by names. If you want to reference list elements by names, you can use the `$` notation.
+```{r}
+# Creating a list
+my_list <- list(A = 1, B = "A", C = TRUE, D = matrix(1:4, nrow = 2), 
+Z = function(x) x^2)
+
+# Retrieve the class of each element in the list
+lapply(my_list, class)
+
+# Perform calculation
+my_list$Z(2)
+```
+
+## DataFrame
+
+A data frame is a natural way to represent such heterogeneous tabular data. Every element within a column must be of the same type, but different elements within a row may be of different types, that's why we say that a data frame is a heterogeneous data structure.
+
+Data frames are usually created by reading in a data using the `read.table()`, `read.csv`, or other similar data-loading functions. However, they can also be created explicitly with the `data.frame` function or they can be coerced from other types of objects such as lists. To create a data frame using the `data.frame` function, note that we send a vector (which, as we know, must contain elements of a single type) to each of the column names we want our data frame to have, which are A, B, and C in this case.
+```{r}
+# Creating a dataframe
+my_dataframe <- data.frame(
+  name = c("Alice", "Bob", "Charlie"),
+  age = c(25, 30, 35),
+  height = c(1.6, 1.8, 1.7)
+)
+		
+# Accessing a column of the dataframe
+my_dataframe$name
+```
+
+## Function
+
+A function is an object that takes other objects as inputs, called arguments, and returns an output object. Most functions are in the following form `f(arg_1, arg_2, ...)`, where `f` is the name of the function and `arg_1, arg_2` are the arguments to the function.
+
+We can create our own function by using the `function` constructor and assign it to a symbol. It takes an arbitrary number of named arguments, which can be used within the body of the function.
+
+In the following example, we create a function that calculates the Euclidian distance ([https://en.wikipedia.org/wiki/Euclidean_distance](https://en.wikipedia.org/wiki/Euclidean_distance)) between two numeric vectors, and we show how the order of the arguments can be changed if we use named arguments. To realize this effect, we use the `print` function to make sure we can see in the console what `R` is receiving as the x and y vectors. When developing your own programs, using the `print` for debugging your function.
+```{r}
+# Creating l2_norm function
+l2_norm <- function(x, y) {
+  print("value of x:")
+  print(x)
+  print("value of y:")
+  print(y)
+  num_diff <- x - y
+  res <- sum(num_diff^2)
+  return(res)
+}
+
+a <- 1:3
+b <- 4:6
+
+l2_norm(a, b)
+```
+
+# Type of Data
+A variable is a characteristic of the population (or sample) being studied, and it is possible to measure, count, and categorize it. The type of variable collected is crucial in the calculation of descriptive statistics and the graphical representation of results as well as in the selection of the statistical methods that will be used to analyze the data. 
+
+## Continuous Data
+
+It refers to a type of numerical data that can take on any value within a specific range or interval. This type of data is measured on a continuous scale, meaning that there are no gaps or interruptions between values. Continuous data is often obtained through measurements or observations that are recorded as real numbers, such as weight, height, time, temperature, and distance.
+```{r}
+# Creating a vector of continuous data
+my_data <- c(1.2, 2.5, 3.1, 4.8, 5.0)
+
+# Calculating mean and standard deviation
+mean(my_data)
+sd(my_data)
+```
+
+## Discrete Data
+
+Unlike _Continuous Data_, discrete data is numeric data that which can only take on certain values within a specific range. For example, the number of kids (or trees, or animals) has to be a whole integer.
+
+Suppose we have a dataset of the number of students in a class, where each value represents a count of a specific number of students:
+```{r}
+students <- c(20, 25, 22, 18, 20, 23, 21, 19, 22, 20)
+
+# Calculating the frequency of each value
+table(students)
+# Calculate proportions
+prop.table(students)
+```
+
+## Categorical Data
+
+Categorical data, also known as nominal data, is a type of data that consists of categories or groups that cannot be ordered or ranked. In R, categorical data is typically represented as a factor variable.
+
+The `factor()` function is used to convert the vector to a factor variable. The `levels()` function is used to view the categories or levels of the factor variable.
+```{r}
+# create a vector of categorical data
+gender <- c("male", "female", "male", "male", "female", "female")
+
+# convert the vector to a factor
+gender_factor <- factor(gender)
+
+# view the levels of the factor
+levels(gender_factor)
+```
+
+## Binary Data
+
+Binary data is categorical data where the only values are 0 and 1. It is often used in situations where a "hit" - an animal getting trapped, a customer clicking a link, etc. - is a 1, and no hit is a 0. In `R`, binary data can be represented using logical vectors.
+
+The `class()` function is used to confirm that the vector is of logical class, which is the `R` data type used to represent binary data.
+```{r}
+# Create a vector of binary data
+binary_data <- c(TRUE, FALSE, TRUE, TRUE, FALSE)
+
+# Check the class of the vector
+class(binary_data)
+# Output: "logical"
+```
+
+## Ordinal Data
+
+Ordinal data is a type of categorical data where each value is assigned a level or rank. It is useful with binned data, but also in graphing to rearrange the order categories are drawn. In `R`, it is referred to as **factors**.
+```{r}
+# Creating an ordered factor
+my_factor <- factor(c("small", "medium", "large"), ordered = TRUE)
+
+# Sorting the levels of the factor
+my_factor <- factor(my_factor, levels = c("small", "medium", "large"))
+
+print(my_factor)
+```
+
+# Data Distribution
+
+Data distribution in `R` refers to the pattern in which the values of a variable are spread across the range of the variable. In other words, it refers to how often every possible value occurs in a dataset. It is usually shown as a curved line on a graph, or a histogram.
+
+## Normal Distribution
+
+Normal distribution is data where the mean equals the median, 2/3 of the data are within one standard deviation of the mean, 95% of the data are within two standard deviations, and 97% are within three. Many statistical analyses assume your data are normally distributed. However, many datasets - especially in nature - aren't.
+```{r}
+library(ggplot2)
+library(plotly)
+# Creating a dataset with normal distribution
+my_val <- rnorm(100000, mean = 0, sd = 1)
+vec <- c(1:100000)
+my_data <- data.frame(vec, my_val)
+# Plotting the histogram
+p <- ggplot(my_data) + aes(x = my_val) +
+      geom_histogram(aes(y = ..density..), bins = 30L, 
+                     fill = "white", colour = 1) +
+      theme_linedraw() + geom_density(lwd = 1, colour = 4, fill = 4, alpha = 0.25)
+ggplotly(p)
+```
+
+## Skewed Distribution
+
+Skewed distribution is data where the median does not equal the mean. A left-skewed distribution has a long tail on the left side of the graph, while a right-skewed distribution has a long tail to the right. It is named after the tail and not the peak of the graph, as values in that tail occur more often than would be expected with a normal distribution.
+```{r}
+library(ggplot2)
+library(plotly)
+# Creating a dataset with normal distribution
+my_val <- rexp(100000, rate = 0.5)
+vec <- c(1:100000)
+my_data <- data.frame(vec, my_val)
+# Plotting the histogram
+p <- ggplot(my_data) + aes(x = my_val) +
+      geom_histogram(aes(y = ..density..), bins = 30L, 
+                     fill = "white", colour = 1) +
+      theme_linedraw() + geom_density(lwd = 1, colour = 4, fill = 4, alpha = 0.25)
+ggplotly(p)
+```
