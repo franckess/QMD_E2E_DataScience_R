@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.553">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
+<meta name="author" content="Rene Essomba">
 <title>End To End Data Science With R - Introduction</title>
 <style>
 code{white-space: pre-wrap;}
@@ -22,7 +20,6 @@ ul.task-list li input[type="checkbox"] {
 }
 </style>
 
-
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -32,7 +29,7 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <link href="./summary.html" rel="next">
 <link href="./index.html" rel="prev">
-<link href="./cover.jpg" rel="icon" type="image/jpeg">
+<link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -41,8 +38,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -69,16 +65,11 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-
-
 </head>
-
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -89,13 +80,9 @@ ul.task-list li input[type="checkbox"] {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">End To End Data Science With R</a> 
         <div class="sidebar-tools-main">
@@ -115,7 +102,7 @@ ul.task-list li input[type="checkbox"] {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preface</span></span></a>
@@ -140,28 +127,22 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#what-you-will-learn" id="toc-what-you-will-learn" class="nav-link active" data-scroll-target="#what-you-will-learn">What you will learn</a></li>
+<li><a href="#what-you-will-learn" id="toc-what-you-will-learn" class="nav-link active" data-scroll-target="#what-you-will-learn">What you will learn</a></li>
   <li><a href="#how-this-book-is-organized" id="toc-how-this-book-is-organized" class="nav-link" data-scroll-target="#how-this-book-is-organized">How this book is organized</a></li>
   <li><a href="#why-learning-data-science" id="toc-why-learning-data-science" class="nav-link" data-scroll-target="#why-learning-data-science">Why Learning data science?</a></li>
   <li><a href="#the-role-of-r" id="toc-the-role-of-r" class="nav-link" data-scroll-target="#the-role-of-r">The Role of R</a></li>
   <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title"><span id="sec-intro" class="quarto-section-identifier">Introduction</span></h1>
 </div>
 
@@ -176,23 +157,17 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header>
-
-
-<section id="what-you-will-learn" class="level2">
-<h2 class="anchored" data-anchor-id="what-you-will-learn">What you will learn</h2>
-<p>Data science is an exciting discipline that allows you to transform raw data into understanding, insight, and knowledge. Data science is a vast field, and there’s no way you can master it all by reading a single book. This book aims to give you a solid foundation in the most important tools and enough knowledge to find the resources to learn more when necessary. Our model of the steps of a typical data science project looks something like <a href="#fig-ds-diagram" class="quarto-xref">Figure&nbsp;<span class="quarto-unresolved-ref">fig-ds-diagram</span></a>.</p>
+</header><section id="what-you-will-learn" class="level2"><h2 class="anchored" data-anchor-id="what-you-will-learn">What you will learn</h2>
+<p>Data science is an exciting discipline that allows you to transform raw data into understanding, insight, and knowledge. Data science is a vast field, and there’s no way you can master it all by reading a single book. This book aims to give you a solid foundation in the most important tools and enough knowledge to find the resources to learn more when necessary. Our model of the steps of a typical data science project looks something like <a href="#fig-ds-diagram" class="quarto-xref">Figure&nbsp;<span>1</span></a>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-ds-diagram" class="quarto-figure quarto-figure-center quarto-float anchored" alt="A diagram displaying the data science cycle: Import -> Tidy -> Understand (which has the phases Transform -> Visualize -> Model in a cycle) -> Communicate. Surrounding all of these is Program. ">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ds-diagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ds-diagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="diagrams/base.png" class="img-fluid figure-img" alt="A diagram displaying the data science cycle: Import -> Tidy -> Understand (which has the phases Transform -> Visualize -> Model in a cycle) -> Communicate. Surrounding all of these is Program. ">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ds-diagram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: In our model of the data science process, you start with data import and tidying. Next, you understand your data with an iterative cycle of transforming, visualizing, and modeling. You finish the process by communicating your results to other humans.
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -208,19 +183,12 @@ Figure&nbsp;1: In our model of the data science process, you start with data imp
 <li><p>The ability to work with big data and scale their analysis using cloud computing platforms</p></li>
 <li><p>The ability to apply their skills to a real-world data science project</p></li>
 <li><p>An understanding of time series analysis and reinforcement learning</p></li>
-</ul>
-</section>
-<section id="how-this-book-is-organized" class="level2">
-<h2 class="anchored" data-anchor-id="how-this-book-is-organized">How this book is organized</h2>
+</ul></section><section id="how-this-book-is-organized" class="level2"><h2 class="anchored" data-anchor-id="how-this-book-is-organized">How this book is organized</h2>
 <p>Below is a list of items we are going to cover in this book: 1. Introduction to Data Science and R 2. Data Exploration and Visualization 3. Supervised Learning 4. Unsupervised Learning 5. Boosting and Random Forest 6. Natural Language Processing 7. Image Processing/Computer Vision 8. Reinforcement Learning 9. Big Data &amp; Cloud Computing</p>
-</section>
-<section id="why-learning-data-science" class="level2">
-<h2 class="anchored" data-anchor-id="why-learning-data-science">Why Learning data science?</h2>
+</section><section id="why-learning-data-science" class="level2"><h2 class="anchored" data-anchor-id="why-learning-data-science">Why Learning data science?</h2>
 <p>As more and more businesses move towards digitalization, there is a growing demand for professionals who can analyze and make sense of the vast amounts of data that are being generated. This has created a significant shortage of skilled Data Scientists, making it a highly sought-after and well-compensated profession.</p>
-<p>Another point is that,Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.</p>
-</section>
-<section id="the-role-of-r" class="level2">
-<h2 class="anchored" data-anchor-id="the-role-of-r">The Role of R</h2>
+<p>Another point is that, Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.</p>
+</section><section id="the-role-of-r" class="level2"><h2 class="anchored" data-anchor-id="the-role-of-r">The Role of R</h2>
 <p>R is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:</p>
 <ul>
 <li><p>Data Wrangling: R has a powerful set of libraries that allow you to manipulate and transform data, which is a critical step in any Data Science project.</p></li>
@@ -230,16 +198,11 @@ Figure&nbsp;1: In our model of the data science process, you start with data imp
 <li><p>Reproducibility: R provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.</p></li>
 </ul>
 <p>Overall, R plays a critical role in the Data Science process by providing a powerful and flexible toolset for manipulating, analyzing, and visualizing data, building and deploying machine learning models, and ensuring reproducibility.</p>
-</section>
-<section id="acknowledgments" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
+</section><section id="acknowledgments" class="level2"><h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
 <p>This book isn’t just the product of the listed authors but is the result of many conversations (in person and online) that we’ve had with many people in the R community. We’re incredibly grateful for all the conversations we’ve had with y’all; Thank You So Much!</p>
 
 
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -647,9 +610,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./index.html" class="pagination-link" aria-label="Preface">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preface</span></span>
       </a>          
@@ -661,8 +622,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
+<footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
 <p>End to End Data Science with R was written by Rene Essomba.</p>
 </div>   
@@ -674,8 +634,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-
-
 
 
 </body></html>

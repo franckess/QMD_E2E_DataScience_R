@@ -66,7 +66,7 @@ Below is a list of items we are going to cover in this book:
 
 As more and more businesses move towards digitalization, there is a growing demand for professionals who can analyze and make sense of the vast amounts of data that are being generated. This has created a significant shortage of skilled Data Scientists, making it a highly sought-after and well-compensated profession.
 
-Another point is that,Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.
+Another point is that, Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.
 
 
 ## The Role of R

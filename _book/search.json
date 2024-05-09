@@ -1,0 +1,82 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "End To End Data Science With R",
+    "section": "",
+    "text": "1 Preface {# Welcome .unnumbered}\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Preface</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "What you will learn\nData science is an exciting discipline that allows you to transform raw data into understanding, insight, and knowledge. Data science is a vast field, and there’s no way you can master it all by reading a single book. This book aims to give you a solid foundation in the most important tools and enough knowledge to find the resources to learn more when necessary. Our model of the steps of a typical data science project looks something like Figure 1.\nFigure 1: In our model of the data science process, you start with data import and tidying. Next, you understand your data with an iterative cycle of transforming, visualizing, and modeling. You finish the process by communicating your results to other humans.\nAfter reading this book, you’ll have the tools to tackle a wide variety of data science challenges using the following skills:",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html#what-you-will-learn",
+    "href": "intro.html#what-you-will-learn",
+    "title": "Introduction",
+    "section": "",
+    "text": "The ability to import and explore data using R\nA solid understanding of basic statistics and machine learning concepts\nThe ability to clean and wrangle data using packages like dplyr and tidyr\nThe ability to visualize data using ggplot2\nThe ability to build machine learning models to predict outcomes or find patterns in data\nThe ability to apply unsupervised learning techniques like clustering and anomaly detection\nAn understanding of advanced topics like natural language processing (NLP) and image processing\nThe ability to work with big data and scale their analysis using cloud computing platforms\nThe ability to apply their skills to a real-world data science project\nAn understanding of time series analysis and reinforcement learning",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html#how-this-book-is-organized",
+    "href": "intro.html#how-this-book-is-organized",
+    "title": "Introduction",
+    "section": "How this book is organized",
+    "text": "How this book is organized\nBelow is a list of items we are going to cover in this book: 1. Introduction to Data Science and R 2. Data Exploration and Visualization 3. Supervised Learning 4. Unsupervised Learning 5. Boosting and Random Forest 6. Natural Language Processing 7. Image Processing/Computer Vision 8. Reinforcement Learning 9. Big Data & Cloud Computing",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html#why-learning-data-science",
+    "href": "intro.html#why-learning-data-science",
+    "title": "Introduction",
+    "section": "Why Learning data science?",
+    "text": "Why Learning data science?\nAs more and more businesses move towards digitalization, there is a growing demand for professionals who can analyze and make sense of the vast amounts of data that are being generated. This has created a significant shortage of skilled Data Scientists, making it a highly sought-after and well-compensated profession.\nAnother point is that, Data Science is a highly interdisciplinary field that combines knowledge and techniques from statistics, computer science, and domain-specific areas. This means that learning Data Science can enhance your critical thinking skills, improve your ability to solve complex problems, and provide you with a unique set of skills that are highly valued in the job market.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html#the-role-of-r",
+    "href": "intro.html#the-role-of-r",
+    "title": "Introduction",
+    "section": "The Role of R",
+    "text": "The Role of R\nR is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:\n\nData Wrangling: R has a powerful set of libraries that allow you to manipulate and transform data, which is a critical step in any Data Science project.\nStatistical Analysis: R has a rich set of statistical libraries that allow you to perform a wide range of statistical analyses, including hypothesis testing, regression analysis, and time series analysis.\nData Visualization: R has an extensive set of libraries for creating high-quality data visualizations, such as plots, charts, and graphs, that enable you to communicate insights effectively.\nMachine Learning: R has a comprehensive set of libraries for building and deploying machine learning models, such as decision trees, random forests, and neural networks.\nReproducibility: R provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.\n\nOverall, R plays a critical role in the Data Science process by providing a powerful and flexible toolset for manipulating, analyzing, and visualizing data, building and deploying machine learning models, and ensuring reproducibility.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html#acknowledgments",
+    "href": "intro.html#acknowledgments",
+    "title": "Introduction",
+    "section": "Acknowledgments",
+    "text": "Acknowledgments\nThis book isn’t just the product of the listed authors but is the result of many conversations (in person and online) that we’ve had with many people in the R community. We’re incredibly grateful for all the conversations we’ve had with y’all; Thank You So Much!",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "summary.html",
+    "href": "summary.html",
+    "title": "\n2  Summary\n",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  }
+]

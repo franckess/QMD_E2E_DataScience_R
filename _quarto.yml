@@ -11,8 +11,8 @@ book:
       End to End Data Science with R was written by Rene Essomba.
     right: |
       This book was built with <a href="https://quarto.org/">Quarto</a>.
-  cover-image: cover.jpg
-  favicon: cover.jpg
+  cover-image: cover.png
+  favicon: cover.png
   site-url: https://e2e-ds-r.franckess.com
   repo-url: https://www.github.com/franckess/QMD_E2E_DataScience_R
   repo-branch: main
@@ -23,15 +23,15 @@ book:
     - summary.qmd
     - references.qmd
 
-bibliography: references.bib
+#bibliography: references.bib
 
 format:
   html:
     theme: cosmo
-  pdf:
-    documentclass: scrreprt
+    code-link: true
+    author-meta: "Rene Essomba"
+    callout-appearance: simple
+  #pdf:
+   # documentclass: scrreprt
 
 editor: visual
-
-execute:
-  freeze: auto
