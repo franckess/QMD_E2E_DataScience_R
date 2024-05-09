@@ -1,10 +1,22 @@
 project:
   type: book
+  output-dir: _book
 
 book:
-  title: "QMD_E2R_DataScience_R"
-  author: "Norah Jones"
-  date: "5/7/2024"
+  title: "End To End Data Science With R"
+  author: "Rene Essomba"
+  reader-mode: true
+  page-footer:
+    left: |
+      End to End Data Science with R was written by Rene Essomba.
+    right: |
+      This book was built with <a href="https://quarto.org/">Quarto</a>.
+  cover-image: cover.jpg
+  favicon: cover.jpg
+  site-url: https://e2e-ds-r.franckess.com
+  repo-url: https://www.github.com/franckess/QMD_E2E_DataScience_R
+  repo-branch: main
+  repo-actions: [edit, issue]
   chapters:
     - index.qmd
     - intro.qmd
