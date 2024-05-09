@@ -22,11 +22,11 @@ In this lesson, we discuss some important data concepts that are frequently used
   - Normal distribution
   - Skewed Distribution
   
-# Basic `R` Objects
+## Basic `R` Objects
 
 In this section, we will explore the fundamental building blocks of `R` programming, starting with the basic `R` objects. These objects serve as the foundation for data manipulation and analysis in `R`. We will delve into five key types of `R` objects: vectors, matrices, lists, data frames, and functions. Understanding these essential data structures is crucial for anyone looking to harness the power of `R` for data science, statistics, and programming tasks. 
 
-## Vector
+### Vector
 Sequence of data elements of the same type. Each element of the vector is also called a component, member, or value. Vectors are created in `R` using the `c()` function, which stands for combine, and coerces all of its arguments into a single type. The coercion will happen from simpler types into more complex types. That is, if we create a vector which contains logicals, numerics, and characters, as the following example shows, our resulting vector will only contain characters, which are the more complex of the three types. If we create a vector that contains logicals and numerics, our resulting vector will be numeric, again because it's the more complex type.
 
 ```{r, }
@@ -43,7 +43,7 @@ paste("the 5th element of `my_vector` is:", my_vector[5])
 paste("the firt 3 elements of `my_vector` are:", my_vector[1:3])
 ```
 
-## Matrix
+### Matrix
 
 Matrices are commonly used in mathematics and statistics, and much of `R`'s power comes from the various operations you can perform with them. In `R`, a matrix is a vector with two additional attributes, the number of rows and the number of columns. And, since matrices are vectors, they are constrained to a single data type. 
 
@@ -62,7 +62,7 @@ my_mat[c(1, 2), 3]
 my_mat[, 2]
 ```
 
-## List
+### List
 A list is an ordered collection of objects, like vectors, but lists can actually combine objects of different types. List elements can contain any type of object that exists in R, including data frames and functions. Lists play a central role in `R` due to their flexibility and they are the basis for data frames, object-oriented programming, and other constructs. 
 
 Using the function `list()` helps to explicitly a list. It takes an arbitrary number of arguments, and we can refer to each of those elements by both position, and, in case they are specified, also by names. If you want to reference list elements by names, you can use the `$` notation.
@@ -78,7 +78,7 @@ lapply(my_list, class)
 my_list$Z(2)
 ```
 
-## DataFrame
+### DataFrame
 
 A data frame is a natural way to represent such heterogeneous tabular data. Every element within a column must be of the same type, but different elements within a row may be of different types, that's why we say that a data frame is a heterogeneous data structure.
 
@@ -95,7 +95,7 @@ my_dataframe <- data.frame(
 my_dataframe$name
 ```
 
-## Function
+### Function
 
 A function is an object that takes other objects as inputs, called arguments, and returns an output object. Most functions are in the following form `f(arg_1, arg_2, ...)`, where `f` is the name of the function and `arg_1, arg_2` are the arguments to the function.
 
@@ -120,10 +120,10 @@ b <- 4:6
 l2_norm(a, b)
 ```
 
-# Type of Data
+## Type of Data
 A variable is a characteristic of the population (or sample) being studied, and it is possible to measure, count, and categorize it. The type of variable collected is crucial in the calculation of descriptive statistics and the graphical representation of results as well as in the selection of the statistical methods that will be used to analyze the data. 
 
-## Continuous Data
+### Continuous Data
 
 It refers to a type of numerical data that can take on any value within a specific range or interval. This type of data is measured on a continuous scale, meaning that there are no gaps or interruptions between values. Continuous data is often obtained through measurements or observations that are recorded as real numbers, such as weight, height, time, temperature, and distance.
 ```{r}
@@ -135,7 +135,7 @@ mean(my_data)
 sd(my_data)
 ```
 
-## Discrete Data
+### Discrete Data
 
 Unlike _Continuous Data_, discrete data is numeric data that which can only take on certain values within a specific range. For example, the number of kids (or trees, or animals) has to be a whole integer.
 
@@ -149,7 +149,7 @@ table(students)
 prop.table(students)
 ```
 
-## Categorical Data
+### Categorical Data
 
 Categorical data, also known as nominal data, is a type of data that consists of categories or groups that cannot be ordered or ranked. In R, categorical data is typically represented as a factor variable.
 
@@ -165,7 +165,7 @@ gender_factor <- factor(gender)
 levels(gender_factor)
 ```
 
-## Binary Data
+### Binary Data
 
 Binary data is categorical data where the only values are 0 and 1. It is often used in situations where a "hit" - an animal getting trapped, a customer clicking a link, etc. - is a 1, and no hit is a 0. In `R`, binary data can be represented using logical vectors.
 
@@ -179,7 +179,7 @@ class(binary_data)
 # Output: "logical"
 ```
 
-## Ordinal Data
+### Ordinal Data
 
 Ordinal data is a type of categorical data where each value is assigned a level or rank. It is useful with binned data, but also in graphing to rearrange the order categories are drawn. In `R`, it is referred to as **factors**.
 ```{r}
@@ -192,11 +192,11 @@ my_factor <- factor(my_factor, levels = c("small", "medium", "large"))
 print(my_factor)
 ```
 
-# Data Distribution
+## Data Distribution
 
 Data distribution in `R` refers to the pattern in which the values of a variable are spread across the range of the variable. In other words, it refers to how often every possible value occurs in a dataset. It is usually shown as a curved line on a graph, or a histogram.
 
-## Normal Distribution
+### Normal Distribution
 
 Normal distribution is data where the mean equals the median, 2/3 of the data are within one standard deviation of the mean, 95% of the data are within two standard deviations, and 97% are within three. Many statistical analyses assume your data are normally distributed. However, many datasets - especially in nature - aren't.
 ```{r}
@@ -214,7 +214,7 @@ p <- ggplot(my_data) + aes(x = my_val) +
 ggplotly(p)
 ```
 
-## Skewed Distribution
+### Skewed Distribution
 
 Skewed distribution is data where the median does not equal the mean. A left-skewed distribution has a long tail on the left side of the graph, while a right-skewed distribution has a long tail to the right. It is named after the tail and not the peak of the graph, as values in that tail occur more often than would be expected with a normal distribution.
 ```{r}

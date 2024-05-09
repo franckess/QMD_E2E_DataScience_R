@@ -7,9 +7,9 @@ source("_common.R")
 ```
 
 In this first part of the book, our focus will be on the the three following chapters:
-- In @sec-understanding-ds we start with an introduction to the world of Data Science and its importance in the our current world. 
-- In @sec-understanding-r-applications we unpack the role of R in the field of Data Science. 
-- In @sec-r-objects-and-variables we discuss some important data concepts that are frequently used in this course.
 
+-   In @sec-understanding-ds we start with an introduction to the world of Data Science and its importance in the our current world.
 
+-   In @sec-understanding-r-applications we unpack the role of R in the field of Data Science.
 
+-   In @sec-r-objects-and-variables we discuss some important data concepts that are frequently used in this course.

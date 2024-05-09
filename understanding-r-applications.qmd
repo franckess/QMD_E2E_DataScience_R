@@ -10,7 +10,7 @@ In this lesson, we unpack the role of R in the field of Data Science. We cover t
 - The Role of `R`
 - `R` vs. Python
 
-# The Role of `R`
+## The Role of `R`
 
 `R` is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:
 
@@ -24,7 +24,7 @@ In this lesson, we unpack the role of R in the field of Data Science. We cover t
 
 - Reproducibility: `R` provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.
 
-## `R` v.s. Python
+### `R` v.s. Python
 
 ```{r}
 #| label: fig-ds-whole-game 
