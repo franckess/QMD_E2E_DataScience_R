@@ -1,0 +1,57 @@
+# Basics of Supervised Learning {#sec-basic-supervised-lear}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In any statistical analysis, it is essential to understand the fundamental terms and concepts. In this section, we will discuss some of the statistical terms commonly used in data science and provide code examples in R.
+
+## Overview
+
+In this section, we will introduce the fundamentals of supervised learning algorithms. It is a widely used approach to machine learning, and it has numerous practical applications in various industries. Here are some real-life examples of supervised learning:
+
+1.  **Image Classification:** Supervised learning algorithms can be trained to classify images into different categories, such as recognising faces, identifying objects in a scene, and detecting anomalies in medical images.
+
+2.  **Fraud Detection:** Supervised learning algorithms can be trained on labeled data to detect fraudulent transactions, identify unusual patterns in financial data, and prevent financial crimes.
+
+3.  **Text and Sentiment Analysis:** Supervised learning can be used for sentiment analysis, where algorithms are trained to classify text as positive or negative based on a labeled dataset. This can be used in customer feedback analysis, social media monitoring, and market research.
+
+4.  **Medical Diagnosis:** Supervised learning algorithms can be used to diagnose diseases based on medical images, clinical data, and genetic data. Examples include the diagnosis of cancer, Alzheimer's disease, and heart disease.
+
+5.  **Speech Recognition:** Supervised learning can be used to train speech recognition systems to transcribe spoken language into text, identify speakers based on their voice, and improve automatic translation systems.
+
+6.  **Autonomous Driving:** Supervised learning algorithms can be used to train self-driving cars to recognise and respond to different traffic situations, road signs, and road conditions.
+
+These are just a few examples of the many applications of supervised learning. With the increasing availability of labeled data and the development of advanced algorithms, the potential applications of supervised learning are constantly expanding.
+
+## Fundamentals of supervised learning models
+
+We provide an overview of the key concepts and techniques required to build effective supervised learning models.
+
+We’ll use the notation $Y$ for the output variable and $X_1,\ldots, X_p$ for the input variables.  For example, suppose we want to predict the sale price of residential properties. In this case, the output variable is the price. and the input variables are the characteristics of the house such as size, number of bedrooms, number of bathrooms, and location.
+
+To build a statistical learning model, we need **training data**. We represent the output data as a vector: $$\begin{equation*}       \boldsymbol y=\begin{pmatrix}             y_{1} \\             y_{2}\\             \vdots\\             y_{n} \end{pmatrix},\,\,\,\,\, \end{equation*} $$
+
+where $y_i$ refers to the observed value of the output variable for observation i. We represent the input data as the matrix: $$\begin{equation*}   \boldsymbol X=\begin{bmatrix}               \begin{array}{cccc}                 x_{11} & x_{12} &  \ldots & x_{1p} \\                 x_{21} & x_{22} &  \ldots & x_{2p} \\                 \vdots & \vdots  & \ddots & \vdots \\                 x_{n1} & x_{n2} &  \ldots & x_{np} \\               \end{array}    \end{bmatrix},       \end{equation*} $$
+
+where $x_{ij}$ denotes the value of input j for observation i. We refer to this matrix as the *design matrix*.
+
+## Generalisation
+
+The primary objective of supervised learning is to develop a model that can accurately predict new data. To evaluate the performance of a model, we need to test its ability to generalise to data it has not seen before. This ability to generalise is referred to as the model’s generalisation capability. **Generalisation** is a crucial concept in machine learning, particularly in the context of building models that perform well on live data in business production systems. While it is essential to train a model using existing data, the ultimate goal is to ensure that the model can generalise well to new data. To test the generalisation capability of a model, we use a separate dataset known as **test data**. This dataset consists of examples that are distinct from the training data and are used to evaluate the model’s performance. Test data may be pre-existing data that we set aside for evaluation purposes or future data that the model will encounter in the real world.
+
+## Training and validation sets
+
+Supervised learning is a practical approach that involves using data to inform modelling decisions and iteratively improving the models. One common practice in supervised learning is to randomly split the training data into two subsets: a training set and a **validation set**. The training set is used to build machine learning models. In contrast, the validation set is used to measure the performance of different models and select the best one. This technique is known as **cross-validation** and is a critical step in the model building process. By splitting the data into training and validation sets, we can train the model on one subset and use the other subset to evaluate its performance. This approach allows us to estimate the generalisation error of the model and assess how well it will perform on new data.
+
+## Metrics
+
+At the beginning of a supervised learning project, it is crucial to determine the appropriate method for evaluating the predictive performance of the machine learning models. One common approach is to use a **metric**, which is a function that assesses the quality of a model’s predictions on a given dataset, such as the validation set.
+
+The most common metric for regression is the **mean squared error** (MSE), $$\textsf{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}, $$ where $y_i$ and $\widehat{y}$ are the actual and predicted values respectively. We commonly report the root mean squared error (RMSE) $$\textsf{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}, $$ instead of the mean squared error as it's on the same scale as the output variable. The prediction $\text{R}^2$ is $$\textsf{Prediction R}^2=1-\frac{\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}{\sum_{i=1}^{n}(y_i-\overline{y})^2}$$
+
+is also derived from the MSE, but does not depend on the scale of the response variable. The mean absolute error (MAE) is $$\textsf{MAE}=\frac{1}{n}\sum_{i=1}^{n}\vert y_i-\widehat{y}_i\vert. $$
+
+The `MAE` is less sensitive to large prediction errors than the `MSE`.

@@ -1,0 +1,99 @@
+# Basics Of Statistics Using R {#sec-basic-stats-r}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In any statistical analysis, it is essential to understand the fundamental terms and concepts. In this section, we will discuss some of the statistical terms commonly used in data science and provide code examples in R.
+
+## Hypothesis Testing
+
+Hypothesis testing is a statistical tool used to compare the null hypothesis to an alternative hypothesis. The null hypothesis typically states that two quantities are equivalent, while the alternative hypothesis in a two-tailed test is that the quantities are different. In contrast, the alternative hypothesis in a one-tailed test is that one quantity is larger or smaller than the other.
+
+In business, hypothesis testing is almost never used to determine if one variable causes another but rather if one variable can predict the other. To conduct a hypothesis test in `R`, we can use the `t.test()` function:.
+
+```{r}
+# Create two sample datasets
+x <- c(1, 2, 3, 4, 5)
+y <- c(6, 7, 8, 9, 10)
+
+# Conduct a two-sample t-test
+t.test(x, y)
+```
+
+## P-value
+
+The p-value is the probability of observing an effect of the same size as our results given a random model. High p-values often mean that our independent variables are irrelevant. However, low p-values don't necessarily mean they're important, and examining the effect size and importance is crucial to determine significance.
+
+The traditional significance threshold is a p-value of 0.05, but this is an arbitrary cut-off point. There's no reason to set a line in the sand for significance. A p-value of 0.05 means that there's a 1 in 20 probability your result could be random chance, and a p-value of 0.056 means it's 1 in 18. Those are almost identical odds. Some journals have banned their use altogether, while others still only accept significant results.
+
+To calculate the p-value in `R`, we can use the `t.test()` function.
+
+```{r}
+# Create two sample datasets
+x <- c(1, 2, 3, 4, 5)
+y <- c(6, 7, 8, 9, 10)
+
+# Conduct a two-sample t-test
+t.test(x, y)$p.value
+```
+
+## Estimates and Statistics
+
+**n**
+
+`n` refers to the number of observations in a dataset or level of a categorical variable. In R, `nrow(dataframe)` can be used to calculate the number of rows in a dataframe or `length(Vector)` to calculate the length of a vector. To calculate the number of observations by group, the `count(Data, GroupingVariable)` function can be used. For example, `nrow(iris)`, `length(iris$Sepal.Length)`, and `count(iris, Species)` can be used to find the number of observations in the `iris` dataset.
+
+**Mean**
+
+`mean` refers to the average of a dataset, defined as the sum of all observations divided by the number of observations. In `R`, `mean(Vector)` can be used to calculate the mean of a vector. For example, `mean(iris$Sepal.Length)` can be used to find the mean sepal length of the iris dataset.
+
+**Trimmed Mean**
+
+`Trimmed Mean` refers to the mean of a dataset with a certain proportion of data not included. The highest and lowest values are trimmed - for instance, the 10% trimmed mean will use the middle 80% of your data. To calculate the trimmed mean in `R`, `mean(Vector, trim = 0.##)` can be used. For example, `mean(iris$Sepal.Length, trim = 0.10)` can be used to find the 10% trimmed mean sepal length of the iris dataset.
+
+**Variance**
+
+`Variance` refers to a measure of the spread of your data. In R, `var(Vector)` can be used to calculate the variance of a vector. For example, `var(iris$Sepal.Length)` can be used to find the variance of the sepal length in the iris dataset.
+
+**Standard Deviation**
+
+`Standard Deviation` refers to the amount any observation can be expected to differ from the mean. In R, `sd(Vector)` can be used to calculate the standard deviation of a vector. For example, `sd(iris$Sepal.Length)` can be used to find the standard deviation of the sepal length in the iris dataset.
+
+**Standard Error**
+
+`Standard Error` refers to the error associated with a point estimate (e.g. the mean) of the sample. If you’re reporting the mean of a sample variable, use the SD. If you’re putting error bars around means on a graph, use the SE. In `R`, there is no native function to calculate the standard error. However, it can be calculated using `sd(Vector)/sqrt(length(Vector))`. For example, `sd(iris$Sepal.Length)/sqrt(length(iris$Sepal.Length))` can be used to find the standard error of the sepal length in the iris dataset.
+
+**Median**
+
+`Median` refers to a robust estimate of the center of the data. In `R`, `median(Vector)` can be used to calculate the median of a vector. For example, `median(iris$Sepal.Length)` can be used to find median of the data.
+
+**Minimum**
+
+The `min()` function in `R` calculates the smallest value in a vector.
+
+**Maximum**
+
+The `max()` function in `R` calculates the largest value in a vector.
+
+**Range**
+
+The range of a dataset is the difference between the maximum and minimum values.
+
+**Quantile**
+
+A quantile is a point in a distribution that divides the data into equally sized subsets. The `quantile()` function in R can be used to calculate specific quantiles, such as quartiles (the 0.25, 0.5, and 0.75 quantiles). Note that quantiles range from 0 to 1. To convert to percentiles, multiply by 100.
+
+**Interquartile Range**
+
+The interquartile range (IQR) is a measure of spread that represents the range of the middle 50% of the data. It can be calculated using the `IQR()` function in `R`
+
+**Skew**
+
+Skewness measures the asymmetry of a distribution. A skewness value of 0 indicates a symmetrical distribution, while positive and negative skewness values indicate a right-skewed and left-skewed distribution, respectively. The `skew()` function is not included in base R, but it can be found in various packages such as `moments` or `psych`.
+
+**Kurtosis**
+
+Kurtosis measures the "peakedness" of a distribution. A kurtosis value of 0 indicates a normal distribution, while positive and negative kurtosis values indicate a more peaked and flatter distribution, respectively. The `kurtosis()` function is not included in base R, but it can be found in various packages such as `moments` or `psych`. Values much different from 0 indicate non-normal distributions.

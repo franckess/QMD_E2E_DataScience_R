@@ -1,0 +1,167 @@
+# Feature Engineering for Tabular Data {#sec-feature-eng}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In this section, we will understand how to perform feature engineering using `R`.
+
+## Overview
+
+Feature engineering is the process of preparing the data for the learning algorithms.
+
+Feature engineering encompasses a variety of tasks, including: 
+
+* Extracting features from raw data; 
+
+* Constructing informative features based on domain knowledge; 
+
+* Processing the data into the format required by different learning algorithms; 
+
+* Processing the predictors in ways that help the learning algorithm to build better models; 
+
+* Imputing missing values.
+
+It is essential to recognize that different learning algorithms have unique feature engineering requirements. A technique that is appropriate for a specific learning algorithm and context may be unnecessary or even detrimental for others. Consequently, there is no universal formula or a single correct approach to feature engineering. As such, it is recommended to experiment with various feature engineering techniques and allow the data to guide decision-making. This approach acknowledges that effective feature engineering requires a deep understanding of the data and the problem at hand. By leveraging data-driven insights, analysts can optimise feature engineering efforts and ultimately improve the performance of machine learning models.
+
+In the following sections will describe several feature engineering techniques for tabular data. However, keep in mind that a key aspect of feature engineering is to come up with informative features. That depends on the context, rather than on specific techniques.
+
+## Feature scaling on numerical features
+
+Most learning algorithms require the inputs to be on the same scale and sometimes be centred around zero. It is a critical preprocessing step in machine learning, especially for algorithms that are sensitive to the scale of input features. Feature scaling can help to improve model performance by ensuring that all features are on a similar scale and preventing some features from dominating others. Common methods for feature scaling include min-max scaling, z-score normalisation, and log scaling.
+
+Here's an example in `R` using the `iris` dataset:
+
+```{r}
+# Load required package
+library(dplyr)
+
+# Load iris dataset
+data(iris)
+
+# Select numerical features
+numerical_features <- iris %>% select_if(is.numeric)
+
+# Perform feature scaling using the scale() function
+scaled_features <- scale(numerical_features)
+
+# Convert scaled features back to a data frame
+scaled_df <- as.data.frame(scaled_features)
+
+# Print the first few rows of the scaled dataset
+head(scaled_df)
+```
+
+In this example, we use the iris dataset and select the numerical features using `select_if(is.numeric)`. The `scale()` function is then applied to the numerical features to perform feature scaling. It standardizes each feature by subtracting the mean and dividing by the standard deviation. The resulting scaled features are stored in the scaled_features object.
+
+To convert the scaled features back to a data frame, we use `as.data.frame(scaled_features)`. Finally, we print the first few rows of the scaled dataset using `head(scaled_df)`.
+
+After applying feature scaling, each numerical feature will have a mean of zero and a standard deviation of one, resulting in comparable scales across all features. This is particularly useful for algorithms that are sensitive to differences in feature scales, such as distance-based algorithms (e.g., k-means clustering) or regularization-based models (e.g., linear regression with L1 or L2 regularization).
+
+## Categorical features
+
+**One-hot encoding**
+
+One-hot encoding is a popular approach for encoding nominal variables is one-hot encoding. This technique involves constructing a binary indicator for each category of the nominal variable. For instance, if the nominal variable is colour ∈ {blue, yellow, red}, we can represent it as a feature vector with binary indicators for each possible value: \* x = \[1,0,0\] if blue, \* x = \[0,1,0\] if yellow, \* x = \[0,0,1\] if red.
+
+By encoding nominal variables in this manner, analysts can use them as input features for machine learning algorithms that require numerical input.
+
+**Dummy encoding**
+
+Dummy encoding is a technique used to convert nominal variables into numerical features, similar to one-hot encoding. We start with one-hot encoding but delete one arbitrary feature to avoid perfect multicollinearity.If we have a predictor gender ∈ {male, female}, we encode it as \* x = 0 if male, \* x = 1 if female.
+
+**Sparse category**
+
+In categorical analysis, some categories may have low counts, which can reduce the statistical power of the analysis or complicate interpretation. To address this issue, analysts may choose to merge all categories with a count below a certain minimum into a more general “other” category. This approach is useful for simplifying the analysis and improving interpretability by reducing the number of categories. By aggregating low-count categories into a broader category, analysts can improve the accuracy and reliability of statistical models.
+
+**High cardinality**
+
+In statistical analysis, the term “cardinality” refers to the number of unique values in a variable. High cardinality indicates that there is a large number of categories, which can present challenges in data analysis. To address this issue, several techniques are commonly used: \* Merging sparse categories: categories with low frequency can be merged into a more general category, improving the statistical power of the analysis. \* Merging similar categories: categories that are similar in meaning can be combined to simplify the analysis and improve interpretability. \* Hash encoding: this technique involves hashing the categorical values to a fixed number of bins, reducing the dimensionality of the data while retaining some of the information in the original categories. \* Target encoding: this technique involves encoding categorical variables as the average value of the target variable within each category, which can improve the accuracy of predictive models. \* Using specialised algorithms: some machine learning algorithms, such as CatBoost, are designed specifically to handle categorical features efficiently and accurately.
+
+By employing these techniques, data scientists can effectively handle high-cardinality categorical variables and improve the accuracy and interpretability of statistical models.
+
+```{r}
+# Load required packages
+library(dplyr)
+library(caret)
+library(Matrix)
+
+# Create a sample data frame
+dataf <- data.frame(
+  category = c("A", "B", "C", "A", "B", "D", "C"),
+  label = c(1, 0, 1, 0, 1, 0, 1)
+)
+
+# One-hot encoding using caret package
+dmy <- caret::dummyVars(" ~ .", data = dataf)
+one_hot_encoded <- data.frame(predict(dmy, newdata = dataf))
+print(one_hot_encoded)
+
+# Dummy encoding using dplyr package
+dummy_encoded <- dataf %>%
+  mutate(category = as.factor(category)) %>%
+  bind_cols(model.matrix(~ category - 1, data = .))
+
+# Print the dummy encoded features
+print(dummy_encoded)
+
+# Handling sparse categories using Matrix package
+sparse_categories <- dataf %>%
+  mutate(category = as.factor(category)) %>%
+  mutate(category = as.character(category))
+
+# Create a sparse matrix of the categories
+sparse_matrix <- sparse.model.matrix(~ category - 1, data = sparse_categories)
+
+# Convert the sparse matrix to a regular matrix
+sparse_encoded <- as.data.frame(as.matrix(sparse_matrix))
+
+# Print the sparse encoded features
+print(sparse_encoded)
+```
+
+## Mixed features
+
+Different machine learning algorithms have varying abilities to handle mixed data types. Tree-based methods, for example, can naturally handle mixed data types, while methods like k-Nearest Neighbours (kNN) work best when all predictors are directly comparable. However, one challenge that arises when working with mixed data types is ensuring that all features are on the same scale. While there are natural ways to scale continuous variables, there is no straightforward way to scale categorical variables, which are often converted to numerical features using techniques such as one-hot encoding or dummy encoding. Despite this issue, in practice, analysts often treat numerical features constructed from categorical predictors in the same way as any other numerical predictor. While some methods may require all features to be on the same scale, this issue is frequently ignored when working with mixed data types.
+
+## Interaction features
+
+An interaction effect refers to a situation where the relationship between the response variable and a predictor variable is dependent on one or more other predictor variables. In other words, the effect of a predictor on the response varies based on the level or values of other predictors.
+
+The model for the illustration is $f(x)$ = $\beta_0$ + $\beta_1$ × income + $\beta_2$ × student + $\beta_3$ × income × student, and student = 1 if the observed individual is student and student = 0 otherwise. $$
+\begin{cases}
+    \text{student} = 1 \text{ if the observed individual is student}\\
+    \text{student} = 0 \text{ otherwise}
+\end{cases}
+$$
+
+```{r}
+# Create a sample data frame
+data <- data.frame(
+  feature1 = c("A", "B", "C"),
+  feature2 = c("X", "Y", "Z"),
+  label = c(1, 0, 1)
+)
+
+# Create interaction feature
+data$interaction_feature <- interaction(data$feature1, data$feature2, drop = TRUE)
+
+# Print the data frame with the interaction feature
+print(data)
+```
+
+## Curse of Dimensionality
+
+The curse of dimensionality refers to the difficulties that arise when working with high-dimensional data, especially in cases where the number of features (i.e., dimensions) greatly exceeds the number of observations. When dealing with interaction features, which are constructed by combining multiple predictors, the number of features can grow rapidly, exacerbating the problems associated with the curse of dimensionality. For instance:
+
+-   When $p=2$ predictors, there is one possible interaction: $f_1(x_1, x_2)$.
+
+-   When $p = 3$, there are four: $f_1(x_1, x_2),\text{ }f_2(x_1, x_3),\text{ }f_3(x_2, x_3)$, and $f_4(x_1, x_2, x_3)$.
+
+-   When $p = 4$, there are 11 combinations.
+
+-   When $p = 10$, there are 1013 combinations.
+
+-   When $p = 50$, there are there are 1,125,899,906,842,573 combinations.

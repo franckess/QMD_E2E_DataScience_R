@@ -6,9 +6,7 @@
 source("_common.R")
 ```
 
-In this lesson, we unpack the role of R in the field of Data Science. We cover the following topics:
-- The Role of `R`
-- `R` vs. Python
+In this lesson, we unpack the role of R in the field of Data Science.
 
 ## The Role of `R`
 

@@ -1,0 +1,107 @@
+# Data Visualisation Using `ggplot2` {#sec-data-visualisation}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In this section, we will look into the awesome `R` package `ggplot2` for creating awesome graphics.
+
+## Introduction and Basics
+
+The utilization of `ggplot2` for data visualization offers several advantages that make it a preferred choice among data analysts and data scientists. 
+
+One significant benefit is its adherence to the **_grammar of graphics_**, a conceptual framework that provides a consistent and structured approach to creating visualizations. The grammar of graphics breaks down a plot into its fundamental components: data, aesthetics, geometries, scales, and facets. This modular approach allows for greater flexibility and customization. For instance, with ggplot2, users can easily map variables to aesthetics, such as color or size, to reveal patterns and relationships in the data. 
+
+Additionally, `ggplot2` simplifies the process of creating complex plots by providing a wide range of geometries, including points, lines, bars, and areas, which can be tailored to suit specific data types and analysis requirements. By understanding and leveraging the grammar of graphics, users can create visually compelling and informative plots that effectively communicate insights from their data.
+
+## Customization and Styling
+
+`ggplot2` is a powerful and versatile package for creating customizable and visually appealing plots. It provides a wide range of options to customize plots, allowing users to tailor their visualizations to meet specific requirements. With `ggplot2`, you can easily customize plot titles, axis labels, and legends to provide clear and descriptive information. 
+
+For example, to add a title to a plot, you can use the `labs()` function:
+```{r}
+library(ggplot2)
+library(plotly)
+# Create a scatter plot
+p <- ggplot(data = iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Sepal Length vs. Sepal Width",
+       x = "Sepal Length", y = "Sepal Width")
+plotly::ggplotly(p)
+```
+Moreover, `ggplot2` allows you to modify colors, shapes, and sizes of plot elements to enhance visual clarity and emphasize important aspects. 
+
+For instance, you can change the color of points in a scatter plot using the `color` argument:
+```{r}
+p <- ggplot(data = iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point() +
+  labs(title = "Scatter Plot with Colored Points",
+       x = "Sepal Length", y = "Sepal Width")
+plotly::ggplotly(p)
+```
+Adjusting axis scales and limits is another crucial aspect of plot customization. You can control the range of values displayed on the x-axis and y-axis using functions such as `xlim()` and `ylim()`. Here's an example of adjusting the axis limits in a scatter plot:
+```{r}
+p <- ggplot(data = iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() +
+  labs(title = "Scatter Plot with Adjusted Axis Limits",
+       x = "Sepal Length", y = "Sepal Width") +
+  xlim(4, 8) +
+  ylim(2, 4.5)
+ggplotly(p)
+```
+Grouping and faceting in ggplot2 allow you to visualize subsets of data or create multiple plots based on categorical variables. By using the `facet_wrap()` or `facet_grid()` functions, you can split the data into panels based on specific grouping variables. 
+
+Here's an example that demonstrates faceting in a scatter plot by species:
+```{r}
+p <- ggplot(data = iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() +
+  labs(title = "Scatter Plot with Grouping and Faceting",
+       x = "Sepal Length", y = "Sepal Width") +
+  facet_wrap(~ Species)
+ggplotly(p)
+```
+Working with multiple data sources is also facilitated by ggplot2. You can combine and overlay different datasets to create layered and composite visualizations. 
+
+For instance, you can combine a scatter plot and a line plot by using the `+` operator:
+```{r}
+df1 <- data.frame(x = 1:10, y = 1:10)
+df2 <- data.frame(x = 1:10, y = 10:1)
+
+p <- ggplot() +
+  geom_point(data = df1, aes(x, y)) +
+  geom_line(data = df2, aes(x, y)) +
+  labs(title = "Overlaying Multiple Data Sources")
+ggplotly(p)
+```
+
+## Creating Advanced Plot Types
+
+R `ggplot2` is a versatile and powerful package for data visualization, allowing users to create advanced plot types and customize their visual appearance. One key aspect of `ggplot2` is the ability to create advanced plot types, beyond basic scatter plots or bar charts, to effectively represent complex data patterns. This can be achieved by incorporating additional geometries, statistical transformations, and layering multiple visual elements. For example, users can create visually appealing heatmaps, boxplots, violin plots, or density plots, among others, using the extensive set of geometries and statistical functions provided by `ggplot2`.
+
+To ensure consistent plot styling across different visualizations, `ggplot2` offers themes and templates that allow users to define and apply predefined sets of formatting rules. By applying a theme, users can easily modify the appearance of various plot elements such as axes, titles, legends, background colors, and fonts. This helps to maintain a cohesive visual style throughout multiple plots in a project or presentation. Additionally, `ggplot2` provides options to customize themes or create custom templates to suit specific design preferences or conform to brand guidelines.
+
+Here's an example that demonstrates creating an advanced plot type (a violin plot) and applying a custom theme for consistent plot styling:
+```{r}
+# Load the ggplot2 library
+library(ggplot2)
+
+# Create a dataset
+data <- data.frame(
+  Group = rep(c("A", "B", "C"), each = 100),
+  Value = rnorm(300)
+)
+
+# Create a violin plot
+p <- ggplot(data, aes(x = Group, y = Value)) +
+  geom_violin(fill = "#FF6666", color = "#990000", alpha = 0.8) +
+  theme_minimal()  # Apply a minimal theme
+
+# Display the plot
+ggplotly(p)
+```
+
+In the above example, we create a dataset with three groups `(A, B, C)` and corresponding values. We use the `geom_violin()` function to create a violin plot, specifying the fill color, border color, and transparency. Finally, we apply the `theme_minimal()` function to apply a minimal theme to the plot, which removes unnecessary background elements and provides a clean and focused visualization.
+
+By exploring the various advanced plot types available in `ggplot2` and leveraging themes and templates, users can create visually striking and consistent plots that effectively communicate complex data patterns.

@@ -27,6 +27,19 @@ book:
         - understanding-ds.qmd
         - understanding-r-applications.qmd
         - r-objects-and-variables.qmd
+    - part: data-exploration-vis.qmd
+      chapters: 
+        - basic-stats-r.qmd
+        - data-manipulation.qmd
+        - feature-eng.qmd
+        - handling-data-issues.qmd
+        - data-visualisation.qmd
+    - part: supervised-learning.qmd
+      chapters: 
+        - basic-supervised-learning.qmd
+        - linear-reg.qmd
+        - k-nearest-neighbour-reg.qmd
+        - class-log-reg.qmd
     #- summary.qmd
     #- references.qmd
 

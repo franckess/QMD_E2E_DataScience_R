@@ -1,0 +1,19 @@
+# Data Exploration And Visualisation {#sec-data-exploration-vis .unnumbered}
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+In this second part of the book, our focus will be on the the five following chapters:
+
+-   In @sec-basic-stats-r we will discuss some of the statistical terms commonly used in data science and provide code examples in `R`.
+
+-   In @sec-data-manipulation we will pay special attention to two of the most used `R` libraries: `dplyr` and data.table.
+
+-   In @sec-feature-eng we will understand how to perform feature engineering using `R`.
+
+-   In @sec-handling-data-issues we will understand how to handle various data problems using `R`.
+
+-   In @sec-data-visualisation we will look into the awesome `R` package `ggplot2` for creating awesome graphics.

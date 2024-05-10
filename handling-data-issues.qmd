@@ -1,0 +1,119 @@
+# Handling Data Issues {#sec-handling-data-issues}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In this section, we will understand how to handle various data problems using `R`.
+
+## Missing values
+
+In dealing with missing values, several methods can be employed:
+* Removing rows that contain missing values should be avoided since it could lead to the loss of valuable information.
+* Similarly, removing columns that have too many missing values should also be avoided.
+* Simple imputation methods such as replacing missing values with the mean, median, or mode can be used, although this may result in biased estimates.
+* More sophisticated imputation methods such as building a model to predict missing values can be employed.
+* Another approach is to create a dummy variable that indicates the presence of missing values. In some cases, the fact that data is missing may carry valuable information.
+* Lastly, some learning algorithms can handle missing values directly, making it unnecessary to perform any imputation.
+
+```{r}
+# Load required package
+library(dplyr)
+
+# Create a sample data frame with missing values
+data <- data.frame(
+  feature1 = c(1, 2, NA, 4),
+  feature2 = c("A", NA, "C", "D"),
+  feature3 = c(5, 6, 7, NA),
+  label = c(1, 0, 1, 0)
+)
+
+# Removing rows with missing values
+data_without_missing_rows <- na.omit(data)
+
+# Removing columns with too many missing values
+data_without_missing_cols <- data %>% 
+  select_if(function(x) sum(is.na(x)) < 0.5 * nrow(data))
+
+# Imputation using mean, median, or mode
+imputed_data <- data %>%
+  mutate(
+    feature1_imputed = ifelse(is.na(feature1), mean(feature1, na.rm = TRUE), feature1),
+    feature2_imputed = ifelse(is.na(feature2), median(feature2, na.rm = TRUE), feature2),
+    feature3_imputed = ifelse(is.na(feature3), as.character(mode(feature3)), feature3)
+  )
+
+# Imputation using model-based approach
+library(mice)
+imputed_data_model <- complete(mice(data))
+
+# Creating a dummy variable for missing values
+data_with_dummy <- data %>%
+  mutate(
+    feature1_missing = ifelse(is.na(feature1), 1, 0),
+    feature2_missing = ifelse(is.na(feature2), 1, 0),
+    feature3_missing = ifelse(is.na(feature3), 1, 0)
+  )
+
+# Learning algorithms handling missing values
+library(randomForest)
+rf_model <- randomForest(label ~ ., data = data, na.action = na.exclude)
+
+# Print the modified data frames
+print(data_without_missing_rows)
+print(data_without_missing_cols)
+print(imputed_data)
+print(imputed_data_model)
+print(data_with_dummy)
+```
+
+## Outliers
+
+Outliers are values that are significantly different from the other values in a dataset. They can have a large effect on statistical estimates and machine learning models. Here are some common approaches for dealing with outliers:
+* Avoid deleting outliers unless they are clearly due to measurement or data entry errors. Outliers may contain valuable information about the data or the underlying process generating the data.
+* If an outlier is due to an error, try to fix the error if possible. If there is no way to correct the error, treat the outlier as a missing value.
+* Censoring involves setting a threshold value for a variable and any values beyond the threshold are set to the threshold value. This can be useful when extreme values are unlikely but still possible, and they can be safely considered as equivalent to the threshold.
+* Transforming the variable can sometimes make the data more amenable to analysis or modelling. For example, taking the logarithm of a skewed variable can help to make it more symmetric.
+* Creating a dummy variable to indicate outliers can be useful when outliers are expected to have a different effect on the response variable than other values. For example, a dummy variable could indicate whether a data point is an outlier or not, and this variable could be used as a predictor in a regression model.
+* Using a learning algorithm that is robust to outliers can also be effective. For example, robust regression methods can downright the influence of outliers on the model fit.
+
+```{r}
+# Load required packages
+library(dplyr)
+library(car)
+library(MASS)
+
+# Create a sample data frame with outliers
+data <- data.frame(
+  variable = c(1, 2, 3, 100, 5, 6, 200),
+  label = c(1, 0, 1, 0, 1, 0, 1)
+)
+
+# Avoid deleting outliers
+# Outliers may contain valuable information, so we don't remove them
+
+# Fix errors or treat outliers as missing values
+data$variable_fixed <- ifelse(data$variable > 100, NA, data$variable)
+
+# Censoring outliers
+threshold <- 100
+data$variable_censored <- ifelse(data$variable > threshold, threshold, data$variable)
+
+# Transforming the variable
+data$variable_log <- log(data$variable)
+
+# Creating a dummy variable to indicate outliers
+data$outlier_dummy <- ifelse(data$variable > 100, 1, 0)
+
+# Using a robust learning algorithm
+model <- rlm(formula = label ~ variable, data = data, method = "MM")
+
+# Print the modified data frame
+print(data)
+```
+
+## Data leakage
+
+**Leakage** in statistical learning refers to a situation where a model is trained using information that would not be available during prediction in real-world scenarios. Leakage can lead to over-optimistic estimates of the model’s performance, as the model may be relying on information that it would not have access to during deployment. To avoid leakage, it is essential to carefully inspect the variables used in the model and ensure that they are not revealing information that would not be available in a production environment. By avoiding leakage, we can create more accurate and reliable machine learning models.

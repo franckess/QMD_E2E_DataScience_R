@@ -6,22 +6,66 @@
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/intro.html</loc>
-    <lastmod>2024-05-09T03:05:31.650Z</lastmod>
+    <lastmod>2024-05-10T13:18:27.404Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/introduction.html</loc>
-    <lastmod>2024-05-09T04:46:33.754Z</lastmod>
+    <lastmod>2024-05-09T05:32:15.497Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/understanding-ds.html</loc>
-    <lastmod>2024-05-09T04:48:26.008Z</lastmod>
+    <lastmod>2024-05-10T01:33:56.467Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/understanding-r-applications.html</loc>
-    <lastmod>2024-05-09T04:48:15.957Z</lastmod>
+    <lastmod>2024-05-10T01:34:11.597Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/r-objects-and-variables.html</loc>
-    <lastmod>2024-05-09T04:50:21.676Z</lastmod>
+    <lastmod>2024-05-10T07:29:18.967Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/data-exploration-vis.html</loc>
+    <lastmod>2024-05-10T07:39:38.004Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/basic-stats-r.html</loc>
+    <lastmod>2024-05-10T12:13:50.945Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/data-manipulation.html</loc>
+    <lastmod>2024-05-10T05:55:17.899Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/feature-eng.html</loc>
+    <lastmod>2024-05-10T13:24:45.352Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/handling-data-issues.html</loc>
+    <lastmod>2024-05-10T07:25:29.074Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/data-visualisation.html</loc>
+    <lastmod>2024-05-10T07:34:12.235Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/supervised-learning.html</loc>
+    <lastmod>2024-05-10T12:13:31.849Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/basic-supervised-learning.html</loc>
+    <lastmod>2024-05-10T12:15:28.987Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/linear-reg.html</loc>
+    <lastmod>2024-05-10T11:00:39.679Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/k-nearest-neighbour-reg.html</loc>
+    <lastmod>2024-05-10T11:57:01.107Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/class-log-reg.html</loc>
+    <lastmod>2024-05-10T12:05:33.089Z</lastmod>
   </url>
 </urlset>

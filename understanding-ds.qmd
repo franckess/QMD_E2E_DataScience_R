@@ -6,8 +6,6 @@
 source("_common.R")
 ```
 
-We will cover the following topics: - State of Data Science - Difference among popular data careers - Why learning data science?
-
 ## State of Data Science
 
 Data Science is an interdisciplinary field that involves using scientific methods, processes, algorithms, and systems to extract insights and knowledge from structured and unstructured data. It involves collecting and processing large amounts of data, analyzing it to identify patterns and trends, and using those insights to make informed business decisions. A Data Scientist is a professional who has expertise in data analysis, machine learning, statistics, programming, and domain knowledge. They use various statistical and computational techniques to analyse large, complex datasets and derive valuable insights that help organisations make informed decisions. It can be used to optimize operations, improve customer experiences, and develop new products and services. By leveraging Data Science techniques, businesses can gain a competitive edge by making more informed decisions and quickly adapting to changing market conditions.

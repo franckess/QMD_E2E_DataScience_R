@@ -1,4 +1,4 @@
-# Introduction {#sec-intro .unnumbered}
+# The Data Science Universe {#sec-intro .unnumbered}
 
 ```{r}
 #| echo: false
@@ -12,7 +12,8 @@ Data science is an exciting discipline that allows you to transform raw data int
 #| label: fig-ds-diagram
 #| echo: false
 #| fig-cap: |
-#|   Understanding the Data Science Lifecycle. Image taken from 
+#|   Understanding the Data Science Lifecycle. 
+#|   Image taken from 
 #|   https://www.sudeep.co/data-science/2018/02/09/Understanding-the-Data-Science-Lifecycle.html
 #| fig-alt: |
 #|   A diagram displaying the data science cycle: business understanding -> data mining -> data cleaning -> data exploration -> feature engineering -> predictive model -> visualisation
@@ -24,14 +25,23 @@ knitr::include_graphics("diagrams/data_science_lifecycle.png", dpi = 270)
 ## How this book is organized
 
 Below is a list of items we are going to cover in this book:
+
 1.  Introduction to Data Science and R
+
 2.  Data Exploration and Visualization
+
 3.  Supervised Learning
+
 4.  Unsupervised Learning
+
 5.  Boosting and Random Forest
+
 6.  Natural Language Processing
+
 7.  Image Processing/Computer Vision
+
 8.  Reinforcement Learning
+
 9.  Big Data & Cloud Computing
 
 ## Why Learning data science?

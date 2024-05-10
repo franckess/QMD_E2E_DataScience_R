@@ -1,4 +1,4 @@
-# Introduction to Data Science and R {#sec-introduction-intro .unnumbered}
+# Data Science and R {#sec-introduction-intro .unnumbered}
 
 ```{r}
 #| results: "asis"

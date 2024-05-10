@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.553">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Rene Essomba">
-<title>End To End Data Science With R - 2&nbsp; Understanding R Applications in Data Science</title>
+<title>End To End Data Science With R - 11&nbsp; K-Nearest Neighbour Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -18,6 +18,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -27,8 +61,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./r-objects-and-variables.html" rel="next">
-<link href="./understanding-ds.html" rel="prev">
+<link href="./class-log-reg.html" rel="next">
+<link href="./linear-reg.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -64,7 +98,32 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script>
+}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 </head>
 <body class="nav-sidebar floating">
 
@@ -73,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-r-applications.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./k-nearest-neighbour-reg.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">K-Nearest Neighbour Regression</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -154,7 +213,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link active">
+  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></a>
   </div>
 </li>
@@ -230,7 +289,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./k-nearest-neighbour-reg.html" class="sidebar-item-text sidebar-link">
+  <a href="./k-nearest-neighbour-reg.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">K-Nearest Neighbour Regression</span></span></a>
   </div>
 </li>
@@ -250,17 +309,12 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li>
-<a href="#the-role-of-r" id="toc-the-role-of-r" class="nav-link active" data-scroll-target="#the-role-of-r"><span class="header-section-number">2.1</span> The Role of <code>R</code></a>
-  <ul class="collapse">
-<li><a href="#r-v.s.-python" id="toc-r-v.s.-python" class="nav-link" data-scroll-target="#r-v.s.-python"><span class="header-section-number">2.1.1</span> <code>R</code> v.s. Python</a></li>
-  </ul>
-</li>
-  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-r-applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">11.1</span> Overview</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/k-nearest-neighbour-reg.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-r-applications.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-understanding-r-applications" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./k-nearest-neighbour-reg.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">K-Nearest Neighbour Regression</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-k-nearest-neighbour-reg" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">K-Nearest Neighbour Regression</span></span></h1>
 </div>
 
 
@@ -274,44 +328,53 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><p>In this lesson, we unpack the role of R in the field of Data Science.</p>
-<section id="the-role-of-r" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="the-role-of-r">
-<span class="header-section-number">2.1</span> The Role of <code>R</code>
-</h2>
-<p><code>R</code> is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:</p>
-<ul>
-<li><p>Data Wrangling: <code>R</code> has a powerful set of libraries that allow you to manipulate and transform data, which is a critical step in any Data Science project.</p></li>
-<li><p>Statistical Analysis: <code>R</code> has a rich set of statistical libraries that allow you to perform a wide range of statistical analyses, including hypothesis testing, regression analysis, and time series analysis.</p></li>
-<li><p>Data Visualization: <code>R</code> has an extensive set of libraries for creating high-quality data visualizations, such as plots, charts, and graphs, that enable you to communicate insights effectively.</p></li>
-<li><p>Machine Learning: <code>R</code> has a comprehensive set of libraries for building and deploying machine learning models, such as decision trees, random forests, and neural networks.</p></li>
-<li><p>Reproducibility: <code>R</code> provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.</p></li>
-</ul>
-<section id="r-v.s.-python" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="r-v.s.-python">
-<span class="header-section-number">2.1.1</span> <code>R</code> v.s. Python</h3>
+</header><p>The k-Nearest Neighbours (kNN) regression algorithm is a classic method for nonlinear data.</p>
+<section id="overview" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="overview">
+<span class="header-section-number">11.1</span> Overview</h2>
+<p>The kNN method keeps all training examples in memory to make predictions. When a new input comes in, kNN finds the training examples that are more similar to that new input. The prediction is the average value of the output variable for these nearest neighbours.</p>
+<p>In mathematical notation, the kNN prediction is <span class="math display">\[\begin{align*} \widehat{f}(\boldsymbol x)&amp;=\text{Average}\Big[\,y_i \,\Big|\, i \;\text{is in}\; \mathcal{N}_k(\boldsymbol x,\mathcal{D}) \, \Big]\\ &amp;=\frac{1}{k}\sum_{i \in \mathcal{N}_k(\boldsymbol x,\mathcal{D})}y_i \end{align*}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{N}_k(\boldsymbol x,\mathcal{D})\)</span> is the set of indexes for the closest <span class="math inline">\(k\)</span> data points to <span class="math inline">\(x\)</span> in <span class="math inline">\(\mathcal{D}\)</span> according to some distance function <span class="math inline">\(\text{dist}(\boldsymbol x,\boldsymbol x_i)\)</span>.</p>
+<p>The kNN method is highly flexible: in principle, it can approximate any “reasonable” regression function assuming what it may look like.</p>
+<p>Unfortunately, the price to pay for this flexibility is that kNN performs poorly when the number of inputs increases. This problem is known as the curse of dimensionality. We’ll explain it in more detail later in the unit.</p>
+<p><strong>Hyperparameters</strong> A hyperparameter is a parameter of a learning algorithm that is set before the training process begins and is not directly learnable from the data. The choice of hyperparameters is crucial for many learning algorithms, as they determine their behaviour.</p>
+<p>The KNN method has two hyperparameters: the number of neighbours (K) and the distance function.</p>
+<p>Above, you saw how the choice of the number of neighbours has an important effect on the learned predictive function. For now, try to reach your own intuitive conclusions regarding how the number of neighbours affects the KNN method.</p>
+<p>A common choice of distance function is the Euclidean distance: <span class="math display">\[\begin{align*} \textsf{dist}(\boldsymbol x_i,\boldsymbol x_l)&amp;=\Vert \boldsymbol x_i-\boldsymbol x_l\Vert_2\\[3pt] &amp;=\sqrt{\sum_{j=1}^{p}(x_{ij}-x_{lj})^2}, \end{align*}\]</span></p>
+<p>There are many other distance functions available. The Mahalonobis distance is <span class="math display">\[\textsf{dist}(\boldsymbol x_i,\boldsymbol x_l)=\sqrt{(\boldsymbol x_i-\boldsymbol x_l)^\top\boldsymbol S^{-1}(\boldsymbol x_i-\boldsymbol x_l)},\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol S\)</span> is the sample covariance matrix of the predictors. In addition to automatic scaling, this approach accounts for the correlations between the predictors.</p>
+<p>An advanced approach is <strong>metric learning</strong>, which aims to learn a task-specific distance metric from data. For example, we can use metric learning metrics to choose the <span class="math inline">\(\boldsymbol S\)</span> matrix in the Mahalanobis distance. Metric learning can significantly improve KNN, but is computationally expensive.</p>
+<p>Here’s an example in base R to illustrate the concept of k-nearest neighbor (KNN):</p>
 <div class="cell">
-<div class="cell-output-display">
-<div id="fig-ds-whole-game" class="quarto-figure quarto-figure-center quarto-float anchored" alt="R vs. Python.">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ds-whole-game-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/r-vs-python.png" class="img-fluid figure-img" alt="R vs. Python.">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a sample dataset</span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define a function for KNN regression</span></span>
+<span><span class="va">knn_regression</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">train_data</span>, <span class="va">test_point</span>, <span class="va">k</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">(</span><span class="va">train_data</span><span class="op">$</span><span class="va">x</span> <span class="op">-</span> <span class="va">test_point</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="va">sorted_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">distances</span><span class="op">)</span></span>
+<span>  <span class="va">neighbors</span> <span class="op">&lt;-</span> <span class="va">train_data</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">sorted_indices</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">k</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">predicted_value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">neighbors</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">predicted_value</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># Predict the value using KNN regression</span></span>
+<span><span class="va">test_point</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">8.5</span><span class="op">)</span></span>
+<span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<span><span class="va">predicted_value</span> <span class="op">&lt;-</span> <span class="fu">knn_regression</span><span class="op">(</span><span class="va">data</span>, <span class="va">test_point</span>, <span class="va">k</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Print the predicted value</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">predicted_value</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.5460616</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ds-whole-game-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.1: R vs.&nbsp;Python
-</figcaption></figure>
-</div>
-</div>
-</div>
-<p>You may wondering why we choose <code>R</code> over another popular language - Python, in this course. The short answer is the choice ultimately depends on the specific needs of the data scientist and the project at hand.</p>
-<p><strong>Ask yourself: what kind of data scientist you want to become?</strong> <code>R</code> is hands down the best option when you focus on statistics and probabilities. It has a large community of statisticians that can answer your questions. But, if you want to develop applications that process enormous amounts of data, Python is your best option. It has a more extensive ecosystem of developers, and it’s easier to find people willing to collaborate with you.</p>
-<p><strong>Technical Differences</strong> 1. Syntax: <code>R</code> has a syntax that is tailored for statistical analysis and modelling, with many built-in functions and operators specifically designed for this purpose. Python, on the other hand, has a more general-purpose syntax that can be used for a wide range of tasks beyond statistical analysis.</p>
-<ol start="2" type="1">
-<li><p>Libraries and Packages: Both <code>R</code> and Python have extensive libraries and packages for data science, but they differ in their focus and scope. R has a strong emphasis on statistical modelling and analysis, with packages like ggplot2, dplyr, and tidyr. Python, on the other hand, has a broader range of applications, including web development, scientific computing, and machine learning, with packages like NumPy, Pandas, and Scikit-learn.</p></li>
-<li><p>Community: Both <code>R</code> and Python have large and active communities, but they differ in their backgrounds and focus. <code>R</code> has historically been used more by statisticians and data analysts, while Python has been more popular among software engineers and developers.</p></li>
-<li><p>Learning Curve: <code>R</code> is generally considered to have a steeper learning curve than Python, especially for those who are new to programming. However, once you become familiar with R’s syntax and packages, it can be a very powerful and efficient tool for statistical analysis.</p></li>
-<li><p>Visualisation: <code>R</code> has a strong focus on Visualisation, with packages like ggplot2 and lattice that make it easy to create high-quality plots and charts. Python also has Visualisation packages like Matplotlib and Seaborn, but they may require more customisation and tweaking to get the desired output.</p></li>
-</ol>
+<p>In this example, we create a sample dataset with two variables <code>x</code> and <code>y</code>. The <code>x</code> variable represents the input feature, and the <code>y</code> variable represents the target variable we want to predict.</p>
+<p>We define a function knn_regression that takes three arguments: <code>train_data</code> (the training dataset), <code>test_point</code> (the test point for which we want to make a prediction), and <code>k</code> (the number of nearest neighbors to consider).</p>
+<p>Inside the <code>knn_regression</code> function, we calculate the Euclidean distance between the <code>x</code> values of the training data and the <code>x</code> value of the test point. Then, we sort the distances and select the <code>k</code> nearest neighbors based on the sorted indices. We extract the corresponding <code>y</code> values of the neighbors and calculate the mean as the predicted value.</p>
+<p>We predict the value for a test point with <code>x = 8.5</code> and <code>k = 3</code> by calling the <code>knn_regression</code> function with the sample dataset, test point, and <code>k</code> value. Finally, we print the predicted value.</p>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -720,13 +783,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./understanding-ds.html" class="pagination-link" aria-label="Understanding Data Science As a Career">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></span>
+      <a href="./linear-reg.html" class="pagination-link" aria-label="Linear Regression">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./r-objects-and-variables.html" class="pagination-link" aria-label="R Objects And Variables">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R Objects And Variables</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./class-log-reg.html" class="pagination-link" aria-label="Classification Using Logistic Model">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification Using Logistic Model</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -737,7 +800,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-r-applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/k-nearest-neighbour-reg.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

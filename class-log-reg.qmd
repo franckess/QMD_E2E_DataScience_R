@@ -1,0 +1,97 @@
+# Classification Using Logistic Model {#sec-class-log-reg}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In this section, we dive into classification models
+
+## Overview
+
+The linear models that we have constructed so far have proven to be effective in forecasting numerical outcomes such as the housing price or the number of customers who may click on a hyperlink. These models, known as regression models, are suited for such applications. Nonetheless, there are situations where we require the ability to predict events or categories, rather than just a numerical quantity. For instance, we may want to ascertain the species of a flower, whether a person is likely to click on an emailed link, or the likelihood of a tree dying in a given year.
+
+For these tasks, we need to use a classification model. To walk through how these work, let’s start using a new dataset included in base R - `mtcars` which contains information on different car models, including their fuel efficiency (`mpg`), number of cylinders (`cyl`), engine displacement (`disp`), horsepower (`hp`), weight (`wt`), and other features. To obtain more information on the dataset, you can type `?mtcars` in the console.
+
+```{r}
+library(ggplot2)
+library(plotly)
+# Load mtcars dataset
+data(mtcars)
+
+p <- ggplot(mtcars, aes(mpg, am)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = F)
+ggplotly(p)
+```
+
+There are a few reasons based on statistics why using a simple straight line is not appropriate for classification problems. When the data has heavy tails, meaning that there are data points that have a high probability (such as 95%) of belonging to one group, the linear formula becomes less effective. Similarly, when predictors are non-linear, where high and low values of a predictor tend to make belonging to group 0 more likely and middle values tend to be 1s, the linear model performs poorly. Instead, a logistic model is preferred, which produces a line that looks more like this:
+
+```{r}
+p <- ggplot(mtcars, aes(mpg, am)) + 
+  geom_point() + 
+  geom_smooth(method = "loess", se = F)
+
+ggplotly(p)
+```
+
+**Logistic Regression vs. Linear Regression**
+Logistic regression works similarly to linear regression, where data points with probabilities higher than 50% are assigned to the class "1" and so on. Comparing the two, the logistic model demonstrates slightly better classification performance. For example, using the same model formula, logistic regression achieved 81% accuracy, outperforming the linear model.
+
+While some experts, such as certain professors, argue that the simplicity of linear models makes them the best choice for the majority of datasets, logistic models are generally as easy to implement and understand. Moreover, logistic regression usually provides better classification results. As such, logistic models are commonly relied upon for classifying datasets.
+
+**Creating Logistic Regression Models**
+The process of creating logistic regression models is quite similar to that of linear regression models. Instead of using the `lm()` function, the `glm()` function is employed, as logistic regression belongs to the family of algorithms known as *generalized linear models*. The formula and data arguments still need to be supplied, just as with `lm()`. The main difference when using `glm()` is the additional requirement to specify the argument `family`. In this case, setting `family = binomial` will calculate the logistic model.
+
+We can build a logistic regression model using the following line of code:
+```{r}
+glm(am ~ mpg, data = mtcars, family = binomial)
+```
+
+The model summary can be viewed just like we did with `lm()`:
+```{r}
+logmod <- glm(am ~ mpg, data = mtcars, family = binomial)
+summary(logmod)
+```
+
+The output presents various metrics that help to understand and interpret the logistic regression model:
+
+- **Deviance Residuals**: These are a measure of the difference between the observed values and the values predicted by the model. The minimum, 1st quartile, median, 3rd quartile, and maximum deviance residuals are shown. Smaller values indicate better model fit.
+
+- **Coefficients**: These are the estimated coefficients for the model predictors (intercept and `mpg` in this case). The `Estimate` column shows the estimated value of each coefficient, while the `Std. Error` column presents the standard error for the estimate. The `z value` is the test statistic (estimate divided by standard error), and `Pr(>|z|)` is the p-value, which indicates the significance of each predictor in the model. Significance codes are provided to help interpret the p-value (e.g., `***` for p \< 0.001, `**` for p \< 0.01, and `*` for p \< 0.05).
+
+- **Dispersion parameter**: For the binomial family, the dispersion parameter is taken to be 1. This indicates that the model assumes the variance of the response variable is equal to its mean.
+
+- **Null deviance**: This is the deviance of the null model (a model with no predictors). In this case, the null deviance is 43.230, calculated based on 31 degrees of freedom.
+
+- **Residual deviance**: This is the deviance of the fitted model, which measures the goodness-of-fit. The residual deviance is 29.675, calculated based on 30 degrees of freedom. A lower residual deviance compared to the null deviance indicates a better model fit.
+
+- **AIC (Akaike Information Criterion)**: This is a measure of the model's quality in terms of the trade-off between goodness-of-fit and model complexity. A lower AIC value suggests a better model.
+
+- **Number of Fisher Scoring iterations**: This is the number of iterations taken by the Fisher Scoring algorithm to converge. In this case, the algorithm converged in 5 iterations.
+
+We can further refine our model by adding more variables and changing the formula, just as we did with linear models:
+```{r}
+summary(glm(am ~ hp + wt, data = mtcars, family="binomial"))
+```
+
+We can see the AIC decreased significantly after adding an extra feature. 
+
+**Predicting with Logistic Regression Models**
+In fact, logistic models created with the `glm()` function work similarly to linear models made with `lm()`. However, there are some key differences to consider. For instance, when using the model to make predictions, let's assign the model to `mtmod`:
+```{r}
+mtmod <- glm(am ~ hp + wt, data = mtcars, family="binomial")
+```
+
+Recall how we generated predictions from our models using `predict(model, data)`. Here is what happens if we do something similar with logistic regression:
+```{r}
+head(predict(mtmod, mtcars))
+```
+This does not produce the expected probabilities. The reason is that R is attempting to use the logistic model as if it were a linear model. To fix this, we must specify `type = "response"` in our `predict()` call:
+
+```{r}
+head(predict(mtmod, mtcars, type = "response"))
+```
+With this adjustment, we can generate the correct probabilities.
+

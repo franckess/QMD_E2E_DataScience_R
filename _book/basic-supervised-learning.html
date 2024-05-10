@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.553">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Rene Essomba">
-<title>End To End Data Science With R - 2&nbsp; Understanding R Applications in Data Science</title>
+<title>End To End Data Science With R - 9&nbsp; Basics of Supervised Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -27,8 +27,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./r-objects-and-variables.html" rel="next">
-<link href="./understanding-ds.html" rel="prev">
+<link href="./linear-reg.html" rel="next">
+<link href="./supervised-learning.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -64,7 +64,32 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script>
+}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 </head>
 <body class="nav-sidebar floating">
 
@@ -73,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-r-applications.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./basic-supervised-learning.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -154,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link active">
+  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></a>
   </div>
 </li>
@@ -218,7 +243,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./basic-supervised-learning.html" class="sidebar-item-text sidebar-link">
+  <a href="./basic-supervised-learning.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></span></a>
   </div>
 </li>
@@ -250,17 +275,16 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li>
-<a href="#the-role-of-r" id="toc-the-role-of-r" class="nav-link active" data-scroll-target="#the-role-of-r"><span class="header-section-number">2.1</span> The Role of <code>R</code></a>
-  <ul class="collapse">
-<li><a href="#r-v.s.-python" id="toc-r-v.s.-python" class="nav-link" data-scroll-target="#r-v.s.-python"><span class="header-section-number">2.1.1</span> <code>R</code> v.s. Python</a></li>
-  </ul>
-</li>
-  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-r-applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">9.1</span> Overview</a></li>
+  <li><a href="#fundamentals-of-supervised-learning-models" id="toc-fundamentals-of-supervised-learning-models" class="nav-link" data-scroll-target="#fundamentals-of-supervised-learning-models"><span class="header-section-number">9.2</span> Fundamentals of supervised learning models</a></li>
+  <li><a href="#generalisation" id="toc-generalisation" class="nav-link" data-scroll-target="#generalisation"><span class="header-section-number">9.3</span> Generalisation</a></li>
+  <li><a href="#training-and-validation-sets" id="toc-training-and-validation-sets" class="nav-link" data-scroll-target="#training-and-validation-sets"><span class="header-section-number">9.4</span> Training and validation sets</a></li>
+  <li><a href="#metrics" id="toc-metrics" class="nav-link" data-scroll-target="#metrics"><span class="header-section-number">9.5</span> Metrics</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/basic-supervised-learning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-r-applications.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-understanding-r-applications" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./basic-supervised-learning.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-basic-supervised-lear" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></span></h1>
 </div>
 
 
@@ -274,44 +298,41 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><p>In this lesson, we unpack the role of R in the field of Data Science.</p>
-<section id="the-role-of-r" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="the-role-of-r">
-<span class="header-section-number">2.1</span> The Role of <code>R</code>
-</h2>
-<p><code>R</code> is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:</p>
-<ul>
-<li><p>Data Wrangling: <code>R</code> has a powerful set of libraries that allow you to manipulate and transform data, which is a critical step in any Data Science project.</p></li>
-<li><p>Statistical Analysis: <code>R</code> has a rich set of statistical libraries that allow you to perform a wide range of statistical analyses, including hypothesis testing, regression analysis, and time series analysis.</p></li>
-<li><p>Data Visualization: <code>R</code> has an extensive set of libraries for creating high-quality data visualizations, such as plots, charts, and graphs, that enable you to communicate insights effectively.</p></li>
-<li><p>Machine Learning: <code>R</code> has a comprehensive set of libraries for building and deploying machine learning models, such as decision trees, random forests, and neural networks.</p></li>
-<li><p>Reproducibility: <code>R</code> provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.</p></li>
-</ul>
-<section id="r-v.s.-python" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="r-v.s.-python">
-<span class="header-section-number">2.1.1</span> <code>R</code> v.s. Python</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-ds-whole-game" class="quarto-figure quarto-figure-center quarto-float anchored" alt="R vs. Python.">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ds-whole-game-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/r-vs-python.png" class="img-fluid figure-img" alt="R vs. Python.">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ds-whole-game-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.1: R vs.&nbsp;Python
-</figcaption></figure>
-</div>
-</div>
-</div>
-<p>You may wondering why we choose <code>R</code> over another popular language - Python, in this course. The short answer is the choice ultimately depends on the specific needs of the data scientist and the project at hand.</p>
-<p><strong>Ask yourself: what kind of data scientist you want to become?</strong> <code>R</code> is hands down the best option when you focus on statistics and probabilities. It has a large community of statisticians that can answer your questions. But, if you want to develop applications that process enormous amounts of data, Python is your best option. It has a more extensive ecosystem of developers, and it’s easier to find people willing to collaborate with you.</p>
-<p><strong>Technical Differences</strong> 1. Syntax: <code>R</code> has a syntax that is tailored for statistical analysis and modelling, with many built-in functions and operators specifically designed for this purpose. Python, on the other hand, has a more general-purpose syntax that can be used for a wide range of tasks beyond statistical analysis.</p>
-<ol start="2" type="1">
-<li><p>Libraries and Packages: Both <code>R</code> and Python have extensive libraries and packages for data science, but they differ in their focus and scope. R has a strong emphasis on statistical modelling and analysis, with packages like ggplot2, dplyr, and tidyr. Python, on the other hand, has a broader range of applications, including web development, scientific computing, and machine learning, with packages like NumPy, Pandas, and Scikit-learn.</p></li>
-<li><p>Community: Both <code>R</code> and Python have large and active communities, but they differ in their backgrounds and focus. <code>R</code> has historically been used more by statisticians and data analysts, while Python has been more popular among software engineers and developers.</p></li>
-<li><p>Learning Curve: <code>R</code> is generally considered to have a steeper learning curve than Python, especially for those who are new to programming. However, once you become familiar with R’s syntax and packages, it can be a very powerful and efficient tool for statistical analysis.</p></li>
-<li><p>Visualisation: <code>R</code> has a strong focus on Visualisation, with packages like ggplot2 and lattice that make it easy to create high-quality plots and charts. Python also has Visualisation packages like Matplotlib and Seaborn, but they may require more customisation and tweaking to get the desired output.</p></li>
+</header><p>In any statistical analysis, it is essential to understand the fundamental terms and concepts. In this section, we will discuss some of the statistical terms commonly used in data science and provide code examples in R.</p>
+<section id="overview" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="overview">
+<span class="header-section-number">9.1</span> Overview</h2>
+<p>In this section, we will introduce the fundamentals of supervised learning algorithms. It is a widely used approach to machine learning, and it has numerous practical applications in various industries. Here are some real-life examples of supervised learning:</p>
+<ol type="1">
+<li><p><strong>Image Classification:</strong> Supervised learning algorithms can be trained to classify images into different categories, such as recognising faces, identifying objects in a scene, and detecting anomalies in medical images.</p></li>
+<li><p><strong>Fraud Detection:</strong> Supervised learning algorithms can be trained on labeled data to detect fraudulent transactions, identify unusual patterns in financial data, and prevent financial crimes.</p></li>
+<li><p><strong>Text and Sentiment Analysis:</strong> Supervised learning can be used for sentiment analysis, where algorithms are trained to classify text as positive or negative based on a labeled dataset. This can be used in customer feedback analysis, social media monitoring, and market research.</p></li>
+<li><p><strong>Medical Diagnosis:</strong> Supervised learning algorithms can be used to diagnose diseases based on medical images, clinical data, and genetic data. Examples include the diagnosis of cancer, Alzheimer’s disease, and heart disease.</p></li>
+<li><p><strong>Speech Recognition:</strong> Supervised learning can be used to train speech recognition systems to transcribe spoken language into text, identify speakers based on their voice, and improve automatic translation systems.</p></li>
+<li><p><strong>Autonomous Driving:</strong> Supervised learning algorithms can be used to train self-driving cars to recognise and respond to different traffic situations, road signs, and road conditions.</p></li>
 </ol>
+<p>These are just a few examples of the many applications of supervised learning. With the increasing availability of labeled data and the development of advanced algorithms, the potential applications of supervised learning are constantly expanding.</p>
+</section><section id="fundamentals-of-supervised-learning-models" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="fundamentals-of-supervised-learning-models">
+<span class="header-section-number">9.2</span> Fundamentals of supervised learning models</h2>
+<p>We provide an overview of the key concepts and techniques required to build effective supervised learning models.</p>
+<p>We’ll use the notation <span class="math inline">\(Y\)</span> for the output variable and <span class="math inline">\(X_1,\ldots, X_p\)</span> for the input variables.&nbsp; For example, suppose we want to predict the sale price of residential properties. In this case, the output variable is the price. and the input variables are the characteristics of the house such as size, number of bedrooms, number of bathrooms, and location.</p>
+<p>To build a statistical learning model, we need <strong>training data</strong>. We represent the output data as a vector: <span class="math display">\[\begin{equation*}       \boldsymbol y=\begin{pmatrix}             y_{1} \\             y_{2}\\             \vdots\\             y_{n} \end{pmatrix},\,\,\,\,\, \end{equation*} \]</span></p>
+<p>where <span class="math inline">\(y_i\)</span> refers to the observed value of the output variable for observation i. We represent the input data as the matrix: <span class="math display">\[\begin{equation*}   \boldsymbol X=\begin{bmatrix}               \begin{array}{cccc}                 x_{11} &amp; x_{12} &amp;  \ldots &amp; x_{1p} \\                 x_{21} &amp; x_{22} &amp;  \ldots &amp; x_{2p} \\                 \vdots &amp; \vdots  &amp; \ddots &amp; \vdots \\                 x_{n1} &amp; x_{n2} &amp;  \ldots &amp; x_{np} \\               \end{array}    \end{bmatrix},       \end{equation*} \]</span></p>
+<p>where <span class="math inline">\(x_{ij}\)</span> denotes the value of input j for observation i. We refer to this matrix as the <em>design matrix</em>.</p>
+</section><section id="generalisation" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="generalisation">
+<span class="header-section-number">9.3</span> Generalisation</h2>
+<p>The primary objective of supervised learning is to develop a model that can accurately predict new data. To evaluate the performance of a model, we need to test its ability to generalise to data it has not seen before. This ability to generalise is referred to as the model’s generalisation capability. <strong>Generalisation</strong> is a crucial concept in machine learning, particularly in the context of building models that perform well on live data in business production systems. While it is essential to train a model using existing data, the ultimate goal is to ensure that the model can generalise well to new data. To test the generalisation capability of a model, we use a separate dataset known as <strong>test data</strong>. This dataset consists of examples that are distinct from the training data and are used to evaluate the model’s performance. Test data may be pre-existing data that we set aside for evaluation purposes or future data that the model will encounter in the real world.</p>
+</section><section id="training-and-validation-sets" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="training-and-validation-sets">
+<span class="header-section-number">9.4</span> Training and validation sets</h2>
+<p>Supervised learning is a practical approach that involves using data to inform modelling decisions and iteratively improving the models. One common practice in supervised learning is to randomly split the training data into two subsets: a training set and a <strong>validation set</strong>. The training set is used to build machine learning models. In contrast, the validation set is used to measure the performance of different models and select the best one. This technique is known as <strong>cross-validation</strong> and is a critical step in the model building process. By splitting the data into training and validation sets, we can train the model on one subset and use the other subset to evaluate its performance. This approach allows us to estimate the generalisation error of the model and assess how well it will perform on new data.</p>
+</section><section id="metrics" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="metrics">
+<span class="header-section-number">9.5</span> Metrics</h2>
+<p>At the beginning of a supervised learning project, it is crucial to determine the appropriate method for evaluating the predictive performance of the machine learning models. One common approach is to use a <strong>metric</strong>, which is a function that assesses the quality of a model’s predictions on a given dataset, such as the validation set.</p>
+<p>The most common metric for regression is the <strong>mean squared error</strong> (MSE), <span class="math display">\[\textsf{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}, \]</span> where <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\widehat{y}\)</span> are the actual and predicted values respectively. We commonly report the root mean squared error (RMSE) <span class="math display">\[\textsf{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}, \]</span> instead of the mean squared error as it’s on the same scale as the output variable. The prediction <span class="math inline">\(\text{R}^2\)</span> is <span class="math display">\[\textsf{Prediction R}^2=1-\frac{\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}{\sum_{i=1}^{n}(y_i-\overline{y})^2}\]</span></p>
+<p>is also derived from the MSE, but does not depend on the scale of the response variable. The mean absolute error (MAE) is <span class="math display">\[\textsf{MAE}=\frac{1}{n}\sum_{i=1}^{n}\vert y_i-\widehat{y}_i\vert. \]</span></p>
+<p>The <code>MAE</code> is less sensitive to large prediction errors than the <code>MSE</code>.</p>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -720,13 +741,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./understanding-ds.html" class="pagination-link" aria-label="Understanding Data Science As a Career">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></span>
+      <a href="./supervised-learning.html" class="pagination-link" aria-label="Supervised Learning">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Supervised Learning</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./r-objects-and-variables.html" class="pagination-link" aria-label="R Objects And Variables">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R Objects And Variables</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./linear-reg.html" class="pagination-link" aria-label="Linear Regression">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -737,7 +758,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-r-applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/basic-supervised-learning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

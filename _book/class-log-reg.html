@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Rene Essomba">
+<title>End To End Data Science With R - 12&nbsp; Classification Using Logistic Model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./k-nearest-neighbour-reg.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script><link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="site_libs/plotly-binding-4.10.4/plotly.js"></script><script src="site_libs/typedarray-0.1/typedarray.min.js"></script><script src="site_libs/jquery-3.5.1/jquery.min.js"></script><link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script><link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./class-log-reg.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification Using Logistic Model</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">End To End Data Science With R</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.github.com/franckess/QMD_E2E_DataScience_R" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=%7Curl%7C">
+              <i class="bi bi-bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+</div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Data Science Universe</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Science and R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./understanding-ds.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-objects-and-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R Objects And Variables</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./data-exploration-vis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Exploration And Visualisation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basic-stats-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basics Of Statistics Using R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-manipulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Manipulation Using R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./feature-eng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Feature Engineering for Tabular Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./handling-data-issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Handling Data Issues</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-visualisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Visualisation Using <code>ggplot2</code></span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./supervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Supervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basic-supervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linear-reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./k-nearest-neighbour-reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">K-Nearest Neighbour Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./class-log-reg.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification Using Logistic Model</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">12.1</span> Overview</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/class-log-reg.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./class-log-reg.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification Using Logistic Model</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-class-log-reg" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification Using Logistic Model</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>In this section, we dive into classification models</p>
+<section id="overview" class="level2" data-number="12.1"><h2 data-number="12.1" class="anchored" data-anchor-id="overview">
+<span class="header-section-number">12.1</span> Overview</h2>
+<p>The linear models that we have constructed so far have proven to be effective in forecasting numerical outcomes such as the housing price or the number of customers who may click on a hyperlink. These models, known as regression models, are suited for such applications. Nonetheless, there are situations where we require the ability to predict events or categories, rather than just a numerical quantity. For instance, we may want to ascertain the species of a flower, whether a person is likely to click on an emailed link, or the likelihood of a tree dying in a given year.</p>
+<p>For these tasks, we need to use a classification model. To walk through how these work, let’s start using a new dataset included in base R - <code>mtcars</code> which contains information on different car models, including their fuel efficiency (<code>mpg</code>), number of cylinders (<code>cyl</code>), engine displacement (<code>disp</code>), horsepower (<code>hp</code>), weight (<code>wt</code>), and other features. To obtain more information on the dataset, you can type <code><a href="https://rdrr.io/r/datasets/mtcars.html">?mtcars</a></code> in the console.</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://plotly-r.com">plotly</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'plotly'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:ggplot2':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     last_plot</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:graphics':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     layout</span></span>
+<span><span class="co"># Load mtcars dataset</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html">ggplotly</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
+<span><span class="co">#&gt; `geom_smooth()` using formula = 'y ~ x'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:433px;"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"data":[{"x":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"y":[1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1],"text":["mpg: 21.0<br />am: 1","mpg: 21.0<br />am: 1","mpg: 22.8<br />am: 1","mpg: 21.4<br />am: 0","mpg: 18.7<br />am: 0","mpg: 18.1<br />am: 0","mpg: 14.3<br />am: 0","mpg: 24.4<br />am: 0","mpg: 22.8<br />am: 0","mpg: 19.2<br />am: 0","mpg: 17.8<br />am: 0","mpg: 16.4<br />am: 0","mpg: 17.3<br />am: 0","mpg: 15.2<br />am: 0","mpg: 10.4<br />am: 0","mpg: 10.4<br />am: 0","mpg: 14.7<br />am: 0","mpg: 32.4<br />am: 1","mpg: 30.4<br />am: 1","mpg: 33.9<br />am: 1","mpg: 21.5<br />am: 0","mpg: 15.5<br />am: 0","mpg: 15.2<br />am: 0","mpg: 13.3<br />am: 0","mpg: 19.2<br />am: 0","mpg: 27.3<br />am: 1","mpg: 26.0<br />am: 1","mpg: 30.4<br />am: 1","mpg: 15.8<br />am: 1","mpg: 19.7<br />am: 1","mpg: 15.0<br />am: 1","mpg: 21.4<br />am: 1"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[10.4,10.697468354430381,10.994936708860759,11.29240506329114,11.589873417721519,11.887341772151899,12.184810126582278,12.482278481012658,12.779746835443039,13.077215189873417,13.374683544303798,13.672151898734178,13.969620253164557,14.267088607594937,14.564556962025318,14.862025316455696,15.159493670886075,15.456962025316455,15.754430379746836,16.051898734177215,16.349367088607593,16.646835443037975,16.944303797468354,17.241772151898733,17.539240506329115,17.836708860759494,18.134177215189872,18.431645569620251,18.729113924050633,19.026582278481012,19.324050632911394,19.621518987341773,19.918987341772151,20.21645569620253,20.513924050632909,20.811392405063291,21.10886075949367,21.406329113924052,21.703797468354431,22.001265822784809,22.298734177215188,22.596202531645567,22.893670886075949,23.191139240506331,23.48860759493671,23.786075949367088,24.083544303797467,24.381012658227846,24.678481012658224,24.975949367088607,25.273417721518989,25.570886075949367,25.868354430379746,26.165822784810125,26.463291139240503,26.760759493670882,27.058227848101268,27.355696202531647,27.653164556962025,27.950632911392404,28.248101265822783,28.545569620253161,28.84303797468354,29.140506329113926,29.437974683544304,29.735443037974683,30.032911392405062,30.33037974683544,30.627848101265819,30.925316455696198,31.222784810126583,31.520253164556962,31.817721518987341,32.115189873417719,32.412658227848098,32.710126582278477,33.007594936708863,33.305063291139241,33.60253164556962,33.899999999999999],"y":[-0.075006847792512432,-0.060233942786778405,-0.045461037781044489,-0.030688132775310573,-0.015915227769576656,-0.0011423227638426292,0.013630582241891176,0.028403487247625203,0.04317639225335923,0.057949297259093036,0.072722202264827063,0.08749510727056109,0.1022680122762949,0.11704091728202892,0.13181382228776295,0.14658672729349675,0.16135963229923067,0.1761325373049647,0.19090544231069861,0.20567834731643253,0.22045125232216645,0.23522415732790047,0.24999706233363439,0.26476996733936831,0.27954287234510233,0.29431577735083625,0.30908868235657017,0.32386158736230408,0.33863449236803811,0.35340739737377203,0.36818030237950605,0.38295320738523997,0.39772611239097388,0.41249901739670769,0.42727192240244161,0.44204482740817574,0.45681773241390966,0.4715906374196438,0.48636354242537749,0.50113644743111141,0.51590935243684533,0.53068225744257924,0.54545516244831338,0.56022806745404752,0.57500097245978121,0.58977387746551513,0.60454678247124904,0.61931968747698296,0.63409259248271688,0.64886549748845102,0.66363840249418493,0.67841130749991885,0.69318421250565276,0.70795711751138668,0.7227300225171206,0.73750292752285451,0.75227583252858865,0.76704873753432257,0.78182164254005648,0.7965945475457904,0.81136745255152432,0.82614035755725823,0.84091326256299215,0.85568616756872629,0.8704590725744602,0.88523197758019412,0.90000488258592803,0.91477778759166195,0.92955069259739587,0.94432359760312978,0.95909650260886392,0.97386940761459784,0.98864231262033175,1.0034152176260656,1.0181881226317997,1.0329610276375334,1.0477339326432675,1.0625068376490017,1.0772797426547354,1.0920526476604695],"text":["mpg: 10.40000<br />am: -0.075006848","mpg: 10.69747<br />am: -0.060233943","mpg: 10.99494<br />am: -0.045461038","mpg: 11.29241<br />am: -0.030688133","mpg: 11.58987<br />am: -0.015915228","mpg: 11.88734<br />am: -0.001142323","mpg: 12.18481<br />am:  0.013630582","mpg: 12.48228<br />am:  0.028403487","mpg: 12.77975<br />am:  0.043176392","mpg: 13.07722<br />am:  0.057949297","mpg: 13.37468<br />am:  0.072722202","mpg: 13.67215<br />am:  0.087495107","mpg: 13.96962<br />am:  0.102268012","mpg: 14.26709<br />am:  0.117040917","mpg: 14.56456<br />am:  0.131813822","mpg: 14.86203<br />am:  0.146586727","mpg: 15.15949<br />am:  0.161359632","mpg: 15.45696<br />am:  0.176132537","mpg: 15.75443<br />am:  0.190905442","mpg: 16.05190<br />am:  0.205678347","mpg: 16.34937<br />am:  0.220451252","mpg: 16.64684<br />am:  0.235224157","mpg: 16.94430<br />am:  0.249997062","mpg: 17.24177<br />am:  0.264769967","mpg: 17.53924<br />am:  0.279542872","mpg: 17.83671<br />am:  0.294315777","mpg: 18.13418<br />am:  0.309088682","mpg: 18.43165<br />am:  0.323861587","mpg: 18.72911<br />am:  0.338634492","mpg: 19.02658<br />am:  0.353407397","mpg: 19.32405<br />am:  0.368180302","mpg: 19.62152<br />am:  0.382953207","mpg: 19.91899<br />am:  0.397726112","mpg: 20.21646<br />am:  0.412499017","mpg: 20.51392<br />am:  0.427271922","mpg: 20.81139<br />am:  0.442044827","mpg: 21.10886<br />am:  0.456817732","mpg: 21.40633<br />am:  0.471590637","mpg: 21.70380<br />am:  0.486363542","mpg: 22.00127<br />am:  0.501136447","mpg: 22.29873<br />am:  0.515909352","mpg: 22.59620<br />am:  0.530682257","mpg: 22.89367<br />am:  0.545455162","mpg: 23.19114<br />am:  0.560228067","mpg: 23.48861<br />am:  0.575000972","mpg: 23.78608<br />am:  0.589773877","mpg: 24.08354<br />am:  0.604546782","mpg: 24.38101<br />am:  0.619319687","mpg: 24.67848<br />am:  0.634092592","mpg: 24.97595<br />am:  0.648865497","mpg: 25.27342<br />am:  0.663638402","mpg: 25.57089<br />am:  0.678411307","mpg: 25.86835<br />am:  0.693184213","mpg: 26.16582<br />am:  0.707957118","mpg: 26.46329<br />am:  0.722730023","mpg: 26.76076<br />am:  0.737502928","mpg: 27.05823<br />am:  0.752275833","mpg: 27.35570<br />am:  0.767048738","mpg: 27.65316<br />am:  0.781821643","mpg: 27.95063<br />am:  0.796594548","mpg: 28.24810<br />am:  0.811367453","mpg: 28.54557<br />am:  0.826140358","mpg: 28.84304<br />am:  0.840913263","mpg: 29.14051<br />am:  0.855686168","mpg: 29.43797<br />am:  0.870459073","mpg: 29.73544<br />am:  0.885231978","mpg: 30.03291<br />am:  0.900004883","mpg: 30.33038<br />am:  0.914777788","mpg: 30.62785<br />am:  0.929550693","mpg: 30.92532<br />am:  0.944323598","mpg: 31.22278<br />am:  0.959096503","mpg: 31.52025<br />am:  0.973869408","mpg: 31.81772<br />am:  0.988642313","mpg: 32.11519<br />am:  1.003415218","mpg: 32.41266<br />am:  1.018188123","mpg: 32.71013<br />am:  1.032961028","mpg: 33.00759<br />am:  1.047733933","mpg: 33.30506<br />am:  1.062506838","mpg: 33.60253<br />am:  1.077279743","mpg: 33.90000<br />am:  1.092052648"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(51,102,255,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":27.955168119551683,"r":7.9701120797011216,"b":44.632627646326284,"l":47.023661270236623},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":15.940224159402243},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[9.2249999999999996,35.074999999999996],"tickmode":"array","ticktext":["10","15","20","25","30","35"],"tickvals":[10,15,20,25,30,35],"categoryorder":"array","categoryarray":["10","15","20","25","30","35"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.9850560398505608,"tickwidth":0.72455564360919278,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":12.7521793275218},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.72455564360919278,"zeroline":false,"anchor":"y","title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":15.940224159402243}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.13335982256516152,1.1504056224331185],"tickmode":"array","ticktext":["0.0","0.4","0.8"],"tickvals":[0,0.40000000000000002,0.80000000000000004],"categoryorder":"array","categoryarray":["0.0","0.4","0.8"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.9850560398505608,"tickwidth":0.72455564360919289,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":12.7521793275218},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.72455564360919289,"zeroline":false,"anchor":"x","title":{"text":"am","font":{"color":"rgba(0,0,0,1)","family":"","size":15.940224159402243}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":2.0615604867573372,"font":{"color":"rgba(0,0,0,1)","family":"","size":12.7521793275218}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1649714652d25":{"x":{},"y":{},"type":"scatter"},"164977e76e298":{"x":{},"y":{}}},"cur_data":"1649714652d25","visdat":{"1649714652d25":["function (y) ","x"],"164977e76e298":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>There are a few reasons based on statistics why using a simple straight line is not appropriate for classification problems. When the data has heavy tails, meaning that there are data points that have a high probability (such as 95%) of belonging to one group, the linear formula becomes less effective. Similarly, when predictors are non-linear, where high and low values of a predictor tend to make belonging to group 0 more likely and middle values tend to be 1s, the linear model performs poorly. Instead, a logistic model is preferred, which produces a line that looks more like this:</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"loess"</span>, se <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html">ggplotly</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
+<span><span class="co">#&gt; `geom_smooth()` using formula = 'y ~ x'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:100%;height:433px;"></div>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"data":[{"x":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"y":[1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1],"text":["mpg: 21.0<br />am: 1","mpg: 21.0<br />am: 1","mpg: 22.8<br />am: 1","mpg: 21.4<br />am: 0","mpg: 18.7<br />am: 0","mpg: 18.1<br />am: 0","mpg: 14.3<br />am: 0","mpg: 24.4<br />am: 0","mpg: 22.8<br />am: 0","mpg: 19.2<br />am: 0","mpg: 17.8<br />am: 0","mpg: 16.4<br />am: 0","mpg: 17.3<br />am: 0","mpg: 15.2<br />am: 0","mpg: 10.4<br />am: 0","mpg: 10.4<br />am: 0","mpg: 14.7<br />am: 0","mpg: 32.4<br />am: 1","mpg: 30.4<br />am: 1","mpg: 33.9<br />am: 1","mpg: 21.5<br />am: 0","mpg: 15.5<br />am: 0","mpg: 15.2<br />am: 0","mpg: 13.3<br />am: 0","mpg: 19.2<br />am: 0","mpg: 27.3<br />am: 1","mpg: 26.0<br />am: 1","mpg: 30.4<br />am: 1","mpg: 15.8<br />am: 1","mpg: 19.7<br />am: 1","mpg: 15.0<br />am: 1","mpg: 21.4<br />am: 1"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[10.4,10.697468354430381,10.994936708860759,11.29240506329114,11.589873417721519,11.887341772151899,12.184810126582278,12.482278481012658,12.779746835443039,13.077215189873417,13.374683544303798,13.672151898734178,13.969620253164557,14.267088607594937,14.564556962025318,14.862025316455696,15.159493670886075,15.456962025316455,15.754430379746836,16.051898734177215,16.349367088607593,16.646835443037975,16.944303797468354,17.241772151898733,17.539240506329115,17.836708860759494,18.134177215189872,18.431645569620251,18.729113924050633,19.026582278481012,19.324050632911394,19.621518987341773,19.918987341772151,20.21645569620253,20.513924050632909,20.811392405063291,21.10886075949367,21.406329113924052,21.703797468354431,22.001265822784809,22.298734177215188,22.596202531645567,22.893670886075949,23.191139240506331,23.48860759493671,23.786075949367088,24.083544303797467,24.381012658227846,24.678481012658224,24.975949367088607,25.273417721518989,25.570886075949367,25.868354430379746,26.165822784810125,26.463291139240503,26.760759493670882,27.058227848101268,27.355696202531647,27.653164556962025,27.950632911392404,28.248101265822783,28.545569620253161,28.84303797468354,29.140506329113926,29.437974683544304,29.735443037974683,30.032911392405062,30.33037974683544,30.627848101265819,30.925316455696198,31.222784810126583,31.520253164556962,31.817721518987341,32.115189873417719,32.412658227848098,32.710126582278477,33.007594936708863,33.305063291139241,33.60253164556962,33.899999999999999],"y":[0.0035762586633808313,0.017610076508378879,0.031012166789906946,0.043796239063187886,0.055976002883444231,0.067565167805898829,0.078577443385774257,0.089026539178293312,0.098926164738678629,0.10829002962215285,0.11706471966335245,0.12406664770280884,0.12964377890015882,0.13483745218403065,0.14068900648305221,0.14713091676099799,0.15084113371055413,0.15506765073887041,0.16001868716424364,0.1615861862111197,0.16109374834677292,0.15996774529802596,0.15963454879170155,0.16152053055462243,0.16705206231361136,0.17763457180521194,0.1925907778631393,0.21050443182222955,0.23075379593530332,0.25271713245518063,0.27715458120269548,0.31337520177816597,0.35816147304059665,0.40527726255097685,0.44848643787029624,0.48155286655954416,0.4972019368039669,0.50080843132276509,0.51586396160386017,0.53106328042552786,0.54679543563715161,0.56344947508811449,0.58132114919029276,0.59934185176665522,0.61710460979867965,0.63461400340101448,0.65187461268830893,0.66889101777521165,0.68566779877637141,0.70220953580643719,0.71852080898005755,0.73460619841188124,0.75047028421655715,0.76611764650873404,0.78155286540306057,0.79678052101418584,0.81180519345675872,0.82663085459108065,0.84123044424481164,0.85556295437914087,0.86959461648054515,0.88329166203550025,0.89662032253048263,0.90954682945196919,0.92203741428643515,0.93405830852035765,0.94557574364021268,0.95655595113247693,0.96699148663301948,0.97692671268792053,0.98636306087726611,0.99529980671756402,1.0037362257253231,1.0116715934170517,1.0191051853092581,1.0260362769184506,1.0324641437611379,1.0383880613538279,1.043807305213029,1.0487211508552501],"text":["mpg: 10.40000<br />am: 0.003576259","mpg: 10.69747<br />am: 0.017610077","mpg: 10.99494<br />am: 0.031012167","mpg: 11.29241<br />am: 0.043796239","mpg: 11.58987<br />am: 0.055976003","mpg: 11.88734<br />am: 0.067565168","mpg: 12.18481<br />am: 0.078577443","mpg: 12.48228<br />am: 0.089026539","mpg: 12.77975<br />am: 0.098926165","mpg: 13.07722<br />am: 0.108290030","mpg: 13.37468<br />am: 0.117064720","mpg: 13.67215<br />am: 0.124066648","mpg: 13.96962<br />am: 0.129643779","mpg: 14.26709<br />am: 0.134837452","mpg: 14.56456<br />am: 0.140689006","mpg: 14.86203<br />am: 0.147130917","mpg: 15.15949<br />am: 0.150841134","mpg: 15.45696<br />am: 0.155067651","mpg: 15.75443<br />am: 0.160018687","mpg: 16.05190<br />am: 0.161586186","mpg: 16.34937<br />am: 0.161093748","mpg: 16.64684<br />am: 0.159967745","mpg: 16.94430<br />am: 0.159634549","mpg: 17.24177<br />am: 0.161520531","mpg: 17.53924<br />am: 0.167052062","mpg: 17.83671<br />am: 0.177634572","mpg: 18.13418<br />am: 0.192590778","mpg: 18.43165<br />am: 0.210504432","mpg: 18.72911<br />am: 0.230753796","mpg: 19.02658<br />am: 0.252717132","mpg: 19.32405<br />am: 0.277154581","mpg: 19.62152<br />am: 0.313375202","mpg: 19.91899<br />am: 0.358161473","mpg: 20.21646<br />am: 0.405277263","mpg: 20.51392<br />am: 0.448486438","mpg: 20.81139<br />am: 0.481552867","mpg: 21.10886<br />am: 0.497201937","mpg: 21.40633<br />am: 0.500808431","mpg: 21.70380<br />am: 0.515863962","mpg: 22.00127<br />am: 0.531063280","mpg: 22.29873<br />am: 0.546795436","mpg: 22.59620<br />am: 0.563449475","mpg: 22.89367<br />am: 0.581321149","mpg: 23.19114<br />am: 0.599341852","mpg: 23.48861<br />am: 0.617104610","mpg: 23.78608<br />am: 0.634614003","mpg: 24.08354<br />am: 0.651874613","mpg: 24.38101<br />am: 0.668891018","mpg: 24.67848<br />am: 0.685667799","mpg: 24.97595<br />am: 0.702209536","mpg: 25.27342<br />am: 0.718520809","mpg: 25.57089<br />am: 0.734606198","mpg: 25.86835<br />am: 0.750470284","mpg: 26.16582<br />am: 0.766117647","mpg: 26.46329<br />am: 0.781552865","mpg: 26.76076<br />am: 0.796780521","mpg: 27.05823<br />am: 0.811805193","mpg: 27.35570<br />am: 0.826630855","mpg: 27.65316<br />am: 0.841230444","mpg: 27.95063<br />am: 0.855562954","mpg: 28.24810<br />am: 0.869594616","mpg: 28.54557<br />am: 0.883291662","mpg: 28.84304<br />am: 0.896620323","mpg: 29.14051<br />am: 0.909546829","mpg: 29.43797<br />am: 0.922037414","mpg: 29.73544<br />am: 0.934058309","mpg: 30.03291<br />am: 0.945575744","mpg: 30.33038<br />am: 0.956555951","mpg: 30.62785<br />am: 0.966991487","mpg: 30.92532<br />am: 0.976926713","mpg: 31.22278<br />am: 0.986363061","mpg: 31.52025<br />am: 0.995299807","mpg: 31.81772<br />am: 1.003736226","mpg: 32.11519<br />am: 1.011671593","mpg: 32.41266<br />am: 1.019105185","mpg: 32.71013<br />am: 1.026036277","mpg: 33.00759<br />am: 1.032464144","mpg: 33.30506<br />am: 1.038388061","mpg: 33.60253<br />am: 1.043807305","mpg: 33.90000<br />am: 1.048721151"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(51,102,255,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":27.955168119551683,"r":7.9701120797011216,"b":44.632627646326284,"l":53.399750933997524},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":15.940224159402243},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[9.2249999999999996,35.074999999999996],"tickmode":"array","ticktext":["10","15","20","25","30","35"],"tickvals":[10,15,20,25,30,35],"categoryorder":"array","categoryarray":["10","15","20","25","30","35"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.9850560398505608,"tickwidth":0.72455564360919278,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":12.7521793275218},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.72455564360919278,"zeroline":false,"anchor":"y","title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":15.940224159402243}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.05243605754276251,1.1011572083980126],"tickmode":"array","ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.24999999999999997,0.5,0.75,1],"categoryorder":"array","categoryarray":["0.00","0.25","0.50","0.75","1.00"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.9850560398505608,"tickwidth":0.72455564360919289,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":12.7521793275218},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.72455564360919289,"zeroline":false,"anchor":"x","title":{"text":"am","font":{"color":"rgba(0,0,0,1)","family":"","size":15.940224159402243}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":2.0615604867573372,"font":{"color":"rgba(0,0,0,1)","family":"","size":12.7521793275218}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1649736d20062":{"x":{},"y":{},"type":"scatter"},"1649715173e0c":{"x":{},"y":{}}},"cur_data":"1649736d20062","visdat":{"1649736d20062":["function (y) ","x"],"1649715173e0c":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p><strong>Logistic Regression vs.&nbsp;Linear Regression</strong> Logistic regression works similarly to linear regression, where data points with probabilities higher than 50% are assigned to the class “1” and so on. Comparing the two, the logistic model demonstrates slightly better classification performance. For example, using the same model formula, logistic regression achieved 81% accuracy, outperforming the linear model.</p>
+<p>While some experts, such as certain professors, argue that the simplicity of linear models makes them the best choice for the majority of datasets, logistic models are generally as easy to implement and understand. Moreover, logistic regression usually provides better classification results. As such, logistic models are commonly relied upon for classifying datasets.</p>
+<p><strong>Creating Logistic Regression Models</strong> The process of creating logistic regression models is quite similar to that of linear regression models. Instead of using the <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> function, the <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> function is employed, as logistic regression belongs to the family of algorithms known as <em>generalized linear models</em>. The formula and data arguments still need to be supplied, just as with <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>. The main difference when using <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> is the additional requirement to specify the argument <code>family</code>. In this case, setting <code>family = binomial</code> will calculate the logistic model.</p>
+<p>We can build a logistic regression model using the following line of code:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:  glm(formula = am ~ mpg, family = binomial, data = mtcars)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Coefficients:</span></span>
+<span><span class="co">#&gt; (Intercept)          mpg  </span></span>
+<span><span class="co">#&gt;      -6.604        0.307  </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Degrees of Freedom: 31 Total (i.e. Null);  30 Residual</span></span>
+<span><span class="co">#&gt; Null Deviance:       43.23 </span></span>
+<span><span class="co">#&gt; Residual Deviance: 29.68     AIC: 33.68</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The model summary can be viewed just like we did with <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">logmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">mpg</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">logmod</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; glm(formula = am ~ mpg, family = binomial, data = mtcars)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Coefficients:</span></span>
+<span><span class="co">#&gt;             Estimate Std. Error z value Pr(&gt;|z|)   </span></span>
+<span><span class="co">#&gt; (Intercept)  -6.6035     2.3514  -2.808  0.00498 **</span></span>
+<span><span class="co">#&gt; mpg           0.3070     0.1148   2.673  0.00751 **</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; (Dispersion parameter for binomial family taken to be 1)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     Null deviance: 43.230  on 31  degrees of freedom</span></span>
+<span><span class="co">#&gt; Residual deviance: 29.675  on 30  degrees of freedom</span></span>
+<span><span class="co">#&gt; AIC: 33.675</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Fisher Scoring iterations: 5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The output presents various metrics that help to understand and interpret the logistic regression model:</p>
+<ul>
+<li><p><strong>Deviance Residuals</strong>: These are a measure of the difference between the observed values and the values predicted by the model. The minimum, 1st quartile, median, 3rd quartile, and maximum deviance residuals are shown. Smaller values indicate better model fit.</p></li>
+<li><p><strong>Coefficients</strong>: These are the estimated coefficients for the model predictors (intercept and <code>mpg</code> in this case). The <code>Estimate</code> column shows the estimated value of each coefficient, while the <code>Std. Error</code> column presents the standard error for the estimate. The <code>z value</code> is the test statistic (estimate divided by standard error), and <code>Pr(&gt;|z|)</code> is the p-value, which indicates the significance of each predictor in the model. Significance codes are provided to help interpret the p-value (e.g., <code>***</code> for p &lt; 0.001, <code>**</code> for p &lt; 0.01, and <code>*</code> for p &lt; 0.05).</p></li>
+<li><p><strong>Dispersion parameter</strong>: For the binomial family, the dispersion parameter is taken to be 1. This indicates that the model assumes the variance of the response variable is equal to its mean.</p></li>
+<li><p><strong>Null deviance</strong>: This is the deviance of the null model (a model with no predictors). In this case, the null deviance is 43.230, calculated based on 31 degrees of freedom.</p></li>
+<li><p><strong>Residual deviance</strong>: This is the deviance of the fitted model, which measures the goodness-of-fit. The residual deviance is 29.675, calculated based on 30 degrees of freedom. A lower residual deviance compared to the null deviance indicates a better model fit.</p></li>
+<li><p><strong>AIC (Akaike Information Criterion)</strong>: This is a measure of the model’s quality in terms of the trade-off between goodness-of-fit and model complexity. A lower AIC value suggests a better model.</p></li>
+<li><p><strong>Number of Fisher Scoring iterations</strong>: This is the number of iterations taken by the Fisher Scoring algorithm to converge. In this case, the algorithm converged in 5 iterations.</p></li>
+</ul>
+<p>We can further refine our model by adding more variables and changing the formula, just as we did with linear models:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; glm(formula = am ~ hp + wt, family = "binomial", data = mtcars)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Coefficients:</span></span>
+<span><span class="co">#&gt;             Estimate Std. Error z value Pr(&gt;|z|)   </span></span>
+<span><span class="co">#&gt; (Intercept) 18.86630    7.44356   2.535  0.01126 * </span></span>
+<span><span class="co">#&gt; hp           0.03626    0.01773   2.044  0.04091 * </span></span>
+<span><span class="co">#&gt; wt          -8.08348    3.06868  -2.634  0.00843 **</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; (Dispersion parameter for binomial family taken to be 1)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     Null deviance: 43.230  on 31  degrees of freedom</span></span>
+<span><span class="co">#&gt; Residual deviance: 10.059  on 29  degrees of freedom</span></span>
+<span><span class="co">#&gt; AIC: 16.059</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of Fisher Scoring iterations: 8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can see the AIC decreased significantly after adding an extra feature.</p>
+<p><strong>Predicting with Logistic Regression Models</strong> In fact, logistic models created with the <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> function work similarly to linear models made with <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>. However, there are some key differences to consider. For instance, when using the model to make predictions, let’s assign the model to <code>mtmod</code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mtmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Recall how we generated predictions from our models using <code>predict(model, data)</code>. Here is what happens if we do something similar with logistic regression:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mtmod</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         Mazda RX4     Mazda RX4 Wag        Datsun 710    Hornet 4 Drive </span></span>
+<span><span class="co">#&gt;         1.6757093        -0.3855769         3.4844067        -3.1339584 </span></span>
+<span><span class="co">#&gt; Hornet Sportabout           Valiant </span></span>
+<span><span class="co">#&gt;        -2.5961266        -5.2956878</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This does not produce the expected probabilities. The reason is that R is attempting to use the logistic model as if it were a linear model. To fix this, we must specify <code>type = "response"</code> in our <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> call:</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mtmod</span>, <span class="va">mtcars</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         Mazda RX4     Mazda RX4 Wag        Datsun 710    Hornet 4 Drive </span></span>
+<span><span class="co">#&gt;       0.842335537       0.404782533       0.970240822       0.041728035 </span></span>
+<span><span class="co">#&gt; Hornet Sportabout           Valiant </span></span>
+<span><span class="co">#&gt;       0.069388122       0.004988159</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With this adjustment, we can generate the correct probabilities.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/e2e-ds-r\.franckess\.com");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./k-nearest-neighbour-reg.html" class="pagination-link" aria-label="K-Nearest Neighbour Regression">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">K-Nearest Neighbour Regression</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>End to End Data Science with R was written by Rene Essomba.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/class-log-reg.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

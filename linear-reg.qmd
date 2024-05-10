@@ -1,0 +1,96 @@
+# Linear Regression {#sec-linear-reg}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+In this section, we will dive into linear regression from a theoretical and practical standpoint.
+
+## The mathematics of Linear Regression
+
+In the linear regression method, we use a linear function for prediction: $$f(\boldsymbol x; \boldsymbol \beta)=\beta_0+\beta_1x_1+\beta_2x_2+\ldots+\beta_px_p, $$
+
+where $\boldsymbol x$ is a vector of input values and $\boldsymbol \beta$ is a vector of parameters.
+
+We train the linear regression model by minimising the training mean squared error, $$\begin{align*} \widehat{\boldsymbol \beta}=\underset{\boldsymbol \beta}{\operatorname{argmin}}\,\, \left\{\frac{1}{n}\sum_{i=1}^{n}\left(y_i-\beta_0-\sum_{j=1}^p\beta_j x_{ij}\right)^2\right\}, \end{align*} $$
+
+where $\widehat{\boldsymbol \beta}$ denotes the estimated parameters. This is known as the **ordinary least squares (OLS)** method for estimating a linear regression. To get the solution, let the design matrix be: $$\begin{equation*}    \boldsymbol X=\begin{bmatrix}               \begin{array}{ccccc}                 1 & x_{11} & x_{12} &  \ldots & x_{1p} \\                 1 & x_{21} & x_{22} &  \ldots & x_{2p} \\                 \vdots & \vdots & \vdots  & \ddots & \vdots \\                 1 & x_{n1} & x_{n2} &  \ldots & x_{np} \\               \end{array}    \end{bmatrix},   \end{equation*} $$ noting that we added a column of ones at the beginning of the design matrix.
+
+As before, the output vector is:
+
+$$\begin{equation*}       \boldsymbol y=\begin{pmatrix}             y_{1} \\             y_{2}\\             \vdots\\             y_{n} \end{pmatrix}.  \end{equation*} $$
+
+We can show that the OLS problem $$\begin{align*} \widehat{\boldsymbol \beta}=\underset{\boldsymbol \beta}{\operatorname{argmin}}\,\, \left\{\frac{1}{n}\sum_{i=1}^{n}\left(y_i-\beta_0-\sum_{j=1}^p\beta_j x_{ij}\right)^2\right\}, \end{align*} $$
+
+has solution $$\widehat{\boldsymbol \beta} = (\boldsymbol X^\top\boldsymbol X)^{-1} \boldsymbol X^\top\boldsymbol y, $$ under the assumption that the columns of $\boldsymbol X$ are linearly independent.
+
+Upon observing a new input $\boldsymbol x_0$, we make the prediction: $$\widehat{f}(\boldsymbol x_0)=\widehat{\beta}_0+\sum_{j=1}^p\widehat{\beta}_j x_{0j}. $$
+
+# Statistical modelling for linear regression
+
+It's useful to contrast supervised learning with the traditional statistical modelling approach that may be familiar to you from other units.
+
+The goal of supervised learning is to accurately predict new data.
+
+In traditional statistical modelling, the goal is to make inferences about the data generating process (DGP). Prediction is just one type of statistical inference. Do you remember procedures such as confidence intervals and hypothesis testing? This type of modelling requires several assumptions regarding the DGP. In particular, we assume that the model is a good description of the data generating process.
+
+In machine learning, we can regard the data generating process as a black box. The model doesn't need to be a realistic description of the data generating process, it only needs to be useful for prediction. Nevertheless, statistical modelling is still useful for machine learning.
+
+## Classical assumptions of the linear regression model
+
+In the statistical approach to linear regression, the classical linear regression model is based on the following assumptions: \* Linearity: if $X=\boldsymbol x$, then $Y=\beta_0+\beta_1x_1+\ldots+\beta_px_p+\varepsilon$ for some population parameters $\beta_0, \beta_1, \ldots, \beta_p$ and a random error . \* The errors have zero conditional mean: $\mathbb E(\varepsilon |X=\boldsymbol x)=0$ for all $\boldsymbol x$. \* Constant error variance: $\mathbb V(\varepsilon|X=\boldsymbol x)=\sigma^2$ for all $\boldsymbol x$. \* Independent errors: all the errors are independent of each other. \* No perfect multicollinearity. \* Gaussian errors (optional): that $\varepsilon \sim N(0,\sigma^2)$. The linear regression algorithm for supervised learning *only requires the assumption of no perfect multicollinearity*, which is necessary for the least squares solution to be defined. The twist is that the classical assumptions are still desirable because they represent the ideal situation for using a linear regression model trained by OLS.
+
+## Potential problems
+
+In regression analysis, there are several potential issues that can arise and affect the accuracy and validity of the results. These issues include nonlinearity, non-constant error variance, dependent errors, perfect and imperfect multicollinearity, non-Gaussian errors, and outliers and leverage points.
+
+-   Nonlinearity: One potential issue in regression analysis is nonlinearity. This occurs when the relationship between the predictor variables and the response variable is not linear. In other words, the relationship between the variables is not a straight line, but instead is curved or has other shapes. This can lead to biased estimates of the regression coefficients and affect the accuracy of the predictions.
+
+-   Non-constant Error Variance: Another potential issue is non-constant error variance, also known as heteroscedasticity. This occurs when the variability of the errors is not constant across the range of the predictor variables. This can lead to biased estimates of the regression coefficients and affect the accuracy of the predictions.
+
+-   Dependent Errors: also known as autocorrelation, occur when the errors in the regression model are correlated with each other. This violates the assumption of independence of the errors, which can lead to biased estimates of the regression coefficients and affect the accuracy of the predictions.
+
+-   Perfect Multicollinearity: when one or more of the predictor variables are perfectly correlated with each other. This can lead to an inability to estimate the regression coefficients and affect the accuracy of the predictions.
+
+-   Imperfect Multicollinearity: when there is high correlation between predictor variables, but not perfect correlation. This can lead to biased estimates of the regression coefficients and affect the accuracy of the predictions.
+
+-   Non-Gaussian Errors: the errors in the regression model do not follow a normal distribution. This can lead to biased estimates of the regression coefficients and affect the accuracy of the predictions.
+
+-   Outliers and Leverage Points: data points that are significantly different from the other data points in the dataset. Outliers can affect the estimates of the regression coefficients, while leverage points can have a large influence on the regression line. Both can affect the accuracy of the predictions.
+
+**Response transformation**
+
+The response variable is often highly skewed in business data. In this case, a log transformation of the output variable can:
+
+-   Account for some forms of nonlinearity.
+-   Stabilise the variance of the errors.
+-   Reduce skewness in the errors.
+
+In the example below, we load the `mtcars` dataset, which contains information about various car models. We then perform a linear regression analysis to predict the miles per gallon (`mpg`) based on the weight (`wt`) of the cars. The `lm()` function is used to fit the linear regression model, with `mpg ~ wt` specifying the dependent and independent variables.
+
+Next, we print the summary of the regression model using `summary(model)`. This provides important information such as the coefficients, standard errors, p-values, and goodness-of-fit measures.
+
+Here is an `R` example to illustrate the concept:
+```{r}
+library(ggplot2)
+library(plotly)
+
+# read dataset
+df = mtcars
+
+# create multiple linear model
+lm_fit <- lm(mpg ~ wt, data=df)
+summary(lm_fit)
+
+# this is predicted line comparing only chosen variables
+p <- ggplot(data = df, aes(x = wt, y = mpg)) + 
+  geom_point(color='blue') +
+  geom_abline(slope = coef(lm_fit)[["wt"]], 
+              intercept = coef(lm_fit)[["(Intercept)"]], 
+              color = 'red') + 
+  labs(title="Miles per gallon",
+       x="Weight (lb/1000)", y = "Miles/(US) gallon") + theme_linedraw()
+ggplotly(p)
+```

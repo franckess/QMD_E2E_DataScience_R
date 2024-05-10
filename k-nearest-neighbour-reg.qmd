@@ -1,0 +1,74 @@
+# K-Nearest Neighbour Regression {#sec-k-nearest-neighbour-reg}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+The k-Nearest Neighbours (kNN) regression algorithm is a classic method for nonlinear data.
+
+## Overview
+
+The kNN method keeps all training examples in memory to make predictions. When a new input comes in, kNN finds the  training examples that are more similar to that new input. The prediction is the average value of the output variable for these nearest neighbours.  
+
+In mathematical notation, the kNN prediction is
+$$\begin{align*} \widehat{f}(\boldsymbol x)&=\text{Average}\Big[\,y_i \,\Big|\, i \;\text{is in}\; \mathcal{N}_k(\boldsymbol x,\mathcal{D}) \, \Big]\\ &=\frac{1}{k}\sum_{i \in \mathcal{N}_k(\boldsymbol x,\mathcal{D})}y_i \end{align*}$$
+
+where $\mathcal{N}_k(\boldsymbol x,\mathcal{D})$ is the set of indexes for the closest $k$ data points to  $x$ in  $\mathcal{D}$  according to some distance function $\text{dist}(\boldsymbol x,\boldsymbol x_i)$.  
+
+The kNN method is highly flexible: in principle, it can approximate any "reasonable" regression function assuming what it may look like. 
+
+Unfortunately, the price to pay for this flexibility is that kNN performs poorly when the number of inputs increases. This problem is known as the curse of dimensionality.  We'll explain it in more detail later in the unit. 
+
+**Hyperparameters**
+A hyperparameter is a parameter of a learning algorithm that is set before the training process begins and is not directly learnable from the data. The choice of hyperparameters is crucial for many learning algorithms, as they determine their behaviour. 
+
+The KNN method has two hyperparameters: the number of neighbours (K) and the distance function. 
+
+Above, you saw how the choice of the number of neighbours has an important effect on the learned predictive function. For now, try to reach your own intuitive conclusions regarding how the number of neighbours affects the KNN method.
+
+A common choice of distance function is the Euclidean distance:
+$$\begin{align*} \textsf{dist}(\boldsymbol x_i,\boldsymbol x_l)&=\Vert \boldsymbol x_i-\boldsymbol x_l\Vert_2\\[3pt] &=\sqrt{\sum_{j=1}^{p}(x_{ij}-x_{lj})^2}, \end{align*}$$
+
+There are many other distance functions available. The Mahalonobis distance is
+$$\textsf{dist}(\boldsymbol x_i,\boldsymbol x_l)=\sqrt{(\boldsymbol x_i-\boldsymbol x_l)^\top\boldsymbol S^{-1}(\boldsymbol x_i-\boldsymbol x_l)},$$
+
+
+where $\boldsymbol S$ is the sample covariance matrix of the predictors. In addition to automatic scaling, this approach accounts for the correlations between the predictors. 
+
+An advanced approach is **metric learning**, which aims to learn a task-specific distance metric from data. For example, we can use metric learning metrics to choose the $\boldsymbol S$ matrix in the Mahalanobis distance. Metric learning can significantly improve KNN, but is computationally expensive.
+
+Here's an example in base R to illustrate the concept of k-nearest neighbor (KNN):
+
+```{r}
+# Create a sample dataset
+x <- seq(1, 10, by = 0.5)
+y <- sin(x) + rnorm(length(x), mean = 0, sd = 0.3)
+data <- data.frame(x, y)
+
+# Define a function for KNN regression
+knn_regression <- function(train_data, test_point, k) {
+  distances <- sqrt((train_data$x - test_point$x)^2)
+  sorted_indices <- order(distances)
+  neighbors <- train_data$y[sorted_indices[1:k]]
+  predicted_value <- mean(neighbors)
+  return(predicted_value)
+}
+
+# Predict the value using KNN regression
+test_point <- data.frame(x = 8.5)
+k <- 3
+predicted_value <- knn_regression(data, test_point, k)
+
+# Print the predicted value
+print(predicted_value)
+```
+
+In this example, we create a sample dataset with two variables `x` and `y`. The `x` variable represents the input feature, and the `y` variable represents the target variable we want to predict.
+
+We define a function knn_regression that takes three arguments: `train_data` (the training dataset), `test_point` (the test point for which we want to make a prediction), and `k` (the number of nearest neighbors to consider).
+
+Inside the `knn_regression` function, we calculate the Euclidean distance between the `x` values of the training data and the `x` value of the test point. Then, we sort the distances and select the `k` nearest neighbors based on the sorted indices. We extract the corresponding `y` values of the neighbors and calculate the mean as the predicted value.
+
+We predict the value for a test point with `x = 8.5` and `k = 3` by calling the `knn_regression` function with the sample dataset, test point, and `k` value. Finally, we print the predicted value.

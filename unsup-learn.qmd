@@ -1,0 +1,19 @@
+# Unsupervised Learning {#sec-unsup-learn .unnumbered}
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+In this fourth part of the book, our focus will be on the the five following chapters:
+
+-   In @sec-basic-unsupervised-learning we will get to understand the basics of unsupervised learning from a theoretical and practical standpoint..
+
+-   In @sec-k-means-clust we will explore clustering techniques and their implementation using `R`.
+
+-   In @sec-hier-clust we will explore hierarchical clustering techniques and its implementation using `R`.
+
+-   In @sec-pca we will understand PCA and its implementation using `R`..
+
+-   In @sec-t-sne we will dive t-SNE and its implementation using `R`..

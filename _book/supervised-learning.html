@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.553">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Rene Essomba">
-<title>End To End Data Science With R - 2&nbsp; Understanding R Applications in Data Science</title>
+<title>End To End Data Science With R - Supervised Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -27,8 +27,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./r-objects-and-variables.html" rel="next">
-<link href="./understanding-ds.html" rel="prev">
+<link href="./basic-supervised-learning.html" rel="next">
+<link href="./data-visualisation.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-r-applications.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -154,7 +154,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link active">
+  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></a>
   </div>
 </li>
@@ -209,7 +209,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./supervised-learning.html" class="sidebar-item-text sidebar-link">
+            <a href="./supervised-learning.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Supervised Learning</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -247,20 +247,11 @@ ul.task-list li input[type="checkbox"] {
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-<li>
-<a href="#the-role-of-r" id="toc-the-role-of-r" class="nav-link active" data-scroll-target="#the-role-of-r"><span class="header-section-number">2.1</span> The Role of <code>R</code></a>
-  <ul class="collapse">
-<li><a href="#r-v.s.-python" id="toc-r-v.s.-python" class="nav-link" data-scroll-target="#r-v.s.-python"><span class="header-section-number">2.1.1</span> <code>R</code> v.s. Python</a></li>
-  </ul>
-</li>
-  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-r-applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./introduction.html">Data Science and R</a></li><li class="breadcrumb-item"><a href="./understanding-r-applications.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-understanding-r-applications" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span id="sec-supervised-learning" class="quarto-section-identifier">Supervised Learning</span></h1>
 </div>
 
 
@@ -274,44 +265,17 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><p>In this lesson, we unpack the role of R in the field of Data Science.</p>
-<section id="the-role-of-r" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="the-role-of-r">
-<span class="header-section-number">2.1</span> The Role of <code>R</code>
-</h2>
-<p><code>R</code> is a programming language that is widely used in the field of Data Science. Its role in Data Science is multifaceted and can be summarized as follows:</p>
+</header><p>In this third part of the book, our focus will be on the the five following chapters:</p>
 <ul>
-<li><p>Data Wrangling: <code>R</code> has a powerful set of libraries that allow you to manipulate and transform data, which is a critical step in any Data Science project.</p></li>
-<li><p>Statistical Analysis: <code>R</code> has a rich set of statistical libraries that allow you to perform a wide range of statistical analyses, including hypothesis testing, regression analysis, and time series analysis.</p></li>
-<li><p>Data Visualization: <code>R</code> has an extensive set of libraries for creating high-quality data visualizations, such as plots, charts, and graphs, that enable you to communicate insights effectively.</p></li>
-<li><p>Machine Learning: <code>R</code> has a comprehensive set of libraries for building and deploying machine learning models, such as decision trees, random forests, and neural networks.</p></li>
-<li><p>Reproducibility: <code>R</code> provides a framework for creating reproducible data analyses, which is essential for collaborating with others and ensuring that your work can be verified and replicated.</p></li>
+<li><p>In <span class="quarto-unresolved-ref">?sec-basics-supervised-learning</span> we will get to understand the basics of supervised learning from a theoretical and practical standpoint.</p></li>
+<li><p>In <a href="linear-reg.html" class="quarto-xref"><span>10&nbsp; Linear Regression</span></a> we will dive into linear regression from a theoretical and practical standpoint.</p></li>
+<li><p>In <a href="k-nearest-neighbour-reg.html" class="quarto-xref"><span>11&nbsp; K-Nearest Neighbour Regression</span></a> we will understand the k-Nearest Neighbours (kNN) regression algorithm as a classic method for nonlinear data..</p></li>
+<li><p>In <a href="class-log-reg.html" class="quarto-xref"><span>12&nbsp; Classification Using Logistic Model</span></a> we will dive into classification models.</p></li>
 </ul>
-<section id="r-v.s.-python" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="r-v.s.-python">
-<span class="header-section-number">2.1.1</span> <code>R</code> v.s. Python</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-ds-whole-game" class="quarto-figure quarto-figure-center quarto-float anchored" alt="R vs. Python.">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ds-whole-game-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="images/r-vs-python.png" class="img-fluid figure-img" alt="R vs. Python.">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ds-whole-game-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.1: R vs.&nbsp;Python
-</figcaption></figure>
-</div>
-</div>
-</div>
-<p>You may wondering why we choose <code>R</code> over another popular language - Python, in this course. The short answer is the choice ultimately depends on the specific needs of the data scientist and the project at hand.</p>
-<p><strong>Ask yourself: what kind of data scientist you want to become?</strong> <code>R</code> is hands down the best option when you focus on statistics and probabilities. It has a large community of statisticians that can answer your questions. But, if you want to develop applications that process enormous amounts of data, Python is your best option. It has a more extensive ecosystem of developers, and it’s easier to find people willing to collaborate with you.</p>
-<p><strong>Technical Differences</strong> 1. Syntax: <code>R</code> has a syntax that is tailored for statistical analysis and modelling, with many built-in functions and operators specifically designed for this purpose. Python, on the other hand, has a more general-purpose syntax that can be used for a wide range of tasks beyond statistical analysis.</p>
-<ol start="2" type="1">
-<li><p>Libraries and Packages: Both <code>R</code> and Python have extensive libraries and packages for data science, but they differ in their focus and scope. R has a strong emphasis on statistical modelling and analysis, with packages like ggplot2, dplyr, and tidyr. Python, on the other hand, has a broader range of applications, including web development, scientific computing, and machine learning, with packages like NumPy, Pandas, and Scikit-learn.</p></li>
-<li><p>Community: Both <code>R</code> and Python have large and active communities, but they differ in their backgrounds and focus. <code>R</code> has historically been used more by statisticians and data analysts, while Python has been more popular among software engineers and developers.</p></li>
-<li><p>Learning Curve: <code>R</code> is generally considered to have a steeper learning curve than Python, especially for those who are new to programming. However, once you become familiar with R’s syntax and packages, it can be a very powerful and efficient tool for statistical analysis.</p></li>
-<li><p>Visualisation: <code>R</code> has a strong focus on Visualisation, with packages like ggplot2 and lattice that make it easy to create high-quality plots and charts. Python also has Visualisation packages like Matplotlib and Seaborn, but they may require more customisation and tweaking to get the desired output.</p></li>
-</ol>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+
+</main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -720,13 +684,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./understanding-ds.html" class="pagination-link" aria-label="Understanding Data Science As a Career">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></span>
+      <a href="./data-visualisation.html" class="pagination-link" aria-label="Data Visualisation Using `ggplot2`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Visualisation Using <code>ggplot2</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./r-objects-and-variables.html" class="pagination-link" aria-label="R Objects And Variables">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R Objects And Variables</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./basic-supervised-learning.html" class="pagination-link" aria-label="Basics of Supervised Learning">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -737,7 +701,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-r-applications.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/supervised-learning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
