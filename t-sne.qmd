@@ -1,0 +1,73 @@
+# t-Distributed Stochastic Neighbour Embedding {#sec-t-sne}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+## Overview
+
+t-Distributed Stochastic Neighbour Embedding (t-SNE) is a non-linear dimensionality reduction technique particularly effective for visualising high-dimensional data in a lower-dimensional space. t-SNE is especially useful for data that does not adhere to linear assumptions, where linear techniques like PCA may not provide satisfactory results.
+
+t-SNE operates by attempting to maintain the relative pairwise distances between data points in the high-dimensional space when they are mapped onto a lower-dimensional space. It does so by minimising the divergence between two probability distributions: one representing pairwise similarities in the high-dimensional space, and the other representing pairwise similarities in the lower-dimensional space.
+
+The algorithm involves a stochastic optimisation process, which means that the final results may vary between different runs. Despite this stochastic nature, t-SNE produces visualisations that often reveal the intrinsic structure of the data, such as clusters or groupings.
+
+## The Mathematics of t-SNE
+
+To provide a faithful lower-dimensional representation, we have one main goal in mind: close points should remain tight, distant points shall stay far.
+
+t-SNE achieves this by modeling the dataset with a dimension-agnostic probability distribution, finding a lower-dimensional approximation with a closely matching distribution. It was introduced by Laurens van der Maaten and Geoffrey Hinton in their paper Visualizing High-Dimensional Data Using t-SNE.
+
+Since we also want to capture a possible underlying cluster structure, we define a probability distribution on the $\mathbf{x}_i$-s that reflect this. For each data point $\mathbf{x}_j$, we model the probability of $\mathbf{x}_i$ belonging to the same class ("being neighbors") with a Gaussian distribution:
+
+```{r}
+#| label: t-sne
+#| echo: false
+#| fig-align: 'center'
+#| fig-cap: |
+#| fig-alt: |
+#| out.width: NULL
+knitr::include_graphics("images/t-sne.png", dpi = 170)
+```
+
+## An R Example
+
+In R, the `Rtsne` function from the `Rtsne` package can be used to perform t-SNE. Before applying t-SNE to the Iris dataset, it's necessary to remove any duplicated entries. Here's an example of how to do this:
+
+```{r}
+library(Rtsne)
+library(ggplot2)
+library(plotly)
+
+# Load the iris dataset
+data(iris)
+
+# Remove duplicated entries in the iris dataset
+iris_unique <- unique(iris)
+
+# Perform t-SNE on the iris data (excluding the Species column)
+tsne_result <- Rtsne(iris_unique[, -5], check_duplicates = FALSE)
+df_tsne <- data.frame(tsne_result$Y, Species = as.factor(iris_unique$Species))
+
+p <- ggplot(df_tsne) +
+  aes(x = X1, y = X2, colour = Species) +
+  geom_point(shape = "circle", size = 2) +
+  scale_color_hue(direction = 1) +
+  labs(title = "t-SNE Clustering") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 10L, face = "bold.italic"))
+
+ggplotly(p)
+```
+
+As with PCA, t-SNE visualisations can help reveal the underlying structure of high-dimensional data, such as clusters, groupings, or other patterns. However, it is essential to consider that the distances between clusters in the lower-dimensional space do not always accurately represent their distances in the high-dimensional space.
+
+Additionally, careful selection of hyper parameters can further enhance the quality of the clustering. t-SNE, along with numerous other methods, particularly classification algorithms, possesses two critical parameters that can greatly impact the clustering of the data:
+
+1.  **Perplexity**: This parameter balances the global and local aspects of the data. A higher perplexity value emphasises global relationships, while a lower value highlights local relationships. Choosing an appropriate perplexity value is essential for obtaining meaningful visualisations.
+
+2.  **Iterations**: This parameter specifies the number of iterations before the clustering process is halted. Increasing the number of iterations may lead to a more stable and accurate representation of the data. However, it may also increase the computational time required to perform the analysis.
+
+Despite these limitations, t-SNE provides a powerful tool for visualising high-dimensional data, especially when linear techniques like PCA are not suitable.

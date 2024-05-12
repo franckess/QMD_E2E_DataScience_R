@@ -1,0 +1,36 @@
+# Basics Of Unsupervised Learning {#sec-basic-unsupervised-learning}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+Unsupervised learning is a type of machine learning where algorithms learn patterns and relationships in data without any labeled information. The primary goal is to identify underlying structures and extract valuable insights from the data. Common unsupervised learning techniques include clustering, dimensionality reduction, and anomaly detection. A few examples:
+
+| **Algorithm**                | **Type**                              | **R Package**  | **Pros**                                           | **Cons**                                                        |
+|---------------|---------------|---------------|---------------|---------------|
+| K-means                      | Clustering                            | `cluster`      | Fast, scalable, easy to implement                  | Requires predefined K, sensitive to initial conditions          |
+| Hierarchical Clustering      | Clustering                            | `cluster`      | No predefined K, dendrogram representation         | Slower, not ideal for large datasets                            |
+| Principal Component Analysis | Dimensionality Reduction (Linear)     | `base R`       | Fast, interpretable results, noise reduction       | Assumes linear relationships, information loss                  |
+| t-SNE                        | Dimensionality Reduction (Non-linear) | `Rtsne`        | Preserves local structure, visual clustering       | Slower, non-deterministic, hard to interpret in high-dimensions |
+| Isolation Forest             | Anomaly Detection                     | `randomForest` | Efficient for high-dimensional datasets            | May struggle with low-density clusters                          |
+| Local Outlier Factor         | Anomaly Detection                     | `Rlof`         | Considers local density, handles varying densities | Slower, sensitive to parameter choices                          |
+
+Unsupervised learning has a wide range of applications across various industries. Here are some real-life examples of unsupervised learning:
+
+1.  **Clustering Customer Segmentation:** Clustering techniques can be used to group customers based on their purchasing patterns, demographics, and preferences. This information can then be used to create targeted marketing campaigns, improve customer retention, and optimise product offerings.
+
+2.  **Anomaly Detection in Cybersecurity:** Unsupervised learning can be used to detect anomalies in network traffic, identify malicious activity, and prevent cybersecurity breaches. Techniques such as Isolation Forest and Local Outlier Factor are commonly used for this purpose.
+
+3.  **Topic Modelling in Natural Language Processing:** Topic modelling is a technique used in natural language processing to identify common themes and topics within large text datasets. This can be used to analyse customer feedback, social media posts, and news articles.
+
+4.  **Image and Video Recognition:** Unsupervised learning techniques such as Principal Component Analysis (PCA) and t-Distributed Stochastic Neighbour Embedding (t-SNE) can be used for image and video recognition tasks. These techniques can help identify patterns and similarities in visual data without requiring labeled examples.
+
+5.  **Drug Discovery:** Unsupervised learning can be used in drug discovery to identify patterns and relationships in large datasets of chemical compounds. This can help researchers develop new drugs and improve existing treatments.
+
+6.  **Recommendation Systems:** Clustering and association rule mining techniques can be used to develop personalised recommendation systems in e-commerce and entertainment industries. These systems analyse user behaviour and preferences to suggest products or content that are relevant to individual users.
+
+These are just a few examples of the many applications of unsupervised learning. With the increasing availability of large datasets and the development of advanced algorithms, the potential applications of unsupervised learning are constantly expanding.
+
+In this section of the course, we provide an overview of popular clustering, dimensionality reduction, and anomaly detection algorithms in R. By understanding these techniques and their respective R packages, you will be well-equipped to handle various unsupervised learning tasks.

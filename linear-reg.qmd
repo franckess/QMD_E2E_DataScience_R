@@ -8,7 +8,7 @@ source("_common.R")
 
 In this section, we will dive into linear regression from a theoretical and practical standpoint.
 
-## The mathematics of Linear Regression
+## Overview
 
 In the linear regression method, we use a linear function for prediction: $$f(\boldsymbol x; \boldsymbol \beta)=\beta_0+\beta_1x_1+\beta_2x_2+\ldots+\beta_px_p, $$
 
@@ -28,7 +28,7 @@ has solution $$\widehat{\boldsymbol \beta} = (\boldsymbol X^\top\boldsymbol X)^{
 
 Upon observing a new input $\boldsymbol x_0$, we make the prediction: $$\widehat{f}(\boldsymbol x_0)=\widehat{\beta}_0+\sum_{j=1}^p\widehat{\beta}_j x_{0j}. $$
 
-# Statistical modelling for linear regression
+## Statistical modelling for linear regression
 
 It's useful to contrast supervised learning with the traditional statistical modelling approach that may be familiar to you from other units.
 
@@ -38,11 +38,11 @@ In traditional statistical modelling, the goal is to make inferences about the d
 
 In machine learning, we can regard the data generating process as a black box. The model doesn't need to be a realistic description of the data generating process, it only needs to be useful for prediction. Nevertheless, statistical modelling is still useful for machine learning.
 
-## Classical assumptions of the linear regression model
+### Classical assumptions of the linear regression model
 
 In the statistical approach to linear regression, the classical linear regression model is based on the following assumptions: \* Linearity: if $X=\boldsymbol x$, then $Y=\beta_0+\beta_1x_1+\ldots+\beta_px_p+\varepsilon$ for some population parameters $\beta_0, \beta_1, \ldots, \beta_p$ and a random error . \* The errors have zero conditional mean: $\mathbb E(\varepsilon |X=\boldsymbol x)=0$ for all $\boldsymbol x$. \* Constant error variance: $\mathbb V(\varepsilon|X=\boldsymbol x)=\sigma^2$ for all $\boldsymbol x$. \* Independent errors: all the errors are independent of each other. \* No perfect multicollinearity. \* Gaussian errors (optional): that $\varepsilon \sim N(0,\sigma^2)$. The linear regression algorithm for supervised learning *only requires the assumption of no perfect multicollinearity*, which is necessary for the least squares solution to be defined. The twist is that the classical assumptions are still desirable because they represent the ideal situation for using a linear regression model trained by OLS.
 
-## Potential problems
+### Potential problems
 
 In regression analysis, there are several potential issues that can arise and affect the accuracy and validity of the results. These issues include nonlinearity, non-constant error variance, dependent errors, perfect and imperfect multicollinearity, non-Gaussian errors, and outliers and leverage points.
 
@@ -71,6 +71,8 @@ The response variable is often highly skewed in business data. In this case, a l
 In the example below, we load the `mtcars` dataset, which contains information about various car models. We then perform a linear regression analysis to predict the miles per gallon (`mpg`) based on the weight (`wt`) of the cars. The `lm()` function is used to fit the linear regression model, with `mpg ~ wt` specifying the dependent and independent variables.
 
 Next, we print the summary of the regression model using `summary(model)`. This provides important information such as the coefficients, standard errors, p-values, and goodness-of-fit measures.
+
+## An R Example
 
 Here is an `R` example to illustrate the concept:
 ```{r}

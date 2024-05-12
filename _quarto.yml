@@ -40,6 +40,13 @@ book:
         - linear-reg.qmd
         - k-nearest-neighbour-reg.qmd
         - class-log-reg.qmd
+    - part: unsupervised-learn.qmd
+      chapters: 
+        - basic-unsupervised-learning.qmd
+        - k-means-clust.qmd
+        - hier-clust.qmd
+        - pca.qmd
+        - t-sne.qmd
     #- summary.qmd
     #- references.qmd
 

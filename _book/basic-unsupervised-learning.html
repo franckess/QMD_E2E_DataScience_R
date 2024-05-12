@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.553">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Rene Essomba">
-<title>End To End Data Science With R - 9&nbsp; Basics of Supervised Learning</title>
+<title>End To End Data Science With R - 13&nbsp; Basics Of Unsupervised Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -27,8 +27,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./linear-reg.html" rel="next">
-<link href="./supervised-learning.html" rel="prev">
+<link href="./k-means-clust.html" rel="next">
+<link href="./class-log-reg.html" rel="prev">
 <link href="./cover.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -64,32 +64,7 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
+}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script>
 </head>
 <body class="nav-sidebar floating">
 
@@ -98,7 +73,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./basic-supervised-learning.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./basic-unsupervised-learning.html">unsupervised-learn.qmd</a></li><li class="breadcrumb-item"><a href="./basic-unsupervised-learning.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Basics Of Unsupervised Learning</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -243,7 +218,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./basic-supervised-learning.html" class="sidebar-item-text sidebar-link active">
+  <a href="./basic-supervised-learning.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></span></a>
   </div>
 </li>
@@ -278,7 +253,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./basic-unsupervised-learning.html" class="sidebar-item-text sidebar-link">
+  <a href="./basic-unsupervised-learning.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Basics Of Unsupervised Learning</span></span></a>
   </div>
 </li>
@@ -313,19 +288,11 @@ window.Quarto = {
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-<li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">9.1</span> Overview</a></li>
-  <li><a href="#fundamentals-of-supervised-learning-models" id="toc-fundamentals-of-supervised-learning-models" class="nav-link" data-scroll-target="#fundamentals-of-supervised-learning-models"><span class="header-section-number">9.2</span> Fundamentals of supervised learning models</a></li>
-  <li><a href="#generalisation" id="toc-generalisation" class="nav-link" data-scroll-target="#generalisation"><span class="header-section-number">9.3</span> Generalisation</a></li>
-  <li><a href="#training-and-validation-sets" id="toc-training-and-validation-sets" class="nav-link" data-scroll-target="#training-and-validation-sets"><span class="header-section-number">9.4</span> Training and validation sets</a></li>
-  <li><a href="#metrics" id="toc-metrics" class="nav-link" data-scroll-target="#metrics"><span class="header-section-number">9.5</span> Metrics</a></li>
-  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/basic-supervised-learning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./supervised-learning.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./basic-supervised-learning.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-basic-supervised-lear" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./basic-unsupervised-learning.html">unsupervised-learn.qmd</a></li><li class="breadcrumb-item"><a href="./basic-unsupervised-learning.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Basics Of Unsupervised Learning</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-basic-unsupervised-learning" class="quarto-section-identifier"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Basics Of Unsupervised Learning</span></span></h1>
 </div>
 
 
@@ -339,41 +306,82 @@ window.Quarto = {
   
 
 
-</header><p>In any statistical analysis, it is essential to understand the fundamental terms and concepts. In this section, we will discuss some of the statistical terms commonly used in data science and provide code examples in R.</p>
-<section id="overview" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="overview">
-<span class="header-section-number">9.1</span> Overview</h2>
-<p>In this section, we will introduce the fundamentals of supervised learning algorithms. It is a widely used approach to machine learning, and it has numerous practical applications in various industries. Here are some real-life examples of supervised learning:</p>
+</header><p>Unsupervised learning is a type of machine learning where algorithms learn patterns and relationships in data without any labeled information. The primary goal is to identify underlying structures and extract valuable insights from the data. Common unsupervised learning techniques include clustering, dimensionality reduction, and anomaly detection. A few examples:</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead><tr class="header">
+<th><strong>Algorithm</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>R Package</strong></th>
+<th><strong>Pros</strong></th>
+<th><strong>Cons</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>K-means</td>
+<td>Clustering</td>
+<td><code>cluster</code></td>
+<td>Fast, scalable, easy to implement</td>
+<td>Requires predefined K, sensitive to initial conditions</td>
+</tr>
+<tr class="even">
+<td>Hierarchical Clustering</td>
+<td>Clustering</td>
+<td><code>cluster</code></td>
+<td>No predefined K, dendrogram representation</td>
+<td>Slower, not ideal for large datasets</td>
+</tr>
+<tr class="odd">
+<td>Principal Component Analysis</td>
+<td>Dimensionality Reduction (Linear)</td>
+<td><code>base R</code></td>
+<td>Fast, interpretable results, noise reduction</td>
+<td>Assumes linear relationships, information loss</td>
+</tr>
+<tr class="even">
+<td>t-SNE</td>
+<td>Dimensionality Reduction (Non-linear)</td>
+<td><code>Rtsne</code></td>
+<td>Preserves local structure, visual clustering</td>
+<td>Slower, non-deterministic, hard to interpret in high-dimensions</td>
+</tr>
+<tr class="odd">
+<td>Isolation Forest</td>
+<td>Anomaly Detection</td>
+<td><code>randomForest</code></td>
+<td>Efficient for high-dimensional datasets</td>
+<td>May struggle with low-density clusters</td>
+</tr>
+<tr class="even">
+<td>Local Outlier Factor</td>
+<td>Anomaly Detection</td>
+<td><code>Rlof</code></td>
+<td>Considers local density, handles varying densities</td>
+<td>Slower, sensitive to parameter choices</td>
+</tr>
+</tbody>
+</table>
+<p>Unsupervised learning has a wide range of applications across various industries. Here are some real-life examples of unsupervised learning:</p>
 <ol type="1">
-<li><p><strong>Image Classification:</strong> Supervised learning algorithms can be trained to classify images into different categories, such as recognising faces, identifying objects in a scene, and detecting anomalies in medical images.</p></li>
-<li><p><strong>Fraud Detection:</strong> Supervised learning algorithms can be trained on labeled data to detect fraudulent transactions, identify unusual patterns in financial data, and prevent financial crimes.</p></li>
-<li><p><strong>Text and Sentiment Analysis:</strong> Supervised learning can be used for sentiment analysis, where algorithms are trained to classify text as positive or negative based on a labeled dataset. This can be used in customer feedback analysis, social media monitoring, and market research.</p></li>
-<li><p><strong>Medical Diagnosis:</strong> Supervised learning algorithms can be used to diagnose diseases based on medical images, clinical data, and genetic data. Examples include the diagnosis of cancer, Alzheimer’s disease, and heart disease.</p></li>
-<li><p><strong>Speech Recognition:</strong> Supervised learning can be used to train speech recognition systems to transcribe spoken language into text, identify speakers based on their voice, and improve automatic translation systems.</p></li>
-<li><p><strong>Autonomous Driving:</strong> Supervised learning algorithms can be used to train self-driving cars to recognise and respond to different traffic situations, road signs, and road conditions.</p></li>
+<li><p><strong>Clustering Customer Segmentation:</strong> Clustering techniques can be used to group customers based on their purchasing patterns, demographics, and preferences. This information can then be used to create targeted marketing campaigns, improve customer retention, and optimise product offerings.</p></li>
+<li><p><strong>Anomaly Detection in Cybersecurity:</strong> Unsupervised learning can be used to detect anomalies in network traffic, identify malicious activity, and prevent cybersecurity breaches. Techniques such as Isolation Forest and Local Outlier Factor are commonly used for this purpose.</p></li>
+<li><p><strong>Topic Modelling in Natural Language Processing:</strong> Topic modelling is a technique used in natural language processing to identify common themes and topics within large text datasets. This can be used to analyse customer feedback, social media posts, and news articles.</p></li>
+<li><p><strong>Image and Video Recognition:</strong> Unsupervised learning techniques such as Principal Component Analysis (PCA) and t-Distributed Stochastic Neighbour Embedding (t-SNE) can be used for image and video recognition tasks. These techniques can help identify patterns and similarities in visual data without requiring labeled examples.</p></li>
+<li><p><strong>Drug Discovery:</strong> Unsupervised learning can be used in drug discovery to identify patterns and relationships in large datasets of chemical compounds. This can help researchers develop new drugs and improve existing treatments.</p></li>
+<li><p><strong>Recommendation Systems:</strong> Clustering and association rule mining techniques can be used to develop personalised recommendation systems in e-commerce and entertainment industries. These systems analyse user behaviour and preferences to suggest products or content that are relevant to individual users.</p></li>
 </ol>
-<p>These are just a few examples of the many applications of supervised learning. With the increasing availability of labeled data and the development of advanced algorithms, the potential applications of supervised learning are constantly expanding.</p>
-</section><section id="fundamentals-of-supervised-learning-models" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="fundamentals-of-supervised-learning-models">
-<span class="header-section-number">9.2</span> Fundamentals of supervised learning models</h2>
-<p>We provide an overview of the key concepts and techniques required to build effective supervised learning models.</p>
-<p>We’ll use the notation <span class="math inline">\(Y\)</span> for the output variable and <span class="math inline">\(X_1,\ldots, X_p\)</span> for the input variables.&nbsp; For example, suppose we want to predict the sale price of residential properties. In this case, the output variable is the price. and the input variables are the characteristics of the house such as size, number of bedrooms, number of bathrooms, and location.</p>
-<p>To build a statistical learning model, we need <strong>training data</strong>. We represent the output data as a vector: <span class="math display">\[\begin{equation*}       \boldsymbol y=\begin{pmatrix}             y_{1} \\             y_{2}\\             \vdots\\             y_{n} \end{pmatrix},\,\,\,\,\, \end{equation*} \]</span></p>
-<p>where <span class="math inline">\(y_i\)</span> refers to the observed value of the output variable for observation i. We represent the input data as the matrix: <span class="math display">\[\begin{equation*}   \boldsymbol X=\begin{bmatrix}               \begin{array}{cccc}                 x_{11} &amp; x_{12} &amp;  \ldots &amp; x_{1p} \\                 x_{21} &amp; x_{22} &amp;  \ldots &amp; x_{2p} \\                 \vdots &amp; \vdots  &amp; \ddots &amp; \vdots \\                 x_{n1} &amp; x_{n2} &amp;  \ldots &amp; x_{np} \\               \end{array}    \end{bmatrix},       \end{equation*} \]</span></p>
-<p>where <span class="math inline">\(x_{ij}\)</span> denotes the value of input j for observation i. We refer to this matrix as the <em>design matrix</em>.</p>
-</section><section id="generalisation" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="generalisation">
-<span class="header-section-number">9.3</span> Generalisation</h2>
-<p>The primary objective of supervised learning is to develop a model that can accurately predict new data. To evaluate the performance of a model, we need to test its ability to generalise to data it has not seen before. This ability to generalise is referred to as the model’s generalisation capability. <strong>Generalisation</strong> is a crucial concept in machine learning, particularly in the context of building models that perform well on live data in business production systems. While it is essential to train a model using existing data, the ultimate goal is to ensure that the model can generalise well to new data. To test the generalisation capability of a model, we use a separate dataset known as <strong>test data</strong>. This dataset consists of examples that are distinct from the training data and are used to evaluate the model’s performance. Test data may be pre-existing data that we set aside for evaluation purposes or future data that the model will encounter in the real world.</p>
-</section><section id="training-and-validation-sets" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="training-and-validation-sets">
-<span class="header-section-number">9.4</span> Training and validation sets</h2>
-<p>Supervised learning is a practical approach that involves using data to inform modelling decisions and iteratively improving the models. One common practice in supervised learning is to randomly split the training data into two subsets: a training set and a <strong>validation set</strong>. The training set is used to build machine learning models. In contrast, the validation set is used to measure the performance of different models and select the best one. This technique is known as <strong>cross-validation</strong> and is a critical step in the model building process. By splitting the data into training and validation sets, we can train the model on one subset and use the other subset to evaluate its performance. This approach allows us to estimate the generalisation error of the model and assess how well it will perform on new data.</p>
-</section><section id="metrics" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="metrics">
-<span class="header-section-number">9.5</span> Metrics</h2>
-<p>At the beginning of a supervised learning project, it is crucial to determine the appropriate method for evaluating the predictive performance of the machine learning models. One common approach is to use a <strong>metric</strong>, which is a function that assesses the quality of a model’s predictions on a given dataset, such as the validation set.</p>
-<p>The most common metric for regression is the <strong>mean squared error</strong> (MSE), <span class="math display">\[\textsf{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}, \]</span> where <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\widehat{y}\)</span> are the actual and predicted values respectively. We commonly report the root mean squared error (RMSE) <span class="math display">\[\textsf{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}, \]</span> instead of the mean squared error as it’s on the same scale as the output variable. The prediction <span class="math inline">\(\text{R}^2\)</span> is <span class="math display">\[\textsf{Prediction R}^2=1-\frac{\sum_{i=1}^{n}(y_i-\widehat{y}_i)^2}{\sum_{i=1}^{n}(y_i-\overline{y})^2}\]</span></p>
-<p>is also derived from the MSE, but does not depend on the scale of the response variable. The mean absolute error (MAE) is <span class="math display">\[\textsf{MAE}=\frac{1}{n}\sum_{i=1}^{n}\vert y_i-\widehat{y}_i\vert. \]</span></p>
-<p>The <code>MAE</code> is less sensitive to large prediction errors than the <code>MSE</code>.</p>
+<p>These are just a few examples of the many applications of unsupervised learning. With the increasing availability of large datasets and the development of advanced algorithms, the potential applications of unsupervised learning are constantly expanding.</p>
+<p>In this section of the course, we provide an overview of popular clustering, dimensionality reduction, and anomaly detection algorithms in R. By understanding these techniques and their respective R packages, you will be well-equipped to handle various unsupervised learning tasks.</p>
 
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+
+</main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -782,13 +790,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./supervised-learning.html" class="pagination-link" aria-label="Supervised Learning">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Supervised Learning</span>
+      <a href="./class-log-reg.html" class="pagination-link" aria-label="Classification Using Logistic Model">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification Using Logistic Model</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./linear-reg.html" class="pagination-link" aria-label="Linear Regression">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./k-means-clust.html" class="pagination-link" aria-label="K-Mean Clustering">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">K-Mean Clustering</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -799,7 +807,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/basic-supervised-learning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/basic-unsupervised-learning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

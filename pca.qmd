@@ -1,0 +1,85 @@
+# Principal Component Analysis {#sec-pca}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+## Overview
+
+Dimensionality reduction techniques are a set of widely employed and versatile methods utilised for the following purposes:
+
+1.  Uncovering underlying structure in the feature space,
+2.  Pre-processing data for other machine learning algorithms, and
+3.  Facilitating visualisation of high-dimensional data.
+
+The fundamental concept behind these techniques is to transform the original data into a new space with a reduced number of dimensions while preserving the salient properties of the dataset. This new space, containing fewer informative dimensions, is ideal for data visualisation.
+
+Principal Component Analysis (PCA) is a popular dimensionality reduction method that transforms the original n-dimensional dataset into a new n-dimensional space. The new dimensions in this transformed space, known as principal components, are linear combinations of the original variables, meaning they comprise varying proportions of the original features. The dataset exhibits the maximum variability along the first principal component, followed by the second, and so on. Additionally, principal components are orthogonal, or uncorrelated, with one another.
+
+## The Mathematics of PCA
+
+Mathematically, PCA is implemented as follows:
+
+-   Given $m$ data points, $\{x_1,x_2,...,x_m\} \in R^n$, with their mean $\mu = \frac{1}{m}\sum_{i=1}^{m}x_i$
+-   Find a direction $w \in R^n$ where $\|w\| \leq 1$
+-   Such that the variance of the data along the direction $w$ is maximized $$\max_{w:\|w\|\leq 1}\underbrace{\frac{1}{m}\sum_{i=1}^{m}\left(w^Tx_i-w^T\mu\right)^2}_{\text{variance}}$$
+-   It can be easily shown that this equals $$w^T\underbrace{\left(\frac{1}{m}\sum_{i=1}^{m}\left(x_i-\mu \right)\left(x_i-\mu \right)^T\right)}_{\text{covariance matrix C}}w = w^TCw$$ **So, the optimization problem becomes** $$\max_{w:\|w\|\leq 1}w^TCw$$
+-   This can be formulated as an eigenvalue problem
+    -   Given a symmetric matrix $C \in R^{n\times n}$
+    -   Find a row vector $w \in R^n$ and $\|w\| = 1$
+    -   Such that $Cw = \lambda w$
+-   There will be multiple solutions of $w_1, w_2, ...$ (eigenvectors) with different $\lambda_1,\lambda_2,...$ (eigenvalues)
+    -   They are ortho-normal: $w_i^Tw_i = 1, w_i^Tw_j=0$
+
+**To find the top** $k$ principal components, first find the mean and covariance matrix from the data 
+$$ \mu = \frac{1}{m}\sum_{i=1}^{m}x_i \ and \ C = \frac{1}{m}\sum_{i=1}^{m}\left(x_i-\mu\right)\left(x_i-\mu\right)^T$$ 
+calculate the first $k$ eigenvectors $w_1,w_2,...,w_k$ of $C$ corresponding to the largest eigenvalues $\lambda_1,\lambda_2,...,\lambda_k$.
+
+**Then compute the reduced representation** 
+$$z_i = \left(\begin{split}w_1^T\left(x_i-\mu\right)/\sqrt{\lambda_1}\cr w_2^T\left(x_i-\mu\right)/\sqrt{\lambda_2}\end{split}\right)$$
+
+## An R Example
+
+In R, the `prcomp` function is commonly used for performing Principal Component Analysis. Let's apply PCA to the Iris dataset as an example. The dataset contains four variables, making it challenging to visualise the three distinct groups across all dimensions.
+
+```{r}
+# Load the required library and data
+data(iris)
+
+# Perform PCA on the iris data (excluding the Species column)
+pca_result <- prcomp(iris[, -5], center = TRUE, scale. = TRUE)
+
+# Print the PCA results
+summary(pca_result)
+```
+
+The provided results from the PCA can be interpreted as follows:
+
+1.  **Standard deviation**: This row represents the standard deviation of each principal component. A higher standard deviation signifies a larger spread in the data along that component. In this case, PC1 has the highest standard deviation (1.7084), followed by PC2 (0.9560), PC3 (0.38309), and PC4 (0.14393).
+
+2.  **Proportion of Variance**: This row displays the proportion of the total variance in the data explained by each principal component. PC1 accounts for 72.96% (0.7296) of the total variance, while PC2 explains 22.85% (0.2285). The remaining components, PC3 and PC4, explain much smaller proportions of the variance, at 3.669% (0.03669) and 0.518% (0.00518), respectively.
+
+3.  **Cumulative Proportion**: This row shows the cumulative proportion of variance explained by each component and all the preceding components combined. PC1 alone accounts for 72.96% (0.7296) of the total variance. When considering both PC1 and PC2, they together explain 95.81% (0.9581) of the total variance. Adding PC3 increases the cumulative proportion to 99.482% (0.99482), and finally, including PC4, 100% (1.00000) of the total variance is accounted for.
+
+Based on this interpretation, we can conclude that the first two principal components (PC1 and PC2) retain the majority of the information in the data, accounting for 95.81% of the total variance. This simplifies visualisation and further analysis, as most of the variability can be captured using just these two components.
+
+To visualise the components, we can use `biplot` function:
+
+```{r}
+library(ggplot2)
+library(AMR)
+library(plotly)
+
+p <- ggplot_pca(pca_result) + 
+      theme_minimal() +
+      labs(title = "PCA Biplot")
+ggplotly(p)
+```
+
+A biplot is a valuable visualisation tool in PCA that combines two aspects: - The projection of the original data points onto the first two principal components (PC1 and PC2), and - The projection of the original features as vectors onto the same PC space. The figure above shows the length and width are two orthogonal dimensions of the iris data.
+
+By reducing the dimensionality of the data and retaining the most significant information, PCA facilitates easier visualisation, interpretation, and further analysis. However, it is essential to remember that PCA is a linear technique and may not perform well on data with non-linear relationships.
+
+Additionally, real-world datasets frequently contain missing values, which should be encoded as `NA` in R. Unfortunately, PCA is unable to handle missing values, and observations containing NA values will be automatically excluded. This approach is only suitable when the proportion of missing values is relatively low. An alternative solution is to impute missing values, a process discussed in more detail in the *handling data problems*.

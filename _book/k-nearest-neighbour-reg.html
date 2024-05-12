@@ -301,6 +301,47 @@ window.Quarto = {
 </li>
       </ul>
 </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">unsupervised-learn.qmd</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basic-unsupervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Basics Of Unsupervised Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./k-means-clust.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">K-Mean Clustering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hier-clust.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Hierarchical Clustering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./t-sne.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">t-Distributed Stochastic Neighbour Embedding</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
     </ul>
 </div>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
@@ -310,6 +351,7 @@ window.Quarto = {
    
   <ul>
 <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">11.1</span> Overview</a></li>
+  <li><a href="#an-r-example" id="toc-an-r-example" class="nav-link" data-scroll-target="#an-r-example"><span class="header-section-number">11.2</span> An R Example</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/k-nearest-neighbour-reg.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
@@ -343,6 +385,8 @@ window.Quarto = {
 <p>There are many other distance functions available. The Mahalonobis distance is <span class="math display">\[\textsf{dist}(\boldsymbol x_i,\boldsymbol x_l)=\sqrt{(\boldsymbol x_i-\boldsymbol x_l)^\top\boldsymbol S^{-1}(\boldsymbol x_i-\boldsymbol x_l)},\]</span></p>
 <p>where <span class="math inline">\(\boldsymbol S\)</span> is the sample covariance matrix of the predictors. In addition to automatic scaling, this approach accounts for the correlations between the predictors.</p>
 <p>An advanced approach is <strong>metric learning</strong>, which aims to learn a task-specific distance metric from data. For example, we can use metric learning metrics to choose the <span class="math inline">\(\boldsymbol S\)</span> matrix in the Mahalanobis distance. Metric learning can significantly improve KNN, but is computationally expensive.</p>
+</section><section id="an-r-example" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="an-r-example">
+<span class="header-section-number">11.2</span> An R Example</h2>
 <p>Here’s an example in base R to illustrate the concept of k-nearest neighbor (KNN):</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a sample dataset</span></span>

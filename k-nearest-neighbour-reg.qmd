@@ -39,6 +39,8 @@ where $\boldsymbol S$ is the sample covariance matrix of the predictors. In addi
 
 An advanced approach is **metric learning**, which aims to learn a task-specific distance metric from data. For example, we can use metric learning metrics to choose the $\boldsymbol S$ matrix in the Mahalanobis distance. Metric learning can significantly improve KNN, but is computationally expensive.
 
+## An R Example
+
 Here's an example in base R to illustrate the concept of k-nearest neighbor (KNN):
 
 ```{r}
