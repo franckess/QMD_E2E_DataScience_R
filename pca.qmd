@@ -22,12 +22,12 @@ Principal Component Analysis (PCA) is a popular dimensionality reduction method 
 
 Mathematically, PCA is implemented as follows:
 
--   Given $m$ data points, $\{x_1,x_2,...,x_m\} \in R^n$, with their mean $\mu = \frac{1}{m}\sum_{i=1}^{m}x_i$
--   Find a direction $w \in R^n$ where $\|w\| \leq 1$
+-   Given $m$ data points, $\{x_1,x_2,...,x_m\} \in \mathbb{R}^n$, with their mean $\mu = \frac{1}{m}\sum_{i=1}^{m}x_i$
+-   Find a direction $w \in \mathbb{R}^n$ where $\|w\| \leq 1$
 -   Such that the variance of the data along the direction $w$ is maximized $$\max_{w:\|w\|\leq 1}\underbrace{\frac{1}{m}\sum_{i=1}^{m}\left(w^Tx_i-w^T\mu\right)^2}_{\text{variance}}$$
 -   It can be easily shown that this equals $$w^T\underbrace{\left(\frac{1}{m}\sum_{i=1}^{m}\left(x_i-\mu \right)\left(x_i-\mu \right)^T\right)}_{\text{covariance matrix C}}w = w^TCw$$ **So, the optimization problem becomes** $$\max_{w:\|w\|\leq 1}w^TCw$$
 -   This can be formulated as an eigenvalue problem
-    -   Given a symmetric matrix $C \in R^{n\times n}$
+    -   Given a symmetric matrix $C \in \mathbb{R}^{n\times n}$
     -   Find a row vector $w \in R^n$ and $\|w\| = 1$
     -   Such that $Cw = \lambda w$
 -   There will be multiple solutions of $w_1, w_2, ...$ (eigenvectors) with different $\lambda_1,\lambda_2,...$ (eigenvalues)

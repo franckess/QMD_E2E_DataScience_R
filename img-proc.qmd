@@ -1,0 +1,13 @@
+# Image Processing {#sec-img-proc .unnumbered}
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+In this part of the book, our focus will be on the the following chapters:
+
+-   In @sec-intro-img-proc we will get to understand the basics of image processing from a theoretical and practical standpoint.
+
+-   In @sec-img-seg we will dive into image segmentation from a theoretical and practical standpoint.

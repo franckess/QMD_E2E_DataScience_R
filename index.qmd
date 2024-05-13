@@ -24,7 +24,43 @@ After reading this book, you'll have the tools to tackle a wide variety of data 
 
 -   An understanding of time series analysis and reinforcement learning
 
+## Funding & Support
+
+This book was primarily a volunteer effort that took thousands of hours to create 😃
+
+```{r}
+#| label: t-sne
+#| echo: false
+#| fig-align: 'center'
+#| fig-cap: |
+#| fig-alt: |
+#| out.width: NULL
+knitr::include_graphics("images/coffee.jpeg", dpi = 100)
+```
+
+<form action="https://www.paypal.com/donate" method="post" target="_top">
+
+<input type="hidden" name="hosted_button_id" value="XYBAK562BSSQY" /> <input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" /> <img src="https://www.paypal.com/en_AU/i/scr/pixel.gif" border="0" width="1" height="1"/>
+
+</form>
+
 ## Acknowledgments
 
-This book isn't just the product of the listed authors but is the result of many conversations (in person and online) that we've had with many people in the R community.
-We're incredibly grateful for all the conversations we've had with y'all; Thank You So Much!
+This book isn't just the product of the listed authors but is the result of many conversations (in person and online) that we've had with many people in the R community. We're incredibly grateful for all the conversations we've had with y'all; Thank You So Much!
+
+## Contribution
+
+```{css, echo=FALSE}
+.link-style1 a {
+  color: blue;
+  text-decoration: underline;
+}
+
+.link-style2 a {
+ color: blue;
+}
+```
+
+If you would like to make a content contribution, please contact with us first via Github issues or by email: .link-style1\[[franckess48\@gmail.com](mailto:franckess48@gmail.com)\]. We are implementing a schedule for updates and are creating a contributor guide.
+
+Please note that this book project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

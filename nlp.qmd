@@ -1,0 +1,21 @@
+# Natural Language Processing {#sec-nlp .unnumbered}
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+Natural Language Processing (NLP) has become an essential tool in the era of data science, enabling computers to understand, interpret, and generate human languages. It has paved the way for many exciting applications, such as machine translation, sentiment analysis, and chatbots, among others.
+
+R is a popular programming language and environment for statistical computing and data analysis, making it an ideal choice for exploring NLP. Its extensive ecosystem of packages and libraries, combined with its intuitive syntax, empower users to extract insights from text data effortlessly. This chapter provides an introduction to NLP with R, focusing on essential concepts and techniques for beginners.
+
+Embarking on this journey will equip you with the tools and knowledge necessary to unlock the hidden value in text data. Get ready to harness the power of R and NLP to solve real-world problems and enhance your data-driven decision-making capabilities.
+
+In this sixth part of the book, our focus will be on the the following chapters:
+
+-   In @sec-basics-nlp we will get to understand the basics of natural language processing.
+
+-   In @sec-understanding-nlp we will dive into simple NLP models.
+
+-   In @sec-apply-nlp we will understand how to apply NLP in real-world.

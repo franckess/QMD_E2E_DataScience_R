@@ -19,14 +19,14 @@ Data science is an exciting discipline that allows you to transform raw data int
 #|   A diagram displaying the data science cycle: business understanding -> data mining -> data cleaning -> data exploration -> feature engineering -> predictive model -> visualisation
 #| out.width: NULL
 
-knitr::include_graphics("diagrams/data_science_lifecycle.png", dpi = 270)
+knitr::include_graphics("diagrams/data_science_lifecycle.png", dpi = 150)
 ```
 
 ## How this book is organized
 
 Below is a list of items we are going to cover in this book:
 
-1.  Introduction to Data Science and R
+1.  Data Science and R
 
 2.  Data Exploration and Visualization
 

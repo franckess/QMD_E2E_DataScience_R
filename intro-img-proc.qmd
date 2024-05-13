@@ -1,0 +1,152 @@
+# Introduction to image processing {#sec-intro-img-proc}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+## Overview
+
+Image classification is the process of categorising images into predefined classes or categories based on their visual features. It plays a crucial role in various applications such as medical diagnosis, object recognition, and autonomous driving. With the increasing availability of digital images, the need for accurate and efficient image classification has become more important than ever.
+
+Machine learning has revolutionised the field of image classification by enabling the development of automated classification systems that can learn from data. Machine learning algorithms can automatically learn the visual features that distinguish between different classes of images, and then use this knowledge to classify new images. With the development of deep learning algorithms, such as Convolutional Neural Networks (CNNs), image classification has achieved unprecedented levels of accuracy and performance.
+
+`R` also has a number of packages that can be used for image classification. These packages provide a range of machine learning and deep learning algorithms, as well as tools for image processing and feature extraction. In this table, we summarise some of the most popular R packages that can be used for image classification, along with their key features.
+
+## Am R Example
+
+The MNIST dataset is a popular benchmark dataset for image classification tasks in computer vision. It consists of a large set of 70,000 grayscale images of handwritten digits (0-9), each of size 28x28 pixels. The images are split into a training set of 60,000 images and a test set of 10,000 images.
+
+The MNIST dataset is considered a relatively easy dataset, with high-quality images and well-defined classes. However, it remains a challenging dataset for some machine learning models, especially those with limited capacity or prone to overfitting. As a result, the MNIST dataset has become a popular benchmark for evaluating the effectiveness of different data preprocessing techniques, regularisation methods, and model architectures.
+
+In this example, we will use the dataset_mnist() function from TensorFlow to load the MNIST dataset.
+
+```{r}
+library(keras)
+library(tensorflow)
+# Load the data
+mnist <- dataset_mnist()
+x_train <- mnist$train$x / 255
+y_train <- mnist$train$y
+x_test <- mnist$test$x / 255
+y_test <- mnist$test$y
+
+# Reshape the data
+x_train <- array_reshape(x_train, c(nrow(x_train), 28, 28, 1))
+x_test <- array_reshape(x_test, c(nrow(x_test), 28, 28, 1))
+
+# One-hot encode the labels
+y_train <- to_categorical(y_train, num_classes = 10)
+y_test <- to_categorical(y_test, num_classes = 10)
+
+# Convert labels to categorical
+labels <- to_categorical(y_train, num_classes = 10)
+
+# Display the images
+par(mfcol=c(6,6))
+par(mar=c(0, 0, 3, 0), xaxs='i', yaxs='i')
+for (idx in 1:36) { 
+    im <- x_train[idx,,,1]
+    im <- t(apply(im, 2, rev)) 
+    image(1:28, 1:28, im, col=gray((0:255)/255), 
+          xaxt='n', main=paste(y_train[idx]))
+}
+```
+
+**Data augmentation** Data augmentation is a technique commonly used in image processing to increase the size of the training dataset by generating new, slightly modified versions of the original images. The goal of data augmentation is to reduce overfitting and improve the generalisation performance of machine learning models.
+
+Data augmentation can be applied to images in many ways, including rotating, scaling, cropping, flipping, translating, or adding noise to the original images. By applying these transformations to the original images, the machine learning model is exposed to a larger set of training data that includes variations in lighting conditions, object orientation, and object position. As a result, the model becomes more robust to variations in the test data, which improves its ability to generalise to new, unseen examples.
+
+We will use data augmentation techniques to generate additional training data and reduce overfitting. In this example, we will perform random rotations, random zooms, and random crops.
+
+```{r}
+# Set up the data augmentation generator:
+datagen <- image_data_generator(
+  rotation_range = 15,
+  zoom_range = 0.1,
+  width_shift_range = 0.1,
+  height_shift_range = 0.1
+)
+datagen %>% fit_image_data_generator(x_train)
+```
+
+We will use a simple Convolutional Neural Network (CNN) with 2 convolutional layers and 2 fully connected layers.
+
+```{r}
+# Build the model
+model <- keras_model_sequential()
+
+model %>%
+  layer_conv_2d(filters = 32, kernel_size = c(3, 3), activation = "relu", input_shape = c(28, 28, 1)) %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 64, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_flatten() %>%
+  layer_dense(units = 128, activation = "relu") %>%
+  layer_dropout(rate = 0.5) %>%
+  layer_dense(units = 10, activation = "softmax")
+
+model %>% compile(
+  loss = "categorical_crossentropy",
+  optimizer = optimizer_adam(),
+  metrics = c("accuracy")
+)
+```
+
+Train the model with data augmentation (this will take about 20min):
+
+```{r, eval=FALSE}
+batch_size <- 32
+epochs <- 1
+
+history <- model %>% fit(
+  flow_images_from_data(x_train, y_train, datagen, batch_size = batch_size),
+  steps_per_epoch = as.integer(nrow(x_train) / batch_size),
+  epochs = epochs,
+  validation_data = list(x_test, y_test),
+  verbose = 1
+)
+
+```
+
+Preprocess the test dataset (assuming it is not preprocessed yet):
+
+```{r, eval=FALSE}
+x_test <- mnist$test$x / 255
+y_test <- mnist$test$y
+
+# Reshape the data
+x_test <- array_reshape(x_test, c(nrow(x_test), 28, 28, 1))
+
+# One-hot encode the labels
+y_test_categorical <- to_categorical(y_test, num_classes = 10)
+```
+
+Perform predictions on the test dataset:
+
+```{r, eval=FALSE}
+predictions <- model %>% predict(x_test)
+predicted_labels <- apply(predictions, 1, which.max) - 1
+accuracy <- mean(predicted_labels == y_test)
+print(paste("Test accuracy:", accuracy))
+```
+
+``` r
+Test accuracy: 0.9876
+```
+
+A random image from the test sample:
+```{r}
+#| label: pred
+#| echo: false
+#| out.width: NULL
+
+knitr::include_graphics("images/Screenshot 2024-05-13 at 10.56.13 pm.png", dpi = 150)
+```
+
+In this text classification example, we have successfully demonstrated the process of loading, preprocessing, and augmenting the MNIST dataset using R, Keras, and TensorFlow. We have implemented a simple Convolutional Neural Network (CNN) model for classifying handwritten digits from the MNIST dataset.
+
+We utilised data augmentation techniques, such as random rotations, zooms, and translations, to improve the model's performance on unseen data by generating additional training samples. This helps in mitigating overfitting and increasing the model's generalisation capabilities.
+
+After training the model, we performed predictions on the test dataset and evaluated its accuracy. We also visualised some of the predictions to gain insights into the model's performance.

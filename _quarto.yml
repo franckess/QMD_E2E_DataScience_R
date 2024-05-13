@@ -47,6 +47,26 @@ book:
         - hier-clust.qmd
         - pca.qmd
         - t-sne.qmd
+    - part: other-topic-ds.qmd
+      chapters: 
+        - time-series.qmd
+        - svm.qmd
+        - semi-sup.qmd
+        - basics-nn.qmd
+    - part: nlp.qmd
+      chapters: 
+        - basics-nlp.qmd
+        - understanding-nlp.qmd
+        - apply-nlp.qmd
+    - part: img-proc.qmd
+      chapters: 
+        - intro-img-proc.qmd
+        - img-seg.qmd
+#    - part: rl.qmd
+#      chapters: 
+#        - basics-rl.qmd
+#        - markov-dec-proc.qmd
+#        - apply-rl.qmd
     #- summary.qmd
     #- references.qmd
 
@@ -61,6 +81,8 @@ format:
     author-meta: "Rene Essomba"
     include-in-header: plausible.html
     callout-appearance: simple
+    light: flatly
+    dark: darkly
   #pdf:
    # documentclass: scrreprt
 

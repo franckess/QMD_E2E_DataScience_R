@@ -1,0 +1,122 @@
+# Basics of NLP {#sec-basics-nlp}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+## Overview
+
+Text data can be understood as sequences of characters or sequences of words, which form the foundation of human language communication. These sequences can be analysed and processed to extract meaningful insights and patterns for various applications. Natural Language Processing (NLP) focuses on understanding and interpreting this text data to enable computers to interact with human language effectively.
+
+NLP is inherently challenging due to several factors:
+
+1. **Ambiguity**: Human languages are often ambiguous, making it difficult for computers to understand the intended meaning. Ambiguity can occur at various levels, such as lexical (e.g., homonyms and polysemy), syntactic (e.g., ambiguous sentence structures), and semantic (e.g., metaphor and sarcasm). Disambiguating the intended meaning requires context, world knowledge, and reasoning abilities, which can be challenging for NLP systems to acquire.
+
+2. **Variability**: Human languages exhibit a high degree of variability, including dialects, accents, slang, and domain-specific terminology. People use different words, phrases, and sentence structures to express the same meaning, making it difficult for NLP systems to recognise and interpret such variations consistently.
+
+3. **Complexity**: Human languages are complex, with intricate grammatical rules, extensive vocabularies, and numerous linguistic phenomena like anaphora, ellipsis, and co-reference. NLP systems need to account for these complexities and possess a deep understanding of language structure and semantics to process and analyse text effectively.
+
+4. **Idiomatic Expressions**: Languages contain idiomatic expressions, phrases, and proverbs that have meanings not easily deducible from their individual words. Understanding and interpreting these expressions can be challenging for NLP systems, as it requires not only linguistic knowledge but also cultural context and awareness.
+
+5. **Evolution**: Human languages are constantly evolving, with new words, phrases, and usages emerging regularly. NLP systems need to adapt and stay up-to-date with these changes to remain effective in understanding and interpreting the ever-evolving landscape of human language.
+
+6. **Contextual Dependency**: The meaning of words and sentences often depends on the context in which they are used. NLP systems need to be able to consider the broader context and incorporate external knowledge to accurately interpret and disambiguate the meaning of the text.
+
+These factors, among others, contribute to the challenges faced by NLP practitioners and researchers in developing systems capable of understanding, interpreting, and generating human languages effectively. Despite these challenges, significant progress has been made in recent years, with NLP systems becoming increasingly sophisticated and accurate, thanks to advancements in machine learning, deep learning, and the availability of vast amounts of textual data.
+
+## Large Language Models (LLMs)
+
+Simple Natural Language Processing (NLP) models usually refer to traditional, rule-based, or statistical models that can tackle specific tasks. In contrast, Large Language Models (LLMs) like GPT-4 from OpenAI are based on deep learning techniques and can perform a wide range of tasks with much greater proficiency. Here are some key differences between the two types of models:
+
+1. **Architecture**: Simple NLP models typically employ traditional techniques like bag-of-words, term frequency-inverse document frequency (TF-IDF), or statistical methods like Naïve Bayes and logistic regression. These models often require manual feature engineering and may involve rule-based approaches. LLMs like ChatGPT, on the other hand, are based on advanced deep learning architectures, such as the Transformer, which allows them to capture complex patterns and relationships in the text data without manual feature engineering.
+
+2. **Scope**: Simple NLP models are generally designed for specific tasks and may require task-specific adjustments or tuning to work effectively. LLMs like ChatGPT are pre-trained on massive amounts of data and can be fine-tuned for a variety of tasks, including text classification, sentiment analysis, question-answering, and more, with minimal task-specific adjustments.
+
+3. **Performance**: LLMs like ChatGPT often outperform simple NLP models on a wide range of NLP tasks due to their ability to capture complex patterns in the data, learn from vast amounts of training data, and generalise well to new, unseen data. Simple NLP models may struggle with certain linguistic phenomena, ambiguity, or variability, while LLMs can better handle these challenges.
+
+4. **Training Data and Computational Requirements**: LLMs like ChatGPT require massive amounts of training data and significant computational resources for training, which can be prohibitive for many users or organisations. Simple NLP models, on the other hand, can often be trained on smaller datasets and require fewer computational resources, making them more accessible and easier to deploy.
+
+5. **Interpretability**: Simple NLP models tend to be more interpretable and easier to understand, as their inner workings are based on well-understood techniques or rules. LLMs like ChatGPT, with their deep learning architectures, are often considered "black boxes," making it difficult to explain or understand their predictions and decision-making processes.
+
+In summary, simple NLP models covered in this chapter are generally more accessible and interpretable, suitable for specific tasks, and require less computational resources. In contrast, LLMs like ChatGPT are more versatile, better at handling complex linguistic phenomena, and generally outperform simple models but require vast amounts of data and computational resources to train and maintain.
+
+
+## Basic NLP Techniques
+
+To process and analyse text data effectively, NLP employs various techniques, such as tokenization, which consists of defining the unit of analysis, like words, sequences of words, or entire sentences. 
+
+### Tokenization
+
+Tokenization is a crucial step in the text analysis process, as it helps break down unstructured text data into structured, manageable units that can be further processed and analysed. The need for tokenization arises from several factors:
+
+1. **Simplifying Text Data**: 
+Unstructured text data can be challenging to analyse due to its complexity and variability. Tokenization divides the text into smaller, more manageable units (tokens), such as words or sentences. This simplification makes it easier to apply subsequent analysis techniques and extract meaningful insights.
+
+2. **Enabling Text Preprocessing**: Tokenization is a prerequisite for various text preprocessing tasks, such as stop word removal, stemming, and lemmatization. These preprocessing tasks are essential for cleaning and normalising the text data, which in turn improves the accuracy and effectiveness of text analysis and machine learning algorithms.
+
+3. **Facilitating Feature Extraction**: In many text analysis and natural language processing applications, such as text classification and sentiment analysis, features need to be extracted from the text data to be used as input for machine learning models. Tokenization allows for the extraction of features like word frequency, term frequency-inverse document frequency (TF-IDF), and n-grams, which can significantly impact the performance of these models.
+
+4. **Enhancing Computational Efficiency**: By breaking down text data into tokens, you can reduce the computational complexity of text analysis tasks. Working with smaller units of text data allows for more efficient searching, sorting, and indexing operations, which can be particularly beneficial when dealing with large text corpora.
+
+Without tokenization, it would be challenging to perform accurate and effective text analysis and natural language processing tasks.
+
+In R, we will use the `tokenizers` package, which provides a variety of tokenisation functions for text data.
+```{r}
+library(tokenizers)
+#let's create a simple text data example to tokenize:
+text <- "Natural Language Processing with R is an exciting journey!"
+
+#Now, we will tokenize the text at the word level using the tokenize_words() function:
+word_tokens <- tokenize_words(text)
+print(word_tokens)
+```
+
+Notice that the function has tokenized the text into a list of words, including the exclamation mark as a separate token.
+
+## Stop words handling
+
+In the context of text analysis, it is often necessary to remove stop words. Stop words are words that do not contribute significantly to the meaning of a text and are therefore not useful for analysis. These words are typically extremely common in a given language, including words such as "the", "of", "to", and so forth in English. By eliminating stop words from a text, the remaining words will provide more meaningful insights, allowing for more effective analysis and interpretation.
+To demonstrate how to remove common stop words from a text using R, we will use the `tidytext` and `dplyr` packages. 
+
+```{r}
+library(tidytext)
+library(dplyr)
+
+#let's create a simple text data example with some common stop words:
+text <- "The quick brown fox jumps over the lazy dog."
+
+#Now, we will tokenize the text into words using the unnest_tokens() function from the tidytext package:
+text_df <- tibble(line = 1, text = text) %>%
+  unnest_tokens(word, text)
+print(text_df)
+```
+
+Now, let's remove the common stop words using the `anti_join()` function from the `dplyr` package with the `stop_words` dataset from the `tidytext` package:
+```{r}
+text_no_stop_words <- text_df %>%
+  anti_join(stop_words)
+print(text_no_stop_words)
+```
+As you can see, the stop words "the" and "over" have been removed from the text. The remaining words are more meaningful for further text analysis.
+
+## Words frequencies
+
+A fundamental step in text analysis is determining the frequency of words within a given text. Analysing word frequencies can reveal patterns and trends that provide valuable insights into the content and its underlying themes. In this section, we will demonstrate how to calculate word frequencies using R.
+
+Continue with the same example sentence, we first tokenize the text into words using the `unnest_tokens()` function from the `tidytext` package:
+```{r}
+text_df <- tibble(line = 1, text = text) %>%
+  unnest_tokens(word, text)
+```
+Then, we calculate the word frequencies using the count() function from the `dplyr` package:
+```{r}
+word_frequencies <- text_df %>%
+  count(word, sort = TRUE)
+print(word_frequencies)
+```
+
+The output shows the frequency of each word in the text, sorted in descending order. You can observe that the word "the" appears three times, while "dog" and "lazy" appear twice, and the other words appear only once. This analysis provides a simple overview of the most common words within the text.
+
+You can further refine the analysis by removing stop words or applying other preprocessing techniques to focus on the most relevant words for your specific task.

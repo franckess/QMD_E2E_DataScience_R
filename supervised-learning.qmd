@@ -6,12 +6,12 @@
 source("_common.R")
 ```
 
-In this third part of the book, our focus will be on the the five following chapters:
+In this third part of the book, our focus will be on the the following chapters:
 
 -   In @sec-basics-supervised-learning we will get to understand the basics of supervised learning from a theoretical and practical standpoint.
 
 -   In @sec-linear-reg we will dive into linear regression from a theoretical and practical standpoint.
 
--   In @sec-k-nearest-neighbour-reg we will understand the k-Nearest Neighbours (kNN) regression algorithm as a classic method for nonlinear data..
+-   In @sec-k-nearest-neighbour-reg we will understand the k-Nearest Neighbours (kNN) regression algorithm as a classic method for nonlinear data.
 
 -   In @sec-class-log-reg we will dive into classification models.

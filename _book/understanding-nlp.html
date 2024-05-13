@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Rene Essomba">
+<title>End To End Data Science With R - 23&nbsp; Understand a simple NLP model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./apply-nlp.html" rel="next">
+<link href="./basics-nlp.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script defer="" data-domain="e2e-ds-r.franckess.com" src="https://plausible.io/js/plausible.js"></script><link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="site_libs/plotly-binding-4.10.4/plotly.js"></script><script src="site_libs/typedarray-0.1/typedarray.min.js"></script><script src="site_libs/jquery-3.5.1/jquery.min.js"></script><link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script><link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./nlp.html">Natural Language Processing</a></li><li class="breadcrumb-item"><a href="./understanding-nlp.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Understand a simple NLP model</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">End To End Data Science With R</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://www.github.com/franckess/QMD_E2E_DataScience_R" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.linkedin.com/sharing/share-offsite/?url=%7Curl%7C">
+              <i class="bi bi-bi-linkedin pe-1"></i>
+            LinkedIn
+            </a>
+          </li>
+      </ul>
+</div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Data Science Universe</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Science and R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./understanding-ds.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Understanding Data Science As a Career</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./understanding-r-applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Understanding R Applications in Data Science</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-objects-and-variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R Objects And Variables</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./data-exploration-vis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Exploration And Visualisation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basic-stats-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basics Of Statistics Using R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-manipulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data Manipulation Using R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./feature-eng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Feature Engineering for Tabular Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./handling-data-issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Handling Data Issues</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-visualisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Data Visualisation Using <code>ggplot2</code></span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./supervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Supervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basic-supervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Basics of Supervised Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linear-reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./k-nearest-neighbour-reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">K-Nearest Neighbour Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./class-log-reg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Classification Using Logistic Model</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">unsupervised-learn.qmd</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basic-unsupervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Basics Of Unsupervised Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./k-means-clust.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">K-Mean Clustering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hier-clust.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Hierarchical Clustering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Principal Component Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./t-sne.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">t-Distributed Stochastic Neighbor Embedding</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./other-topic-ds.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Other Topics in Data Science</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Basics of time series</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./semi-sup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Tree-based Methods</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basics-nn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Basics of Neural Network</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./nlp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Natural Language Processing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basics-nlp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Basics of NLP</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./understanding-nlp.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Understand a simple NLP model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./apply-nlp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Apply NLP Techniques to Real World Data</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./img-proc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Image Processing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-img-proc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to image processing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./img-seg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Image segmentation and object detection</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#nlp-with-r" id="toc-nlp-with-r" class="nav-link active" data-scroll-target="#nlp-with-r"><span class="header-section-number">23.1</span> NLP with <code>R</code></a></li>
+  <li><a href="#word-embeddings" id="toc-word-embeddings" class="nav-link" data-scroll-target="#word-embeddings"><span class="header-section-number">23.2</span> Word embeddings</a></li>
+  <li><a href="#pre-trained-word-embeddings" id="toc-pre-trained-word-embeddings" class="nav-link" data-scroll-target="#pre-trained-word-embeddings"><span class="header-section-number">23.3</span> Pre-trained word embeddings</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-nlp.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./nlp.html">Natural Language Processing</a></li><li class="breadcrumb-item"><a href="./understanding-nlp.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Understand a simple NLP model</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-understanding-nlp" class="quarto-section-identifier"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Understand a simple NLP model</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="nlp-with-r" class="level2" data-number="23.1"><h2 data-number="23.1" class="anchored" data-anchor-id="nlp-with-r">
+<span class="header-section-number">23.1</span> NLP with <code>R</code>
+</h2>
+<p><code>R</code> offers a rich ecosystem of packages and tools for Natural Language Processing (NLP) tasks, making it an excellent choice for text analysis and processing. In this section, we will describe and explain the basic building blocks of a simple NLP model for text classification. The example provided will help you understand the fundamental steps involved in building an NLP model for various tasks.</p>
+<ol type="1">
+<li><p><strong>Data Collection</strong>: The first step is collecting a dataset relevant to the problem you are trying to solve. For text classification tasks, the dataset should consist of text documents along with their corresponding labels or categories. This labeled dataset will be used for training and testing the model.</p></li>
+<li>
+<p><strong>Text Preprocessing</strong>: Text data is often unstructured, noisy, and contains irrelevant information. Text preprocessing is the process of cleaning and preparing the text data for analysis. Common preprocessing techniques include:</p>
+<ul>
+<li>Lowercasing: Converting all text to lowercase to maintain consistency.</li>
+<li>Removing punctuation: Eliminating punctuation marks to reduce noise.</li>
+<li>Tokenization: Breaking the text into individual words or tokens.</li>
+<li>Stop word removal: Removing common words that do not provide meaningful information (e.g., “the,” “is,” “and”).</li>
+<li>Stemming or Lemmatization: Reducing words to their root forms to normalise the text and group similar words together.</li>
+</ul>
+</li>
+<li>
+<p><strong>Feature Extraction</strong>: After preprocessing, the text data needs to be converted into a structured, numerical format that can be used as input for the classification model. Feature extraction is the process of transforming the text data into a numerical representation. Common techniques include:</p>
+<ul>
+<li>Bag-of-words: A representation where text documents are described by the frequency of words, disregarding the order in which they appear.</li>
+<li>Term frequency-inverse document frequency (TF-IDF): A representation that weighs the importance of words based on their frequency within a document and across the entire dataset.</li>
+<li>Word embeddings: Dense vector representations of words that capture their semantic meaning and relationships with other words (e.g., <code>Word2Vec</code> or <code>GloVe</code>).</li>
+</ul>
+</li>
+<li><p><strong>Model Selection</strong>: Choose a suitable classification model for the task at hand. For simple NLP models, common choices include logistic regression, Naïve Bayes, decision trees, or support vector machines. These models are relatively easy to interpret and require less computational power compared to deep learning models.</p></li>
+<li><p><strong>Model Training</strong>: Train the selected model using the preprocessed text data and extracted features. This involves adjusting the model’s parameters to minimise the classification error on the training dataset. The model learns to recognise patterns and relationships in the text data that can be used to predict the labels or categories of the documents.</p></li>
+<li><p><strong>Model Evaluation</strong>: Evaluate the performance of the trained model on a separate test dataset. Common evaluation metrics for text classification tasks include accuracy, precision, recall, and F1 score. The goal is to assess how well the model generalises to new, unseen data and determine whether it is suitable for deployment or requires further refinement.</p></li>
+<li><p><strong>Model Deployment</strong>: Once the model has been trained and evaluated, deploy it to a production environment to process and classify new text data.</p></li>
+</ol>
+<p>These building blocks provide a foundation for developing a simple NLP model for text classification tasks. By understanding these fundamental steps, you can adapt and customise the process for various NLP tasks and problems.</p>
+<p>It is the process of transforming text into numeric tensors. It consists of applying some tokenisation scheme and then associating numeric vectors with the generated tokens. The generated vector are packed into sequence tensors and fed into deep neural network. There are different ways to associate a vector within a token such as one-hot encoding and token embedding (typically used for words and called word embedding).</p>
+</section><section id="word-embeddings" class="level2" data-number="23.2"><h2 data-number="23.2" class="anchored" data-anchor-id="word-embeddings">
+<span class="header-section-number">23.2</span> Word embeddings</h2>
+<p>Word embeddings are dense vector representations of words that capture their semantic meaning and relationships with other words. These representations are learned by training algorithms on large text corpora, enabling more effective and accurate text analysis. In this introduction, we will explore two popular word embedding techniques - <code>Word2Vec</code>, using the <code>R</code> programming language with the <code>Keras</code> deep learning library.</p>
+<p>For this example, we’ll use the IMDB movie review dataset, which is available in <code>Keras</code>. Let’s download and preprocess the data:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tensorflow.rstudio.com/">keras</a></span><span class="op">)</span></span>
+<span><span class="va">imdb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/dataset_imdb.html">dataset_imdb</a></span><span class="op">(</span>num_words <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span> <span class="co">#will take around 30 seconds to download </span></span>
+<span><span class="va">x_train</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">train</span><span class="op">$</span><span class="va">x</span></span>
+<span><span class="va">y_train</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">train</span><span class="op">$</span><span class="va">y</span></span>
+<span><span class="va">x_test</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">test</span><span class="op">$</span><span class="va">x</span></span>
+<span><span class="va">y_test</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">test</span><span class="op">$</span><span class="va">y</span></span>
+<span></span>
+<span><span class="co"># Pad sequences to the same length</span></span>
+<span><span class="va">maxlen</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
+<span><span class="va">x_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/pad_sequences.html">pad_sequences</a></span><span class="op">(</span><span class="va">x_train</span>, maxlen <span class="op">=</span> <span class="va">maxlen</span><span class="op">)</span></span>
+<span><span class="va">x_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/pad_sequences.html">pad_sequences</a></span><span class="op">(</span><span class="va">x_test</span>, maxlen <span class="op">=</span> <span class="va">maxlen</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In this step, we’ll create an embedding layer using <code>Keras</code>, which will learn the word embeddings as part of the neural network training process:</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vocab_size</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
+<span><span class="va">embedding_dim</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
+<span></span>
+<span><span class="va">embedding_layer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_embedding.html">layer_embedding</a></span><span class="op">(</span>input_dim <span class="op">=</span> <span class="va">vocab_size</span>,</span>
+<span>                                   output_dim <span class="op">=</span> <span class="va">embedding_dim</span>,</span>
+<span>                                   input_length <span class="op">=</span> <span class="va">maxlen</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we’ll build a neural network with the embedding layer for a sentiment analysis task. We’ll use a simple architecture with an embedding layer, a global average pooling layer, and a dense output layer with a sigmoid activation function:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="va">embedding_layer</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_global_average_pooling_1d.html">layer_global_average_pooling_1d</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span>, activation <span class="op">=</span> <span class="st">"sigmoid"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span>optimizer <span class="op">=</span> <span class="st">"adam"</span>,</span>
+<span>                  loss <span class="op">=</span> <span class="st">"binary_crossentropy"</span>,</span>
+<span>                  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"accuracy"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">history</span> <span class="op">&lt;-</span> <span class="va">model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">x_train</span>, <span class="va">y_train</span>,</span>
+<span>                         epochs <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>                         batch_size <span class="op">=</span> <span class="fl">32</span>,</span>
+<span>                         validation_split <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Epoch 1/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.6502 - accuracy: 0.6848 - val_loss: 0.5743 - val_accuracy: 0.7962 - 4s/epoch - 7ms/step</span></span>
+<span><span class="co">#&gt; Epoch 2/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.4931 - accuracy: 0.8340 - val_loss: 0.4314 - val_accuracy: 0.8578 - 4s/epoch - 6ms/step</span></span>
+<span><span class="co">#&gt; Epoch 3/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.3763 - accuracy: 0.8719 - val_loss: 0.3624 - val_accuracy: 0.8712 - 4s/epoch - 6ms/step</span></span>
+<span><span class="co">#&gt; Epoch 4/10</span></span>
+<span><span class="co">#&gt; 625/625 - 5s - loss: 0.3130 - accuracy: 0.8938 - val_loss: 0.3275 - val_accuracy: 0.8766 - 5s/epoch - 8ms/step</span></span>
+<span><span class="co">#&gt; Epoch 5/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.2749 - accuracy: 0.9028 - val_loss: 0.3067 - val_accuracy: 0.8844 - 4s/epoch - 6ms/step</span></span>
+<span><span class="co">#&gt; Epoch 6/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.2471 - accuracy: 0.9125 - val_loss: 0.2942 - val_accuracy: 0.8872 - 4s/epoch - 6ms/step</span></span>
+<span><span class="co">#&gt; Epoch 7/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.2253 - accuracy: 0.9207 - val_loss: 0.2880 - val_accuracy: 0.8890 - 4s/epoch - 7ms/step</span></span>
+<span><span class="co">#&gt; Epoch 8/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.2074 - accuracy: 0.9269 - val_loss: 0.2855 - val_accuracy: 0.8904 - 4s/epoch - 6ms/step</span></span>
+<span><span class="co">#&gt; Epoch 9/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.1925 - accuracy: 0.9324 - val_loss: 0.2844 - val_accuracy: 0.8896 - 4s/epoch - 6ms/step</span></span>
+<span><span class="co">#&gt; Epoch 10/10</span></span>
+<span><span class="co">#&gt; 625/625 - 4s - loss: 0.1789 - accuracy: 0.9376 - val_loss: 0.2794 - val_accuracy: 0.8940 - 4s/epoch - 6ms/step</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once the model is trained, we can access the word embeddings from the embedding layer and visualise them using t-SNE or PCA:</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jdonaldson/rtsne/">tsne</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── Attaching core tidyverse packages ───────────────────── tidyverse 2.0.0 ──</span></span>
+<span><span class="co">#&gt; ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
+<span><span class="co">#&gt; ✔ forcats   1.0.0     ✔ stringr   1.5.0</span></span>
+<span><span class="co">#&gt; ✔ ggplot2   3.5.1     ✔ tibble    3.2.1</span></span>
+<span><span class="co">#&gt; ✔ lubridate 1.9.3     ✔ tidyr     1.3.1</span></span>
+<span><span class="co">#&gt; ✔ purrr     1.0.2     </span></span>
+<span><span class="co">#&gt; ── Conflicts ─────────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></span>
+<span><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></span>
+<span><span class="co">#&gt; ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
+<span></span>
+<span><span class="va">word_embeddings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/get_weights.html">get_weights</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co">#Load the IMDB dataset:</span></span>
+<span><span class="va">imdb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/dataset_imdb.html">dataset_imdb</a></span><span class="op">(</span>num_words <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span>
+<span><span class="va">x_train</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">train</span><span class="op">$</span><span class="va">x</span></span>
+<span><span class="va">y_train</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">train</span><span class="op">$</span><span class="va">y</span></span>
+<span><span class="va">x_test</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">test</span><span class="op">$</span><span class="va">x</span></span>
+<span><span class="va">y_test</span> <span class="op">&lt;-</span> <span class="va">imdb</span><span class="op">$</span><span class="va">test</span><span class="op">$</span><span class="va">y</span></span>
+<span></span>
+<span><span class="co"># word_index is a named list mapping words to an integer index</span></span>
+<span><span class="va">word_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/dataset_imdb.html">dataset_imdb_word_index</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">index_to_word</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">word_index</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">index_to_word</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">word_index</span></span>
+<span></span>
+<span><span class="va">words</span> <span class="op">&lt;-</span> <span class="va">index_to_word</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span></span>
+<span><span class="va">embeddings</span> <span class="op">&lt;-</span> <span class="va">word_embeddings</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we’ll use t-SNE to reduce the dimensionality of the embeddings and visualise them:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jkrijthe/Rtsne">Rtsne</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://plotly-r.com">plotly</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'plotly'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:ggplot2':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     last_plot</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:graphics':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     layout</span></span>
+<span></span>
+<span><span class="co"># Run t-SNE on the embeddings</span></span>
+<span><span class="va">tsne_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Rtsne/man/Rtsne.html">Rtsne</a></span><span class="op">(</span><span class="va">embeddings</span>, dims <span class="op">=</span> <span class="fl">2</span>, perplexity <span class="op">=</span> <span class="fl">30</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, max_iter <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Performing PCA</span></span>
+<span><span class="co">#&gt; Read the 1000 x 50 data matrix successfully!</span></span>
+<span><span class="co">#&gt; Using no_dims = 2, perplexity = 30.000000, and theta = 0.500000</span></span>
+<span><span class="co">#&gt; Computing input similarities...</span></span>
+<span><span class="co">#&gt; Building tree...</span></span>
+<span><span class="co">#&gt; Done in 0.09 seconds (sparsity = 0.103554)!</span></span>
+<span><span class="co">#&gt; Learning embedding...</span></span>
+<span><span class="co">#&gt; Iteration 50: error is 60.419095 (50 iterations in 0.10 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 100: error is 51.089836 (50 iterations in 0.11 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 150: error is 49.754795 (50 iterations in 0.11 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 200: error is 49.236931 (50 iterations in 0.11 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 250: error is 48.939243 (50 iterations in 0.12 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 300: error is 0.597436 (50 iterations in 0.11 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 350: error is 0.454116 (50 iterations in 0.10 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 400: error is 0.423469 (50 iterations in 0.09 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 450: error is 0.408928 (50 iterations in 0.09 seconds)</span></span>
+<span><span class="co">#&gt; Iteration 500: error is 0.402160 (50 iterations in 0.08 seconds)</span></span>
+<span><span class="co">#&gt; Fitting performed in 1.03 seconds.</span></span>
+<span><span class="co">#Create a data frame with the t-SNE results and the corresponding words:</span></span>
+<span><span class="va">tsne_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">tsne_model</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">tsne_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span></span>
+<span><span class="va">tsne_data</span><span class="op">$</span><span class="va">word</span> <span class="op">&lt;-</span> <span class="va">words</span>        </span>
+<span></span>
+<span><span class="co">#Visualize the t-SNE results using ggplot2:</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">tsne_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span>, y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">word</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">3</span>, alpha <span class="op">=</span> <span class="fl">0.7</span>, vjust <span class="op">=</span> <span class="fl">1</span>, hjust <span class="op">=</span> <span class="fl">1</span>, angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"t-SNE Visualization of Word Embeddings"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"t-SNE Dimension 1"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"t-SNE Dimension 2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html">ggplotly</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-ec00bac28bd10a7e0c0a" style="width:100%;height:433px;"></div>
+<script type="application/json" data-for="htmlwidget-ec00bac28bd10a7e0c0a">{"x":{"data":[{"x":[-10.742692141863781,2.6239308959157439,-11.887494584725733,-12.363645717196121,-3.5335320350167141,6.1044127524117773,-11.190788456506919,-12.473410005551175,-13.877702120209072,3.9384578500340202,-13.279436063201761,-10.104054674173277,2.5752926842881076,0.41041890606446735,-7.0000720115825033,-13.17304388879826,-5.5141442403550647,-1.4792015847907174,-7.9187481407236708,-5.5237337654549155,-14.108007301584728,-13.41673845761426,-6.9696332623056945,-11.615175967786518,19.779750655374325,-12.536485991906298,-2.5273101143948282,1.1796147415799907,-13.057954996177529,-7.3966865747625148,-6.1721334774187211,-6.5129286294703475,-1.1087186320888807,-10.721730913946223,-13.491300718398346,-12.257835193695701,-15.039590626472883,-1.0963505811285008,-10.251775346261457,-5.1869510175996494,-9.1634147405907953,-1.8727461208329399,-6.0021770076875329,18.766144343575657,-11.477241004840316,-9.5455863419131699,4.027553837103814,4.8478671171205079,6.5345353348729951,-6.9645080648600493,-6.3790208196379909,3.3356523912467582,-18.214543454184895,-0.76057439848913577,4.7984461408359431,-8.6998171822690171,-11.986830713105457,16.363036827334753,5.3044424119759244,5.3554083786358602,15.144077811632474,-4.1122501921434376,17.715640667953952,-11.251378014241816,15.603569837135607,2.6918532738080305,-13.097762329815685,-6.1485720120968503,4.874849615885803,1.5678945477114159,5.4336295354728703,9.5167950598065936,-0.28365845420611097,-21.150054854873083,-2.8482588452439885,3.9187612692790843,3.0870983927712232,19.34678522198449,22.407891743734854,3.2644771413961053,-10.369618328689089,8.9504670572289697,-12.601202221431853,-0.024473807403447952,2.0008564264160533,-1.570876603363127,4.9293827542317121,-24.658185759387241,-1.0290483967269144,-3.0884785816644151,1.3457710129327642,-15.360731638986556,18.365259729767978,5.6742726790384879,5.9961016766600599,19.437641658977615,4.9387288131366471,16.031171473068458,-7.5902526719972672,14.839226522565676,18.199910233880335,20.252736245220763,4.5549635197676812,-14.270431564552732,-9.8380110669054357,-7.6675902206893278,3.5152585405280417,-6.4074919081586899,-6.1885932486964759,-13.17054978941712,-18.175432593423153,2.8690840455377407,-14.499880267490113,-9.8802202168046662,16.021058447690002,-0.65784110094757209,15.065547645875586,5.9063082017137525,-24.04726829676239,-20.606332645774618,-7.50799695602075,-8.1282694224237009,-2.3492015901102214,1.3740109390786612,-3.4348414006165915,18.74183980061764,-13.872152944272258,-5.4092148903106843,15.921659665334028,-2.0437672615262485,-10.816175310287633,-21.585155237397931,6.0460091708222281,1.1642373933917947,4.8349930208764444,-8.8887599818848333,-3.2327864234466328,4.5528205557724153,15.210128739435723,15.413799611316982,-11.864845436182319,13.634924622654523,15.070448044478868,-5.8270265604091422,15.755949944102127,-4.0747596167363893,19.447672934151441,4.146862246227303,4.7253340432082149,15.770299290063463,1.9392643926838291,-2.8238592594132301,15.578027493624516,-8.7553581270111493,15.04548888045594,18.716041959827933,16.668716003061565,3.6937616620403784,-11.962449558225092,-10.285527803616917,-13.934219816815284,14.63153446711795,-4.5769372237239638,-8.3672690030080741,21.40842000690672,-7.2431684313364633,-20.626085780411106,15.786425024570912,6.3473588202355833,0.57137145137722334,-10.415719454427832,2.1201321022384718,-9.0179278615806435,0.29820990549130355,-2.8197108716336765,-6.2920494179513211,-3.2423457958473434,5.3651294501857709,5.1580889479898655,3.6434621829151319,14.924409888394988,-2.9375389012027835,-16.110334102777305,-13.594407424967141,-7.6769150520465219,-8.2496923222810405,16.339953396507273,5.8962461062165987,0.34017777015790712,2.950925894819453,12.837200668152366,19.135152208210329,-11.262864881674144,-11.487664449945681,-4.0910818325279941,18.281860955842042,-12.635523812840024,-9.837299437510584,-6.3402037671221141,-18.781925781843047,-12.274217487514422,-15.735562102367126,-2.1079263993311792,-20.549728646792559,16.434475941946808,-15.172774576597385,-14.519802454243999,4.2681923372397259,-12.253491425707358,-10.048334651141634,-16.650046083739216,-17.5654879609319,5.4077480830242148,19.287031985365001,-13.810314337529828,4.6549782732724623,3.6407202317526703,-12.26632869131106,14.660052958224821,-2.8074316095821534,-12.367693779631129,15.808949091943179,19.026472380856585,5.2645600827570345,3.8403852957647397,-10.357321401791921,15.998465104688144,-22.66319981394788,2.7934250539630758,20.928109701398871,9.7016483141839593,19.49799469718279,11.173527738584049,16.019460920022919,19.079006326693435,5.4135739336242104,1.6006077244114172,-9.57348223118486,18.417590261727749,-8.8838557221811154,-9.3034313510659743,17.636246537083526,-12.332305803107891,2.5971101443467619,16.120228871428228,1.2846950180167986,2.9671295255529637,-13.085707541173113,-11.283453069055513,24.352153755797325,-7.3709499381946051,-12.268428431921294,-3.701701327474471,-24.120061519757289,-10.012081741013137,18.624612555478361,-4.1427287541510669,-14.970695789040024,7.5006332393405772,4.8361384568461734,-7.2728831887879952,-17.563963606742345,-22.747696614781329,-6.8012345400582568,9.9166214868021001,-11.168633602183304,7.5866072287341932,16.535760302654285,-11.927975569688767,15.547639443811176,7.1857414240903559,-4.0730928490046692,18.037473680982508,3.5848193766382432,19.863478226420682,-18.635457681182363,5.9021157156109494,-10.900707194183889,20.202085290220293,19.040711603986953,-5.2810587800267941,-8.7302542842227702,18.875997078842524,-19.233788297210708,15.942859562298786,-12.014182111731035,17.027834970944042,-19.815304957216625,-20.586372432101165,17.513479168556159,-19.626955447048523,-0.1460945972132946,-23.726368523184043,19.211871143091347,15.452539417991433,0.6782346058021903,-11.647960710976013,-5.0851123196970232,-2.6851545930628582,4.3747803979152575,17.441388372231991,17.082280838020534,9.3194183244341655,-7.2707989496919252,-11.541154385290811,20.797877701763117,-6.5527892648420041,-22.354470409087412,2.7068892645502203,-7.1422542660865611,-9.5660351037686766,2.0795202476906063,-0.77320417167992117,-5.7780699223741845,-8.2081451406103856,-12.130392618323343,-10.025775596527454,16.397138915010377,-7.7019102285774483,-1.1040220299400909,15.831398273136569,-24.82265863503304,-0.44411968200656066,1.4997282124309745,-6.6711546588424451,-6.7659260251491018,16.719169352270445,-18.734339879366104,-9.9408410288630336,15.974138021224999,2.586808280947789,16.06942775248887,12.901584620348853,-4.4162729450877825,15.983170759550088,1.7543328903292521,4.7357168875487519,4.0092111251768552,23.112636927594828,-12.311469489626313,18.987206953827634,0.25459926825325102,16.580079790767279,-13.535725071551996,-9.8353785072385058,15.541861073440144,-4.3547420832508958,-13.166852356368786,3.7763520945317079,5.1999258550589431,-17.553884231039337,-9.2997641191640454,-8.0963360111885958,10.260951361856668,-20.002309855581746,15.626805918936848,-19.962574249782374,23.634757552982471,-23.294230097886349,-9.7063925015042241,17.0534640229023,-6.0271518321370525,5.9507072433346391,2.9406995143687951,16.997101563413391,19.186866763455374,4.8548888627365416,-15.155011785420999,4.5041228410611964,-12.53788854971488,15.939378727708922,-18.38314742241575,16.922401703138078,24.201189300474109,2.2561543503257768,4.1860901437475322,-8.4163151108200935,-9.0873227048076597,18.369963267604888,20.988140425644584,13.535838567139704,-12.496229868406241,-2.9899913980056625,11.777809634030033,16.890015821747529,-10.74954918091913,-17.551962594797686,3.9339228766394871,-12.919547812148329,-24.687700695963024,-12.676395980856016,3.1880082212750507,-9.0726334371673882,-12.471080183991322,23.347761230749388,2.8987592869875809,5.6446404155317191,9.1728776653348429,-13.93611891926732,-2.7936612219140993,-20.966455665107816,3.1329742113800498,5.2604244585469244,16.98201440046817,-24.824819195443144,4.9137871472736707,-21.648075612120408,-23.715723065770899,-12.708605822076979,-15.597415094359786,-0.21192140732483461,18.287454376987558,4.4085361291538625,4.8100784877356846,15.743196790244008,-13.283700564972463,8.5586341291362391,-1.1555543107641937,19.134558656480753,-14.382181986002598,5.8152041528594278,9.927989149599453,-3.7302903583596536,-22.885038993753785,20.759727656739312,2.7532810773328773,18.861410218102858,8.2319860728775502,0.48490383000428317,5.4207623524941173,4.3755580736858182,-10.477602338799214,17.117513845228562,23.29190216686866,2.4031210466186619,-7.6536546081409327,15.615665197902258,24.34075577822615,5.67839333815009,19.371122555654651,1.0003854411311057,-22.741259472874042,4.9915927994459084,-11.313485433906575,-12.835038178760184,-4.140545487494605,-14.148894628071439,-24.41796380967433,1.4561945171046418,21.11777948690894,4.4113563600491386,-3.9952351092474263,16.718452919428302,4.5229692057153068,-4.2143322875231819,14.485079872445413,-0.090111164027024682,3.3142310548738663,16.195559770047357,15.965272053228578,11.242441240972855,8.5835106896672713,2.4950063365543547,20.101577271324803,4.6402984395805831,-11.984366547098645,-3.2557894599441033,5.5099321263066479,15.488521647474906,-8.9101490447783345,21.059872759623307,3.2073775119496517,21.842955191515344,17.632526361914007,-2.1867313912831161,-14.015498276826909,-12.576763431477973,3.5720514524805438,-17.352725073178227,-5.0848456624701575,-24.550553922798436,-3.3920486688874592,16.919820455648342,-23.048964823314343,17.878142686197215,-3.2997645642926523,-17.959358549413381,15.741047246914803,3.9292849852847165,4.5189466113589996,2.8062678418247287,1.2696622467017726,-7.2486779770374188,-15.995491018258571,-9.1976588393628393,-11.676532406798213,-10.50318450220413,18.719013504130888,0.92455905779622094,-10.414277639878264,-9.5550956555080386,4.4431389089397335,-16.949372810501348,-2.2875560854206136,3.7385691245651764,-9.0425199968709666,7.6967633170513885,-8.9670276114429655,14.009608653355929,14.715921221998165,-24.257491126225077,9.7971156045006396,-15.697333633152159,-3.6267386444146545,-24.698568182446095,4.9868416044250328,8.7593116343689346,18.337648673381459,-8.439681510758362,15.190711794873033,8.551589597581847,5.9389890426407561,-4.0398678535754806,-11.342549506904023,5.913993410323898,-4.3289379819158587,-5.4945049303053963,22.897632446172107,3.6740054251519778,4.0436743049658572,-23.810337327204927,-7.5737810452012253,19.858675320042508,-1.1639862458521035,19.595559859692536,-7.8569246690802084,18.36888641306604,-8.8322278424620571,1.9137702448248102,-8.2082344840464785,9.6149393290523903,11.098208120881852,15.990480313501561,-1.2236889261942021,-0.8453092404956013,-24.564535487899423,-0.40241339631746365,-12.31331303651316,5.3426367983120002,18.150483264238481,17.701926661127118,4.1828175187520804,4.2385369716216941,-12.410161252132655,17.380166719650749,-2.5763921300100203,7.2479558990772244,3.4376794198338438,17.413785935019426,-14.31744031929782,-13.27351936772067,3.8905321886940958,-13.834263423372215,-11.87653406906003,-10.714041369779498,-21.158438032497049,4.2063835807131058,-12.282379020588916,1.8760998320721505,-7.7976669434692214,1.9908388412387712,18.558758631623316,-6.8393872633746913,-2.8203319108657028,4.1957018076499244,-13.506463930440052,9.5581841977853212,18.041686178885232,16.295676707589415,2.0582369497031374,-16.914307848748916,-7.9073291537988366,1.2462947722752018,16.206126785343987,-6.7074942034611222,-12.551046301798975,15.785003374815421,0.071445916160968195,5.1813784759581614,18.843158502721106,-1.8809508123491805,18.853142527135606,-9.970050034918744,-5.0071869638052267,19.777887677705305,20.866333708193508,-14.986271829750041,5.0428964980211015,-4.8758039171233198,18.964543593844219,19.183852533258424,19.483509480898135,18.088565930060611,3.9617057412158343,19.547885249156931,-11.771762316437835,-23.643293540504221,22.577097211169448,17.681841901404209,-5.7891115598951117,17.668636285387173,6.8541674805639188,3.736072520860628,-1.9252236192620695,8.7058784892011882,18.460356311489111,22.565142354875785,-9.0665045222986951,-12.569279992319622,20.030436931651462,1.055401384707233,-11.792782743480359,-9.7502277234107222,1.9269972883870621,13.387949352489967,4.3472847344597456,-7.5432958171187883,6.5415088720052221,-11.095819356274113,2.0110321769592039,18.168642290238438,-4.1324571535758619,17.202715071657433,-3.4684515057254055,6.2103480524782748,-5.842703219119544,-11.005043221609192,5.6948318831266045,-10.123977547120798,-24.151362502085782,-8.5163820180424299,-8.698813028097744,-22.418113466612791,1.7247856891014268,-11.738786505867276,16.870783500178849,-14.953041652266979,22.644745348409948,3.0258342072586988,-11.583460021060736,-9.3782002754776901,-12.86374385708908,-1.300853753551914,-6.6987969293592746,-16.576353756448235,-10.511360698665538,2.188199333012157,-0.45490338533380703,8.4065657596774059,-5.1863475326690534,19.809748936987429,-13.007999525245166,18.500223476295272,4.0951803560666313,4.1626623306925126,6.5274196580915813,17.293702496915433,-10.133148827755766,-6.3600944775355845,-7.73445452641936,6.766814981238678,-11.920259487098269,-20.792894212664912,-2.9332101137625819,5.2836235128092994,5.0657937400411903,17.741060952020831,16.490713258379483,16.36735462709677,13.463178176401486,5.5746822735141528,-14.170988843989878,4.3161169565672539,14.622532137917062,15.656054121794403,18.785243871173165,16.823814515916407,3.0644335697234752,-15.158126232319473,17.703657809127773,0.022843741843632397,19.589015877778149,-18.804509903659451,-24.796752985495491,-6.6100007151328857,-10.698052174152997,2.9143377645456736,-7.7609915730792647,5.5313042308340732,5.1478415908054158,-10.839869744612392,6.2980593744595748,-12.741428809465573,13.62595677428558,0.24081361856321404,-18.814825962880242,20.266847170332788,-8.3030714219962398,4.8749087655538421,-24.661613816950329,18.2424057514902,-6.5097082668052666,5.2012894619490249,12.758662602661136,-13.203978097848609,-2.7713633563822384,-20.173321216937907,1.4404390368547864,-18.525957507326755,-6.2402346223895604,4.4026614585880237,-12.79255499981533,-1.7404573330580615,-16.744596954979649,1.0471901017032788,3.8960043076579103,-12.646287964303975,22.061162320381889,-22.388633334150377,5.3217526606433099,-13.129740211220339,-2.5174149759307647,-13.068994031398747,10.019384880376862,18.274501611855253,-14.057254107336455,5.6491214458668724,-23.534235805604769,3.7368801210288538,17.47409472595092,-11.654800180176437,-10.799213856488782,15.16308164859486,-1.0801189398916091,-0.28207934668666351,-11.352428268407172,2.0966533647102219,-8.6194931524153997,0.14258836917408321,3.4928608069926663,16.084128843126656,-7.1428566234448407,3.4545676276264934,23.545514640357588,-2.6136041245405983,16.89032732522632,1.7344436584847502,-3.6827193466040424,8.7884610335522542,0.098374397593756685,-5.7567580994946086,-7.4306972267377844,19.033597732978262,14.495279704109045,5.3036311634524536,-16.148055593785351,-19.969412102926388,3.0984336975666991,-10.498466277052,16.222213436975885,-23.724307419789596,-12.120502758250199,10.385167081058675,8.1573984316246513,-9.3553696884230622,1.5217350959524236,-23.667398243999092,-24.359491362031811,-11.35168079203509,-13.337644810315716,0.49934885501969767,19.749713324934071,-3.9545374793838817,9.8618480286659658,5.3369849701766769,-0.41971642710470281,-9.1631723814344337,6.1429513547722214,-2.7160117945290327,16.005007432732114,-22.691661218001858,-4.1082347383082531,0.50779063734542518,0.29176949644006855,-2.1721802029711639,-13.025108810760832,18.640464893100663,0.77091134316739918,23.48010011259985,-10.573008392780183,-0.43508265855070877,5.001952511993327,16.193659887692185,17.755601009294558,-7.4137132660494585,16.294216897072975,19.520083626176987,16.418198458456931,2.25975641479249,-7.5986001146783924,19.958934009706443,-17.073461538561915,-12.662985449615125,-4.3715550869664925,-10.39897108509194,21.046205581967968,-20.145294104015552,2.1272805914885708,-14.370832451450495,17.304029716398603,14.926346200444007,-22.528730054548408,-12.054685489769327,-11.925658378042275,-6.0681138489889532,3.2421176124224229,-11.845417049473209,2.1844233351661626,-10.273346290861978,-13.432718524886019,19.199202981215169,18.116019632379789,2.0220915147545715,-19.979785989898417,-14.050264629327785,22.129130021131818,-1.6621178198722828,-3.6128357893578351,-10.699616143074968,0.40414250696798687,-11.638089025535473,-22.642254318057002,-5.6840558120978262,2.0091707806145243,3.0000278352995973,5.0480992917346112,-3.0763956269018506,13.502683437905619,15.937660341226445,2.3943947668051333,-5.1030781469142861,16.482775758794457,-12.01002334679773,-11.102976148810953,-3.874428764246713,-13.170061059566391,-13.105946989592308,1.5970009035471993,-14.261281454106186,3.9151696776353884,4.6829983211983821,-12.306444944448536,23.973938406528731,19.249162017434653,19.033486842776021,-13.392602702379611,-11.284717764565185,-20.044832758507422,-11.070741135639697,19.54836677046756,19.363819952670987,-3.2516879025304304,6.4162638832407071,-11.999106579796782,-14.980713322604457,-10.638930679820838,-14.841845551181354,5.1594534041486266,3.0685908283547993,19.360606721368516,-2.0191239762879785,15.954919148352419,-9.0078404348366981,-12.908019955678444,5.5878604700305576,0.13025729852883802,2.9072668469195779,-3.322428498199868,-3.2723575458382022,1.2403632909798095,-4.1562703590260339,-7.2991094899790925,-2.2013470722265001,-16.592886126970946,22.220440791459001,17.405828261838447,-6.0296572288403079,-24.686180769637286,-2.7687232380576585,10.044835772394745,15.909586328094962,16.337312262838438,18.646452426052509,18.399696754714171,4.8698729541676959,3.0664000495197943,-17.004391399439147,0.52730708508331037,4.959649682583545,2.1430331538373646,-12.524283926672533,5.5612647305870286,-13.151166275226945,22.79498784400349,0.72387007711768792,-13.042706676378089,-0.83965756796320279,-12.807603881130502,14.433654133055265,14.959429594326068,-6.7769760430085357,-9.4918293025586049,-12.958641181818811,-0.24815916171625479,-1.5345923927568628,-0.89023727448734336,-13.911286389740368,9.4766323457964301,-1.9209324004428983,-8.1622563222748283,16.465335677423319,-0.45941811561420576,-13.221098478525969,-13.278733139530102,17.993545895367667,-11.172006393172252,-20.20138825999145,-0.66244657099831572,3.6480798240039087,-8.4269257719373183,-0.43130519797208794,-16.466364457970478,-6.8501781162110991,16.145216544099995,5.7337665325960776,-11.543969067904913,20.116534915884841,23.154633809310628,-1.783241453521653,4.7264182634837653,-24.151682482941226,-13.220380096109809,-5.9098318770619729,19.979048172371204,4.9642889622097019,-22.735326950348149,-11.404527268424829,13.188041766183284,-19.47380765185715,18.159556131583713,-7.8870951790384467,-17.51110335616945,-7.6023660944078468,-12.033148674694759,16.022353043742651,-0.1126122965401429,-2.0118791218684233,-9.1342671793441212,-14.968261056349286,0.8561153075076664,4.9776982870741078,14.718441141364659,-2.3087694710339339,-4.1218943186784713,-8.2678147186576449,17.326265976819592,-22.647010772816166,-0.15394154007847244,-3.5165012812646355,8.9714592266027715,18.218018669170345,-9.3569759857717152,16.572566768303492,18.421218250042607,-15.142446491148998,3.8454346058423905,16.232739652657799,-11.673329234582717,3.9794630767999215,-9.1068500856604366,0.0390360719641243,-22.61657941354105,18.433318648372484,5.4252012323009469,-18.643035228151827,17.100578831649884,22.576544486125407,-13.317418438731993,5.4709793955241715,3.5283792118592054],"y":[3.1802602662245496,21.162438757215888,11.391612869138145,3.7951016645166544,1.0008380935278764,-12.089724742203105,2.4090963213574272,9.417490342788934,9.6869971549642422,-5.5339186619970633,12.035544048741173,1.9518345560678347,-19.425926303269957,0.99387125482942473,16.792159095329787,7.1062094006857199,17.635101090352894,2.1971165655302918,18.047550618330671,0.8271349055406455,9.9999080045100186,11.039392767004074,0.41844946817037804,14.185787510509309,7.6437507271194658,-15.948572318932468,19.558254906325612,-1.1268662790895752,13.271654757558654,0.84132237836136625,17.220784013414303,0.9522479020699286,1.1047254407943463,13.991478676275886,6.3179471068920803,10.442497857664735,7.2400656579514688,-0.26372175952841181,14.080515728415275,0.59041626267471992,-0.53010434221504132,0.95112324872788445,17.085236170311941,5.1572841284701498,13.079627983536174,-18.377259879876846,-1.6678609733110052,-6.6066056663241586,19.956131169054299,-0.90280606229691052,16.995945087469938,-15.862944057364066,-10.286513986755628,-21.514511766040929,-15.62131098572471,-20.006585421268195,2.7369449081745469,-5.2733223613590416,-9.2077489129114216,-9.5415728695605164,-1.6259865599461014,-21.363724484526493,12.720043221919175,2.8765366174681577,-1.022119526343936,-3.2648787538275958,10.792557536157727,-21.308404011143441,-8.2939776518926891,20.382761599231777,-9.7152922048153005,18.561743304525006,0.84648858059322674,-7.1465274069319742,0.59934830758627,-3.5336810887723105,20.669327884664174,7.8875661843970208,-11.263745866738528,-16.363909902022272,-18.669552562057405,19.143785067534893,-15.528865129052484,1.5128909578241028,-0.49229244359909929,-22.284906727983969,-13.783496686034963,-2.5033283564432653,20.156315431971958,0.53510217386859849,-20.697290619332797,-13.078223624708764,12.373927674431332,-5.0710285705417117,-11.069985617772815,7.2362825195590572,-15.487262667833351,0.50943943726633889,0.10686988319688284,14.509743209128123,4.0877530378631182,8.0564258916729958,-12.884081628077716,7.7536612867190167,-17.849524116792594,17.906334044929139,-17.040862912088699,0.28673957199107936,1.0606280054277499,6.3099802812948012,-10.322405825580812,-4.5375349957927806,5.9818737992072384,-19.499843191758355,-4.7640237933607832,-0.51529201526580992,-2.3690564576571056,-12.218416203953796,-3.4816324284544944,-7.7550424516650187,17.311220690466289,1.3333033466299582,20.307042075712744,-1.1426135646521898,-21.887487207533756,5.0689150657864754,9.7025471157072687,0.39305027398327191,0.90310452357003113,21.194355260452181,16.053768840080721,-6.6579161664651894,-11.3810333380655,20.658847852203781,-9.9412426939701408,0.69452324560088508,-0.37473568999705104,-12.824035049806714,-2.6817203098837652,14.450623850723213,2.6484455273926875,15.56858328209333,15.392923889259968,19.698101116841404,14.568365374515242,0.064975985672250908,7.5468263020448507,-6.5010687417607338,-14.527700175655433,-1.4104013409201575,-19.887660610451224,-21.493900929398297,-2.3819344514326941,-20.267145048625625,14.1390111279779,5.0079161654137589,12.879915608968954,-3.8406447251841533,-15.676725324491057,16.319982536409462,5.0932685484355913,15.453004445100344,0.83473333397682514,17.927121086773855,-10.883009645161899,-1.0195455951915748,-7.7152885850815274,0.19313075389104775,20.17225130799843,-20.616226408756852,14.494033149126368,20.09379375372874,15.470083522369366,0.31262490936318826,-22.183084918065997,19.173790279002699,-21.905050397994675,-11.077267546372081,-16.311032944996231,-18.331199586235133,13.877001839634989,20.869381720327155,-12.19554555036062,-14.910781091554528,17.098775390343572,2.0850403767067296,-4.9761520803273456,-7.0661988046622648,0.52731909588018488,19.853216762400312,15.534282358707182,6.2897991284458223,14.486094880833582,1.4780260781311054,-0.078484468282625897,4.1282963995248529,10.563237567764938,-18.280763965198762,-0.91152296444883629,-9.6969252587801531,4.6110697816755408,-12.767295282030554,20.300044525954394,-7.8124174858546498,0.79347052628598014,-13.28049064235965,-14.136012289826578,-6.5355357747516623,-16.429999280965973,-18.292768543160651,-11.321938999514792,-10.949462231084754,-7.051080487565538,7.0994265586328451,11.22258953393573,-17.787575591421607,-4.1438019582612622,8.5085927405803954,14.320881079990391,-22.130199234727268,6.4260533022646076,-2.4403640500551407,-9.3166340559848599,-14.178029247652724,-4.8579625566936446,13.814825181074642,13.838186871646528,-5.4215281739113399,-0.77509022804147232,-10.637741581110687,18.046668977389917,7.2206460783821562,17.676810755115437,-4.2122737439090523,-9.3375179597882561,-14.588582354406842,-19.26181005817719,-18.572007380666406,4.3691768017336328,-20.210710493889472,0.30945844076899542,-7.5215866533809104,4.4184873574818795,20.119729038780964,-4.208162567819957,20.330299892744641,-4.6274410484620114,3.2610130549950367,1.9800191568402579,-12.077424456257852,1.2891540254435276,-16.263639330985789,-22.834952649745198,-3.4345791194010347,15.52622738346561,9.7683955034207486,-21.534088818317084,-13.153532594388958,17.826853183674238,-11.616123827815573,-0.02484248978832829,-10.932184781205208,-5.293892516859219,-20.92257397844849,17.59650450130172,-17.289083215293704,18.719608447233085,-5.4626154932702526,13.850375214129976,0.42345332534120173,19.019093763426131,20.731629435460626,-8.101353752897948,-2.2187545544363951,6.3491238828983567,-9.8368845484246776,-5.5089789124113757,3.7470647936653334,-10.206818447512569,7.4095284930664347,-21.251189601048523,16.168963558644371,-9.0619701040749696,-9.1993941047616445,13.034385095139804,2.4711151010439938,-6.4827590321969701,-8.5742221488492465,-7.7668516459207062,2.8782523287792294,-8.7854602457895048,20.943386545836063,-4.0032229513946493,6.4289826172028803,-2.9942158180851712,-21.112691361692114,5.7710714169290274,19.285544307062352,0.13112013537175368,-18.213827926302464,-7.2128972561782589,12.490722881603713,18.952077563386688,-20.173470370591403,5.1807159256956687,-10.582045759026473,-0.66433485866819453,-5.7419163367129844,-4.0988137525786508,1.0206345274543018,15.03746676667471,20.266803362110494,0.94279199446792172,-21.475569088617753,16.612063982878233,13.250340652192531,-17.870059777578565,1.2040963735823387,-20.002796345682132,0.29766337209470162,-3.6991734825913234,-1.956884915837763,20.758806403559603,20.747942608663735,-0.55254217189804311,-20.989010620061013,-5.8738470191567513,-9.708195356721868,15.173651589124992,13.523989510940735,-18.796475066498857,-0.14709296137061253,15.148783045755016,19.391953879958802,0.62628733964472949,19.810595198520875,-8.3908290217332944,-17.203898776435221,-11.564985594597552,11.203604693667266,5.6159182843479885,0.35113827423633798,-5.5634960781702834,5.7160683197706055,1.233999415359003,0.16088099935197983,-22.133685119860839,8.0657523089547087,19.747579010738772,-6.585707911707873,-11.017652900492314,0.55231394095886199,-1.0345438791987422,18.268539432242811,-8.3943770271742366,-2.4834066298488384,-8.4289598279522178,-11.78791835037374,-4.592208293812166,15.928688744031867,12.753182259156205,19.21027952914131,19.476789474715147,-2.9540800826251243,13.701594511175285,8.5632355221877905,-6.055360133326376,-13.421936731073849,-15.178148211651894,-16.007784030201069,-2.1708958656047845,-10.102402821305692,12.879815716160339,-12.013744585958253,19.989936562250747,-17.601639633392761,-0.22314863356028458,-19.220553174098427,10.264597530452539,-10.683940738545864,15.579427643961075,5.3755619073449443,1.1757936121681469,17.079830078471588,1.9781628472228328,-17.594374213449164,-10.929774105333358,20.283111162780589,9.5732041207868281,-2.4248044002963689,-15.234179310006944,-16.971608674259244,-18.915694831610285,5.2661690865571851,-11.680906183604186,20.904155397946329,-5.7252710213629214,18.238681737955911,5.3249906072392221,20.950916473229597,-7.3499228295715513,-18.355744616004984,-15.560441952990082,2.1244827120046477,-1.9403700446225163,-8.6713085777217564,-6.5761974590268366,-4.0219236394960767,-15.5499744382033,-12.886322343217646,20.991213404196184,10.439216226375947,-5.5438959722757959,-5.0024400694075606,14.376154694614344,9.1574673317514428,17.289090257680396,0.59352025029166255,6.5443268222132884,8.0568505405560131,-6.3122981222259797,17.080753770849778,-22.493133598055344,-5.1353346872217287,-10.556378874012102,20.296202896074711,-9.0892089607065607,19.034153525985545,0.90179852518305426,-12.537931832770044,-7.3371406166605242,16.166098787334736,12.03043402528672,-11.651822357690074,-2.3103727548982724,0.25228744252696134,-2.2864980485068527,-12.071514993660189,-15.288412978773982,-9.6060018340239672,-20.954326173511092,-5.2998098647081875,-10.522926771130745,12.663976497074183,-15.567211653818406,20.062187887324356,10.023684938747957,-2.9401258827706611,-0.43929523636476248,-10.738280027346143,-16.404126103542019,-22.076641938532898,1.4734388690871338,-17.734168785737769,-22.046983887868151,14.922876368038331,-21.559969925295384,-16.173529537419146,0.089722010123507598,-0.11744091661207211,16.387950761667945,18.030289653048293,-17.495367472419495,6.7157037644624653,-12.318594145833764,8.6179301868395299,19.563332922744909,-12.906227561964315,-2.349695318387143,-19.462926997663541,-10.725550257563246,20.598373815223702,-11.039238050713365,3.0794911210445459,-21.367031689911151,8.4717266091641719,4.1811179677090848,-3.1173534651857646,-11.141199276068598,-21.383483256077437,-2.752275831798638,19.774412855204371,-6.2631275408896068,-4.9093855831143376,11.158616131627603,19.97292693811875,-10.534138414653579,-2.0033693010299927,-6.2668777496078842,20.328115962243007,-0.23252855374389658,-20.378516210778113,18.679213963645253,-12.62301344954132,0.2850349443451678,-16.33797492116355,15.693804511873646,-8.9434956863764299,-0.36925100016739099,-18.437919237338942,-18.485527409158596,-5.3721647689558703,-11.608218374755236,20.76943331113084,-17.799773296646848,18.088313821418236,18.153519070041451,15.801107454484598,15.468741288105084,15.228400815912329,-3.2468823854276838,17.483442515327422,-12.789964662998676,0.65461446156239678,-2.386458222257676,-6.2768020168848713,19.25865800131168,4.0778055814238794,-19.627751850330913,15.564864271340719,17.858933448307699,19.948110472432802,-21.571414357175946,-17.16539021154324,18.877416640087574,20.184676375747898,19.46335858253526,-11.48159219297577,-5.9475050326059806,-5.0834727909124808,-3.8959182062198443,-20.381612273879242,7.6541531068598703,0.43106770775014158,8.7627367079519161,-20.015287742323721,10.982799670610861,1.6997132381997451,0.13342168870571888,17.989929924672808,19.020372344381826,17.275598933945155,0.10069712542677345,0.20384388266276438,-0.46133983939139933,-2.7243409008535515,20.453547920554502,3.7687871072351169,-10.200745570844218,-8.2633571489987592,-7.6301850746612452,-14.526550406385194,-16.062156060360085,2.3405186526429036,11.79264076856845,1.72192362035688,19.276291950367185,-17.87710230488101,12.460375085539127,-14.245024715238687,7.8361541609036767,-2.7653304020720748,7.9773822952984208,15.625907615912102,14.873309562761287,-7.1348133555739208,20.219373158676721,3.7208428845033752,-0.91030100097404987,-20.091440682199334,0.26524782855533291,4.5518494857956213,18.559059887263093,-21.906644883510346,20.343903710350247,3.9432789834999209,17.37072982129061,3.7422281904740764,-4.8698883409455673,-1.7834172607050121,-11.715305529354586,-20.422957299789569,-0.85960075919473189,-4.6301629011694443,19.361253695661002,-15.685566075236384,-3.0096512238830035,-20.715011632859955,-12.483106851573357,-9.0947969470689376,20.928462432680707,10.446095334912988,16.688076754208602,-21.897485848420096,-9.9136109490492217,-10.619984275859036,-13.605353489695313,-15.006414993925802,19.934919017814686,9.6218433686518363,-9.4518436694236296,8.9946672767454139,-8.1838330668226558,-18.149579871550966,6.4859806029249087,13.460169784889553,-4.1073849885550011,-11.270608576872887,-7.5831664534349912,18.772990833656049,-7.5747924830702349,18.770660876935093,-14.971008470710379,-0.23877062505443014,17.793453964624323,11.988412018047011,-11.279689978890206,-18.734780418682472,4.5303260205305671,7.2496834616456605,19.915825395106825,6.6520777652083831,0.55767663598935768,-1.1597967464355987,15.770791261573322,-13.520981172860669,-20.681954554133885,18.868805203527309,16.983004542960273,19.772342349133332,10.684084199455079,0.80853474626408617,11.599701730515669,20.617988304543641,19.700159122688124,-21.321445751618846,2.6988916768920452,19.632415377692556,1.9483538650322241,-3.3795242773105691,16.193348279433557,-19.160040431599743,-5.6954422466016865,-20.065299399383026,16.034636920459135,12.129222764313282,-13.86409305603769,-11.386429087603306,19.939098209145257,-16.569905694807861,1.9819140572764837,6.5452140839338169,-0.29027139960801041,-20.488549388582321,-11.919725466461376,0.58603258462934282,-0.41192022851604898,-21.876797014671435,17.656580320656744,0.81102823769637011,7.5084674391628532,8.4914614204541738,10.261936090382655,-2.7950817465274782,-6.6267541778150587,19.442907266466431,11.865891088101485,16.533137724693095,17.774370640303424,17.343045521316999,18.456671163437019,5.5564782308614022,-7.5402402646375029,0.72924890790074992,-15.784920481091548,19.721082274964683,3.2183182488893385,1.4006781560531805,-0.29150160690821808,15.981355300216814,-7.6702666989811723,6.6222951097256777,-5.417708046253968,15.046679577565861,-2.9179091573830811,-9.0553938777833167,12.572948354551116,-17.906003633557642,-13.387924229998111,10.801499469539124,21.434605397195753,-9.7746831648772208,-9.6541644094647623,-2.0299436398872279,-20.770829181392028,15.201040841156029,0.17320240346601096,-20.348168819918609,-9.8189763651586901,-5.7859794265485913,-17.562373424035986,20.002109289149022,7.7188522903898926,15.706083098405546,20.829802954583666,-9.6547504452858668,-10.24030080139886,17.321579699507986,-15.044595454374951,-2.4991826075899075,-8.3656109757501351,19.188055611911462,-11.744423890978021,16.095314872868439,-15.988629434942888,-22.334628711982763,-8.2109826038965004,-20.251386936867245,-9.9490006445350758,18.970682433836476,-15.634857287703571,9.9050436322058353,-21.45287980588682,-11.762316142249794,20.225912141165423,21.179132186305971,5.176252935402835,-11.125255593185644,-5.7147516975573014,-14.173105421440768,12.374361396194043,-22.617911055662134,8.7461530544849886,18.488408925680279,-8.4057913249978053,-14.043581129151004,-7.40180420396862,-4.2032978211329812,-4.2849525705030818,-7.2679254532841764,15.079045434461642,-17.648971114301165,13.38568945440892,20.040305729467647,-21.282450102995824,15.51159840631677,-1.2025557033377794,0.56265329124102281,-0.6679010927370993,-18.462978544681466,12.991749164885885,0.42760516718529362,-15.914540463712987,-11.759641414011176,0.63764386855354505,1.9647135548536523,-0.12315383493250308,0.72846865933871607,18.060353311911548,-20.385121055275672,18.369657992562633,0.9746748606651543,-9.3092891960513509,14.340863915342069,19.823149739507446,-12.373995356263846,-8.4069547962787041,-4.7539513687718769,-17.527714240798705,-4.5912394183710825,-4.0062287634227003,-16.444126675875339,17.970300792231914,17.450510124590082,-18.961359957643413,0.41444483060038412,-4.0984926324225368,-3.0516653540597982,3.7293345203523982,10.065843550457293,-21.302228204015332,-9.8761776456714383,20.052865802595022,18.364772440176949,-6.6817028747209415,-21.030447669818141,16.104921542438479,-11.608833304393128,19.92708177173709,-1.8585153990584151,-5.3962827748004267,-0.30641021126187873,-19.880106094785585,-21.123096923839711,-22.014365047558936,-16.015871629900911,9.8143574213743072,-20.632687830515255,-11.731143646489928,2.2971942463875874,-20.499784846784372,-13.17779164881612,0.99269745547950294,3.2342209625721861,-20.095732546707971,1.1112073765689345,-9.7334042896673338,0.66399781588006024,-19.264492004755915,18.785001186460697,6.9960781780360417,-11.469259561452853,5.7583719778172986,-21.935032782078579,16.603124004373914,-10.71823066834593,-8.2289014074190057,-19.060285194364639,-14.159395879812804,-6.9818685156512696,14.989288867963392,-5.5123494493736542,7.377585902131349,-16.303239028261672,-0.56258821781914303,-16.334231034245349,10.267832093250997,-2.3348688527760149,14.980606750598676,-14.91235474813301,6.2491401341697959,10.488105335293435,-1.4583181598351111,-8.4202731491676559,8.3193781457996003,-11.14870989817142,-21.405999890285045,0.59288842816375875,14.192673442019249,-21.57815205106812,12.387054822065119,-5.446460521838187,19.06206103225702,-19.673133214010083,-1.8127038457435376,19.902527787692474,-22.18592523484179,14.808605243978956,-2.6142977090935968,-18.837772959804347,-21.878336913300352,0.68391457622098595,6.7016251288270263,16.832358523492299,1.3429161442995605,-15.482489495973827,10.342694043941302,-1.2751381928957095,9.312070839546557,-6.5720897521271597,-4.5648894046595796,4.9702785902592588,-11.921916156307205,-9.4571962161913614,-9.290026966677285,12.358101857791537,-17.035357080119578,-8.3323769035716371,1.5577666089519955,7.7307581933978007,8.2888719953257972,-21.998476531822188,19.025566679253252,2.3005320026850731,-13.836559684314812,16.310489213742681,-13.644680080926998,-12.597511865125568,21.039599294091843,8.1917905587105508,20.467383966547711,-2.8427415742189206,1.761827978205188,7.3924405530828237,20.139375691996023,20.285545386525225,-2.4707629747094884,19.752833877004043,19.328398829533011,-20.579534234347975,-0.33142775806656516,17.961048358669103,-22.393987106994285,-11.972266605301511,-11.190582155697752,11.663354226263779,19.135159373867872,-2.4496836442051335,20.195963911395626,17.83936879782927,-2.1831245467708991,-4.8910455045903438,-8.863756963129374,11.302728474421469,-5.3909194974304269,-3.2651730301172428,-11.528781960816705,20.795231886086814,-12.679257641599946,21.474201879775382,5.226931051935348,-13.189999592627315,5.0092450665027775,-11.450879258451492,21.378409082117013,11.358654171596861,-20.451500683595899,8.8748170477489943,15.689766980989573,13.939587501151438,0.26504081522830292,-19.32146436593894,2.7563810101929094,0.46267362268905088,0.97351671974986864,-21.764397577372211,-14.536421274477036,18.018145706517245,-21.528286535914326,16.738379201570339,-5.1839861176433093,-20.313249766356805,5.1436807174608417,-15.275342388654556,3.6025881120361993,3.0144081157503568,-8.1601320223563754,21.325835151792049,-18.186254382287139,-19.540604163259655,19.818367276873506,-11.927706882677796,17.099873432825127,0.11628871024126312,-10.940843653899652,15.813393768924353,6.4381972133687881,-11.580690226373559,0.66221123821719674,-14.144999433407509,-3.3791310472391327,8.9858019530677034,18.56317423518048,7.1083765578760492,20.029243354047207,-5.3142640381202,12.287985229718739,16.095501767687814,-8.946718868010155,-8.2656057442795579,1.0248053647090689,-10.986597217350361,1.4960771238870987,12.992701803517187,-0.31555434921561493,-0.50957444286279385,19.975363644162517,1.265222943217208,7.5604450408794044,19.150919322618162,-14.032491645562756,13.982449110813846,20.560148153297881,19.495565763103571,0.70764416618384385,-7.0207258433381403,-5.4393549713736604,20.053792361402145,-0.25451961275344004,17.259606620028357,10.473527140594289,17.333094174561236,0.31475389105905954,4.3564047340775431,-13.317774100160687,-2.9037262840715399,-4.5738418107063969,15.638440731153056,-16.747456138269467,17.446520301593097,1.1623927743489126,-5.4610541369017209,4.2633573146784505,-9.5974616213334567,-9.8366312381857508,-6.6209112870910145,-11.288368878530417,4.4268052888771043,-8.1559546846884157,-4.2236624397608695],"text":["fawn","tsukino","nunnery","sonja","vani","woods","spiders","hanging","woody","trawling","hold's","comically","localized","disobeying","'royale","harpo's","canet","aileen","acurately","diplomat's","rickman","arranged","rumbustious","familiarness","spider'","hahahah","wood'","transvestism","hangin'","bringing","seamier","wooded","bravora","grueling","wooden","wednesday","'prix","altagracia","circuitry","crotch","busybody","tart'n'tangy","burgade","thrace","tom's","snuggles","francesco","complainers","templarios","272","273","zaniacs","275","consenting","snuggled","inanimate","uality","bronte","errors","dialogs","yomada's","madman's","dialoge","usenet","videodrome","kid'","pawed","'girlfriend'","'pleasure","'reloaded'","kazakos'","rocque","mailings","brainwashed","mcanally","tom''","kurupt","affiliated","babaganoosh","noe's","quart","kids","uplifting","controversy","kida","kidd","error'","neurologist","spotty","cobblers","projection","fastforwarding","sters","eggar's","etherything","gateshead","airball","unsinkable","stern","cervi's","dnd","dna","insecurity","'reboot'","trelkovsky","jaekel","sidebars","sforza's","distortions","mutinies","sermons","7ft","boobage","o'bannon's","populations","chulak","mesmerize","quinnell","yahoo","meteorologist","beswick","boorman","voicework","ster'","blustering","hj","intake","morally","jumbling","bowersock","'porky's'","gershon","ludicrosity","coprophilia","expressively","india's","post's","wana","wang","wand","wane","edgeways","titanium","pinta","want","pinto","whoopdedoodles","tchaikovsky","travel","'victory'","copious","gouge","chapters'","barbra","uselessness","wan'","assimilated","petiot","mostand","dinosaurs","wrong","seda","stollen","sentencing","ouroboros","assimilates","colorfully","glenne","dongen","subplots","kiloton","chandon","effect'","snugly","kuei","welcomed","dishonor","concurrence","stoicism","guys'","beroemd'","butcher","melfi's","aargh","playhouse","wickedly","fit","labratory","lifeline","screaming","fix","cineliterate","fic","fia","fig","fmvs","fie","reentered","fin","doctresses","fil","zucker","ached","counsil","paterfamilias","songwriter","shivam","hurting","effects","slauther","'flame'","sommerset","interwhined","whacking","bartok","barton","frewer","fi'","ingrid","stribor","approporiately","wobblyhand","tantalisingly","ankylosaurus","parasites","childen","jenkins'","metafiction","golem","indiscretion","reeves'","inamorata's","brittannica","adapt","russo's","guitarists","abbott","abbots","lanisha","magickal","mattter","'willy","pumpkins","stuntpeople","estimate","ugghhh","gameplay","wern't","n'sync","sickeningly","chiara","disturbed","portmanteau","ineffectively","duchonvey's","nasty'","purpose","lazers","lightened","kaliganj","popularism","damme's","stylistics","mindgaming","spoilerish","'corny'","boerner","olds","bakelite","renovated","forrester","lumiere's","gaskets","needed","smight","master","edie's","seeber","hiya","fuzziness","genesis","rewards","enthrall","'about","recollection's","mutilated","fatherlands","fischer's","positively","270","ahmed","zatoichi","bannister","anniversaries","helm's","'work'","exclaimed","'unfunny'","274","feeling","wanda's","dolan","278","peacoat","brawny","mishra","worlders","protags","skullcap","dastagir","affairs","wholesome","hymen","paramedics","unpersons","heavyarms","affaire","coulisses","hymer","kremlin","shipments","pixilated","'00s","diminishing","cinematic","resonates","simplify","nature'","temptresses","reverence","resonated","dailey","2","treize","majo","kiya","woolnough","thanatos","sandoval","dorama","o'shaughnessy","tech","fugitives","teck","'e'","doesn’t","purged","saying","martians'","norliss","dickey","dicker","'sependipity","padded","ordell","sturges'","independentcritics","tempted","atkinson's","hounded","apace","clicked","'humor'","martino's","'supporting","warmongering","zemeckis's","lube","shocky","plate","plata","sturgess","nerds'","plato","plath","platt","mcnab","clumsiness","altogether","massacring","bicenntinial","skaal","droning","lds","jaguar","cale's","nicely","mummy","lot's","patch","kerkhof","leader's","'movie","uncomfirmed","heirloom","wrangle","emotion","'stargate'","pinoy","conchatta","broeke","advisedly","barker's","descours","lots","lotr","irs","lott","xvi","irk","irl","ira","belzer","irc","ire","requisites","discipline","lyoko","extend","nature","'dickie'","optimist","lapping","superficial","vestment","extent","tendons","heller's","quagmires","miyako","moocow","coles'","lookit","ravenously","levitating","perfunctorily","lookin","lot'","lookie","fearlessly","libyan","fondles","gopher","wearying","nz's","minuses","puposelessly","shandling","decapitates","humming","'nother","smackdown","underdone","frf","triviality","fro","bothers","'kensington","much","muco","wiseguy","richie's","tonino","unleavened","fry","'tv'","toning","obese","sensationalized","spiv","spit","arkin","charleton","jeon","boardroom","doubts","spin","hepo","wildcat","venoms","misconstrues","mesmerising","misconstrued","rescinds","prostrate","majid","climbed","canoeing","majin","animie","sylke","conditioned","waddell","3","hyperdrive","conditioner","bricklayer","hong","memoriam","inventively","levant's","portobello","remand","mummified","honk","spews","visitations","mummifies","cavanaugh","zeon","jungle's","viertel","frenchmen","torpedoes","schlessinger","torpedoed","blister","cinefest","furlough","mainsequence","mentors","academic","stillness","academia","lonelier","nibby","losers'","cineastes","corporate","massaging","bellow","absurdities","expetations","nyfiken","mehras","lasse","visability","militarily","elder'","gainsbourg","hah","hai","haj","hak","hal","ham","duffer","haa","had","advancement","hag","hand'","hay","mcnamara","mozart's","duffel","haq","har","has","hat","hav","haw","figtings","elders","underpanted","pninson","unequivocally","barbara's","bello'","indicative","yawnfest","hexploitation","loder's","sleuthing","justin's","'ball","'summer","'demons'","mormon's","laughton's","debell","shipyard","unabashedly","disks","crowd","crowe","vancouver's","mosques","crown","culpas","crows","surrell","flowless","sheirk","'three","peterson'","ooverall","perchance","bottom","chabert","sneha","inhuman","ichii","ursla","completly","moviedom","raddick","brundage","brigades","starring","'goal'","caskets","willcock","threesome's","mosque'","cover's","spaceships","anomalous","ptsd","shirdan","obscenity","lemmings","duccio","levene's","'gorby'","teenager's","marshall","honeymoon","shoots","despised","okabasho","fabric","cannavale","raped","tutt's","grasping","despises","thief's","rapes","raper","eyre'","walchek","elmo's","perfumes","spurting","exposition'","denoting","thesaurus","shoot'","bonejack","simpsonian","hebetude","hallow's","desperation","incinerator","congratulations","humbled","else's","trelkovski","rape'","'chapters'","1600s","martian","nicest","eyred","passenger","disgrace","moderne","barrymore","yankovich","moderns","studliest","bedsheet","decapitation","slurring","'nunsploitation'","'character'","cambodia","rebelious","pasadena","crowne","'bedchamber","conjectural","appologize","halfassing","paycheque","palms","'islands","hawked","palme","conservatively","larp","palma","smelling","aragorn","hawker","hawkes","explosions","loren","pyle's","shootout","mike's","driscoll's","cogsworth","britian's","childs","portrait's","chain","whoever","puttered","childe","maywether","chair","rance's","machu","ballet","grapples","summerize","freelance","andrea's","very","coolidge","mache","balled","grappled","macha","underlining","macho","oversight","machi","verbally","tenacious","windshields","paychecks","jerk","good'","prancer","prances","olympus","lark","embark","gloomy","jehaan","turaqui","child'","locked","pranced","exact","unattuned","minute","skewed","hodgins","skewer","think","rosenstein","helmit","wrestlemanias","hindered","martha's","cheree","pluckin'","ogles","heavyweight","aada","chopping","strongboy","hegemonic","adorns","xxth","nobuhiro","capitães","kavogianni","antwerp","celebrated","roarke","baggins","cheeseburgers","matras","nineties'","'craig'","celebrates","unintentionally","drafted","climby","303","oldies","climbs","honour","plucking","305","address","menjou","'freak'","dwindling","benson","white’s","shamelessness","impacted","upatz","cusack","flavia's","effette","influx","boooooooo","dimitrova","houseman","bigas","boylen","phillipenes","fakery","grandpa's","darnell","undergone","handbags","perished","pooped","vigour","opposed","etude","caine's","doozers","photojournals","perishes","constrains","migenes","consoled","alastair","wvs","ooooooh","approving","consoles","disparagement","futureistic","rebounding","'date","gregoire","rutherford","americanised","novikov","following","munroe","morita'","christenssen","oatmeal","fossey","livered","listens","'marci","otis's","thanking","maude","extensions","ameteurish","commender's","agricultural","convincingly","fueled","mahattan","paris's","vulkan","stapes","odysessy","harmon","surfing","halloran","unbelieveably","'offed'","quadrant","inhabiting","nebbish","forebears","skirmish","ocassionally","'resist","impactful","spicier","touristy","'football'","webpage","exurbia","jucier","professors","structuring","jig","overlord","disconnect","sniffle","slimeball","jia","milked","banjoes","jim","workforces","jip","rotweiller","mundaneness","'ninja'","dead'","cipriani's","modestly","professor'","shacked","bashful","sorter","overpowering","workmanlike","henpecked","sorted","jōb's","'always","'baptists","dreamcatchers","'silence'","hickory","funyet","breakumentary","didn","didi","pealing","dispite","italy's","instability","quarter","quartet","padmé","'bleedmedry","pahalniuk","honduras","bursting","pablo's","irremediably","presages","bowlegged","dalip","entering","newsradio","presaged","giallo's","bouyant","amerterish","rajni","leeves","macauley","seriously","sugercoma","grimstead","'fairy'","zenda","'twins'","realisation","highsmith","raunchy","incentives","flatson","snooker","crazies","crazier","grandma","napunsaktha","workmanship","reisner","sanford's","doña","modest","everything's","hamer","couldn't'","quibble","socking","tingler","gutman","lachlan","tableaus","headbanger","spoken","cerebrally","'road","tableaux","proust's","periodical","shoveller's","tamara","affords","concert","yara's","someome","lingering","abraham's","beesley","cherbourg","kagan","snatch","miyazaki's","absorbs","koltai's","tingled","crossroads","rehab","falworth","sequals"],"hovertext":["X: -10.74269214<br />Y:   3.18026027<br />word: fawn","X:   2.62393090<br />Y:  21.16243876<br />word: tsukino","X: -11.88749458<br />Y:  11.39161287<br />word: nunnery","X: -12.36364572<br />Y:   3.79510166<br />word: sonja","X:  -3.53353204<br />Y:   1.00083809<br />word: vani","X:   6.10441275<br />Y: -12.08972474<br />word: woods","X: -11.19078846<br />Y:   2.40909632<br />word: spiders","X: -12.47341001<br />Y:   9.41749034<br />word: hanging","X: -13.87770212<br />Y:   9.68699715<br />word: woody","X:   3.93845785<br />Y:  -5.53391866<br />word: trawling","X: -13.27943606<br />Y:  12.03554405<br />word: hold's","X: -10.10405467<br />Y:   1.95183456<br />word: comically","X:   2.57529268<br />Y: -19.42592630<br />word: localized","X:   0.41041891<br />Y:   0.99387125<br />word: disobeying","X:  -7.00007201<br />Y:  16.79215910<br />word: 'royale","X: -13.17304389<br />Y:   7.10620940<br />word: harpo's","X:  -5.51414424<br />Y:  17.63510109<br />word: canet","X:  -1.47920158<br />Y:   2.19711657<br />word: aileen","X:  -7.91874814<br />Y:  18.04755062<br />word: acurately","X:  -5.52373377<br />Y:   0.82713491<br />word: diplomat's","X: -14.10800730<br />Y:   9.99990800<br />word: rickman","X: -13.41673846<br />Y:  11.03939277<br />word: arranged","X:  -6.96963326<br />Y:   0.41844947<br />word: rumbustious","X: -11.61517597<br />Y:  14.18578751<br />word: familiarness","X:  19.77975066<br />Y:   7.64375073<br />word: spider'","X: -12.53648599<br />Y: -15.94857232<br />word: hahahah","X:  -2.52731011<br />Y:  19.55825491<br />word: wood'","X:   1.17961474<br />Y:  -1.12686628<br />word: transvestism","X: -13.05795500<br />Y:  13.27165476<br />word: hangin'","X:  -7.39668657<br />Y:   0.84132238<br />word: bringing","X:  -6.17213348<br />Y:  17.22078401<br />word: seamier","X:  -6.51292863<br />Y:   0.95224790<br />word: wooded","X:  -1.10871863<br />Y:   1.10472544<br />word: bravora","X: -10.72173091<br />Y:  13.99147868<br />word: grueling","X: -13.49130072<br />Y:   6.31794711<br />word: wooden","X: -12.25783519<br />Y:  10.44249786<br />word: wednesday","X: -15.03959063<br />Y:   7.24006566<br />word: 'prix","X:  -1.09635058<br />Y:  -0.26372176<br />word: altagracia","X: -10.25177535<br />Y:  14.08051573<br />word: circuitry","X:  -5.18695102<br />Y:   0.59041626<br />word: crotch","X:  -9.16341474<br />Y:  -0.53010434<br />word: busybody","X:  -1.87274612<br />Y:   0.95112325<br />word: tart'n'tangy","X:  -6.00217701<br />Y:  17.08523617<br />word: burgade","X:  18.76614434<br />Y:   5.15728413<br />word: thrace","X: -11.47724100<br />Y:  13.07962798<br />word: tom's","X:  -9.54558634<br />Y: -18.37725988<br />word: snuggles","X:   4.02755384<br />Y:  -1.66786097<br />word: francesco","X:   4.84786712<br />Y:  -6.60660567<br />word: complainers","X:   6.53453533<br />Y:  19.95613117<br />word: templarios","X:  -6.96450806<br />Y:  -0.90280606<br />word: 272","X:  -6.37902082<br />Y:  16.99594509<br />word: 273","X:   3.33565239<br />Y: -15.86294406<br />word: zaniacs","X: -18.21454345<br />Y: -10.28651399<br />word: 275","X:  -0.76057440<br />Y: -21.51451177<br />word: consenting","X:   4.79844614<br />Y: -15.62131099<br />word: snuggled","X:  -8.69981718<br />Y: -20.00658542<br />word: inanimate","X: -11.98683071<br />Y:   2.73694491<br />word: uality","X:  16.36303683<br />Y:  -5.27332236<br />word: bronte","X:   5.30444241<br />Y:  -9.20774891<br />word: errors","X:   5.35540838<br />Y:  -9.54157287<br />word: dialogs","X:  15.14407781<br />Y:  -1.62598656<br />word: yomada's","X:  -4.11225019<br />Y: -21.36372448<br />word: madman's","X:  17.71564067<br />Y:  12.72004322<br />word: dialoge","X: -11.25137801<br />Y:   2.87653662<br />word: usenet","X:  15.60356984<br />Y:  -1.02211953<br />word: videodrome","X:   2.69185327<br />Y:  -3.26487875<br />word: kid'","X: -13.09776233<br />Y:  10.79255754<br />word: pawed","X:  -6.14857201<br />Y: -21.30840401<br />word: 'girlfriend'","X:   4.87484962<br />Y:  -8.29397765<br />word: 'pleasure","X:   1.56789455<br />Y:  20.38276160<br />word: 'reloaded'","X:   5.43362954<br />Y:  -9.71529220<br />word: kazakos'","X:   9.51679506<br />Y:  18.56174330<br />word: rocque","X:  -0.28365845<br />Y:   0.84648858<br />word: mailings","X: -21.15005485<br />Y:  -7.14652741<br />word: brainwashed","X:  -2.84825885<br />Y:   0.59934831<br />word: mcanally","X:   3.91876127<br />Y:  -3.53368109<br />word: tom''","X:   3.08709839<br />Y:  20.66932788<br />word: kurupt","X:  19.34678522<br />Y:   7.88756618<br />word: affiliated","X:  22.40789174<br />Y: -11.26374587<br />word: babaganoosh","X:   3.26447714<br />Y: -16.36390990<br />word: noe's","X: -10.36961833<br />Y: -18.66955256<br />word: quart","X:   8.95046706<br />Y:  19.14378507<br />word: kids","X: -12.60120222<br />Y: -15.52886513<br />word: uplifting","X:  -0.02447381<br />Y:   1.51289096<br />word: controversy","X:   2.00085643<br />Y:  -0.49229244<br />word: kida","X:  -1.57087660<br />Y: -22.28490673<br />word: kidd","X:   4.92938275<br />Y: -13.78349669<br />word: error'","X: -24.65818576<br />Y:  -2.50332836<br />word: neurologist","X:  -1.02904840<br />Y:  20.15631543<br />word: spotty","X:  -3.08847858<br />Y:   0.53510217<br />word: cobblers","X:   1.34577101<br />Y: -20.69729062<br />word: projection","X: -15.36073164<br />Y: -13.07822362<br />word: fastforwarding","X:  18.36525973<br />Y:  12.37392767<br />word: sters","X:   5.67427268<br />Y:  -5.07102857<br />word: eggar's","X:   5.99610168<br />Y: -11.06998562<br />word: etherything","X:  19.43764166<br />Y:   7.23628252<br />word: gateshead","X:   4.93872881<br />Y: -15.48726267<br />word: airball","X:  16.03117147<br />Y:   0.50943944<br />word: unsinkable","X:  -7.59025267<br />Y:   0.10686988<br />word: stern","X:  14.83922652<br />Y:  14.50974321<br />word: cervi's","X:  18.19991023<br />Y:   4.08775304<br />word: dnd","X:  20.25273625<br />Y:   8.05642589<br />word: dna","X:   4.55496352<br />Y: -12.88408163<br />word: insecurity","X: -14.27043156<br />Y:   7.75366129<br />word: 'reboot'","X:  -9.83801107<br />Y: -17.84952412<br />word: trelkovsky","X:  -7.66759022<br />Y:  17.90633404<br />word: jaekel","X:   3.51525854<br />Y: -17.04086291<br />word: sidebars","X:  -6.40749191<br />Y:   0.28673957<br />word: sforza's","X:  -6.18859325<br />Y:   1.06062801<br />word: distortions","X: -13.17054979<br />Y:   6.30998028<br />word: mutinies","X: -18.17543259<br />Y: -10.32240583<br />word: sermons","X:   2.86908405<br />Y:  -4.53753500<br />word: 7ft","X: -14.49988027<br />Y:   5.98187380<br />word: boobage","X:  -9.88022022<br />Y: -19.49984319<br />word: o'bannon's","X:  16.02105845<br />Y:  -4.76402379<br />word: populations","X:  -0.65784110<br />Y:  -0.51529202<br />word: chulak","X:  15.06554765<br />Y:  -2.36905646<br />word: mesmerize","X:   5.90630820<br />Y: -12.21841620<br />word: quinnell","X: -24.04726830<br />Y:  -3.48163243<br />word: yahoo","X: -20.60633265<br />Y:  -7.75504245<br />word: meteorologist","X:  -7.50799696<br />Y:  17.31122069<br />word: beswick","X:  -8.12826942<br />Y:   1.33330335<br />word: boorman","X:  -2.34920159<br />Y:  20.30704208<br />word: voicework","X:   1.37401094<br />Y:  -1.14261356<br />word: ster'","X:  -3.43484140<br />Y: -21.88748721<br />word: blustering","X:  18.74183980<br />Y:   5.06891507<br />word: hj","X: -13.87215294<br />Y:   9.70254712<br />word: intake","X:  -5.40921489<br />Y:   0.39305027<br />word: morally","X:  15.92165967<br />Y:   0.90310452<br />word: jumbling","X:  -2.04376726<br />Y:  21.19435526<br />word: bowersock","X: -10.81617531<br />Y:  16.05376884<br />word: 'porky's'","X: -21.58515524<br />Y:  -6.65791617<br />word: gershon","X:   6.04600917<br />Y: -11.38103334<br />word: ludicrosity","X:   1.16423739<br />Y:  20.65884785<br />word: coprophilia","X:   4.83499302<br />Y:  -9.94124269<br />word: expressively","X:  -8.88875998<br />Y:   0.69452325<br />word: india's","X:  -3.23278642<br />Y:  -0.37473569<br />word: post's","X:   4.55282056<br />Y: -12.82403505<br />word: wana","X:  15.21012874<br />Y:  -2.68172031<br />word: wang","X:  15.41379961<br />Y:  14.45062385<br />word: wand","X: -11.86484544<br />Y:   2.64844553<br />word: wane","X:  13.63492462<br />Y:  15.56858328<br />word: edgeways","X:  15.07044804<br />Y:  15.39292389<br />word: titanium","X:  -5.82702656<br />Y:  19.69810112<br />word: pinta","X:  15.75594994<br />Y:  14.56836537<br />word: want","X:  -4.07475962<br />Y:   0.06497599<br />word: pinto","X:  19.44767293<br />Y:   7.54682630<br />word: whoopdedoodles","X:   4.14686225<br />Y:  -6.50106874<br />word: tchaikovsky","X:   4.72533404<br />Y: -14.52770018<br />word: travel","X:  15.77029929<br />Y:  -1.41040134<br />word: 'victory'","X:   1.93926439<br />Y: -19.88766061<br />word: copious","X:  -2.82385926<br />Y: -21.49390093<br />word: gouge","X:  15.57802749<br />Y:  -2.38193445<br />word: chapters'","X:  -8.75535813<br />Y: -20.26714505<br />word: barbra","X:  15.04548888<br />Y:  14.13901113<br />word: uselessness","X:  18.71604196<br />Y:   5.00791617<br />word: wan'","X:  16.66871600<br />Y:  12.87991561<br />word: assimilated","X:   3.69376166<br />Y:  -3.84064473<br />word: petiot","X: -11.96244956<br />Y: -15.67672532<br />word: mostand","X: -10.28552780<br />Y:  16.31998254<br />word: dinosaurs","X: -13.93421982<br />Y:   5.09326855<br />word: wrong","X:  14.63153447<br />Y:  15.45300445<br />word: seda","X:  -4.57693722<br />Y:   0.83473333<br />word: stollen","X:  -8.36726900<br />Y:  17.92712109<br />word: sentencing","X:  21.40842001<br />Y: -10.88300965<br />word: ouroboros","X:  -7.24316843<br />Y:  -1.01954560<br />word: assimilates","X: -20.62608578<br />Y:  -7.71528859<br />word: colorfully","X:  15.78642502<br />Y:   0.19313075<br />word: glenne","X:   6.34735882<br />Y:  20.17225131<br />word: dongen","X:   0.57137145<br />Y: -20.61622641<br />word: subplots","X: -10.41571945<br />Y:  14.49403315<br />word: kiloton","X:   2.12013210<br />Y:  20.09379375<br />word: chandon","X:  -9.01792786<br />Y:  15.47008352<br />word: effect'","X:   0.29820991<br />Y:   0.31262491<br />word: snugly","X:  -2.81971087<br />Y: -22.18308492<br />word: kuei","X:  -6.29204942<br />Y:  19.17379028<br />word: welcomed","X:  -3.24234580<br />Y: -21.90505040<br />word: dishonor","X:   5.36512945<br />Y: -11.07726755<br />word: concurrence","X:   5.15808895<br />Y: -16.31103294<br />word: stoicism","X:   3.64346218<br />Y: -18.33119959<br />word: guys'","X:  14.92440989<br />Y:  13.87700184<br />word: beroemd'","X:  -2.93753890<br />Y:  20.86938172<br />word: butcher","X: -16.11033410<br />Y: -12.19554555<br />word: melfi's","X: -13.59440742<br />Y: -14.91078109<br />word: aargh","X:  -7.67691505<br />Y:  17.09877539<br />word: playhouse","X:  -8.24969232<br />Y:   2.08504038<br />word: wickedly","X:  16.33995340<br />Y:  -4.97615208<br />word: fit","X:   5.89624611<br />Y:  -7.06619880<br />word: labratory","X:   0.34017777<br />Y:   0.52731910<br />word: lifeline","X:   2.95092589<br />Y:  19.85321676<br />word: screaming","X:  12.83720067<br />Y:  15.53428236<br />word: fix","X:  19.13515221<br />Y:   6.28979913<br />word: cineliterate","X: -11.26286488<br />Y:  14.48609488<br />word: fic","X: -11.48766445<br />Y:   1.47802608<br />word: fia","X:  -4.09108183<br />Y:  -0.07848447<br />word: fig","X:  18.28186096<br />Y:   4.12829640<br />word: fmvs","X: -12.63552381<br />Y:  10.56323757<br />word: fie","X:  -9.83729944<br />Y: -18.28076397<br />word: reentered","X:  -6.34020377<br />Y:  -0.91152296<br />word: fin","X: -18.78192578<br />Y:  -9.69692526<br />word: doctresses","X: -12.27421749<br />Y:   4.61106978<br />word: fil","X: -15.73556210<br />Y: -12.76729528<br />word: zucker","X:  -2.10792640<br />Y:  20.30004453<br />word: ached","X: -20.54972865<br />Y:  -7.81241749<br />word: counsil","X:  16.43447594<br />Y:   0.79347053<br />word: paterfamilias","X: -15.17277458<br />Y: -13.28049064<br />word: songwriter","X: -14.51980245<br />Y: -14.13601229<br />word: shivam","X:   4.26819234<br />Y:  -6.53553577<br />word: hurting","X: -12.25349143<br />Y: -16.42999928<br />word: effects","X: -10.04833465<br />Y: -18.29276854<br />word: slauther","X: -16.65004608<br />Y: -11.32193900<br />word: 'flame'","X: -17.56548796<br />Y: -10.94946223<br />word: sommerset","X:   5.40774808<br />Y:  -7.05108049<br />word: interwhined","X:  19.28703199<br />Y:   7.09942656<br />word: whacking","X: -13.81031434<br />Y:  11.22258953<br />word: bartok","X:   4.65497827<br />Y: -17.78757559<br />word: barton","X:   3.64072023<br />Y:  -4.14380196<br />word: frewer","X: -12.26632869<br />Y:   8.50859274<br />word: fi'","X:  14.66005296<br />Y:  14.32088108<br />word: ingrid","X:  -2.80743161<br />Y: -22.13019923<br />word: stribor","X: -12.36769378<br />Y:   6.42605330<br />word: approporiately","X:  15.80894909<br />Y:  -2.44036405<br />word: wobblyhand","X:  19.02647238<br />Y:  -9.31663406<br />word: tantalisingly","X:   5.26456008<br />Y: -14.17802925<br />word: ankylosaurus","X:   3.84038530<br />Y:  -4.85796256<br />word: parasites","X: -10.35732140<br />Y:  13.81482518<br />word: childen","X:  15.99846510<br />Y:  13.83818687<br />word: jenkins'","X: -22.66319981<br />Y:  -5.42152817<br />word: metafiction","X:   2.79342505<br />Y:  -0.77509023<br />word: golem","X:  20.92810970<br />Y: -10.63774158<br />word: indiscretion","X:   9.70164831<br />Y:  18.04666898<br />word: reeves'","X:  19.49799470<br />Y:   7.22064608<br />word: inamorata's","X:  11.17352774<br />Y:  17.67681076<br />word: brittannica","X:  16.01946092<br />Y:  -4.21227374<br />word: adapt","X:  19.07900633<br />Y:  -9.33751796<br />word: russo's","X:   5.41357393<br />Y: -14.58858235<br />word: guitarists","X:   1.60060772<br />Y: -19.26181006<br />word: abbott","X:  -9.57348223<br />Y: -18.57200738<br />word: abbots","X:  18.41759026<br />Y:   4.36917680<br />word: lanisha","X:  -8.88385572<br />Y: -20.21071049<br />word: magickal","X:  -9.30343135<br />Y:   0.30945844<br />word: mattter","X:  17.63624654<br />Y:  -7.52158665<br />word: 'willy","X: -12.33230580<br />Y:   4.41848736<br />word: pumpkins","X:   2.59711014<br />Y:  20.11972904<br />word: stuntpeople","X:  16.12022887<br />Y:  -4.20816257<br />word: estimate","X:   1.28469502<br />Y:  20.33029989<br />word: ugghhh","X:   2.96712953<br />Y:  -4.62744105<br />word: gameplay","X: -13.08570754<br />Y:   3.26101305<br />word: wern't","X: -11.28345307<br />Y:   1.98001916<br />word: n'sync","X:  24.35215376<br />Y: -12.07742446<br />word: sickeningly","X:  -7.37094994<br />Y:   1.28915403<br />word: chiara","X: -12.26842843<br />Y: -16.26363933<br />word: disturbed","X:  -3.70170133<br />Y: -22.83495265<br />word: portmanteau","X: -24.12006152<br />Y:  -3.43457912<br />word: ineffectively","X: -10.01208174<br />Y:  15.52622738<br />word: duchonvey's","X:  18.62461256<br />Y:   9.76839550<br />word: nasty'","X:  -4.14272875<br />Y: -21.53408882<br />word: purpose","X: -14.97069579<br />Y: -13.15353259<br />word: lazers","X:   7.50063324<br />Y:  17.82685318<br />word: lightened","X:   4.83613846<br />Y: -11.61612383<br />word: kaliganj","X:  -7.27288319<br />Y:  -0.02484249<br />word: popularism","X: -17.56396361<br />Y: -10.93218478<br />word: damme's","X: -22.74769661<br />Y:  -5.29389252<br />word: stylistics","X:  -6.80123454<br />Y: -20.92257398<br />word: mindgaming","X:   9.91662149<br />Y:  17.59650450<br />word: spoilerish","X: -11.16863360<br />Y: -17.28908322<br />word: 'corny'","X:   7.58660723<br />Y:  18.71960845<br />word: boerner","X:  16.53576030<br />Y:  -5.46261549<br />word: olds","X: -11.92797557<br />Y:  13.85037521<br />word: bakelite","X:  15.54763944<br />Y:   0.42345333<br />word: renovated","X:   7.18574142<br />Y:  19.01909376<br />word: forrester","X:  -4.07309285<br />Y:  20.73162944<br />word: lumiere's","X:  18.03747368<br />Y:  -8.10135375<br />word: gaskets","X:   3.58481938<br />Y:  -2.21875455<br />word: needed","X:  19.86347823<br />Y:   6.34912388<br />word: smight","X: -18.63545768<br />Y:  -9.83688455<br />word: master","X:   5.90211572<br />Y:  -5.50897891<br />word: edie's","X: -10.90070719<br />Y:   3.74706479<br />word: seeber","X:  20.20208529<br />Y: -10.20681845<br />word: hiya","X:  19.04071160<br />Y:   7.40952849<br />word: fuzziness","X:  -5.28105878<br />Y: -21.25118960<br />word: genesis","X:  -8.73025428<br />Y:  16.16896356<br />word: rewards","X:  18.87599708<br />Y:  -9.06197010<br />word: enthrall","X: -19.23378830<br />Y:  -9.19939410<br />word: 'about","X:  15.94285956<br />Y:  13.03438510<br />word: recollection's","X: -12.01418211<br />Y:   2.47111510<br />word: mutilated","X:  17.02783497<br />Y:  -6.48275903<br />word: fatherlands","X: -19.81530496<br />Y:  -8.57422215<br />word: fischer's","X: -20.58637243<br />Y:  -7.76685165<br />word: positively","X:  17.51347917<br />Y:   2.87825233<br />word: 270","X: -19.62695545<br />Y:  -8.78546025<br />word: ahmed","X:  -0.14609460<br />Y:  20.94338655<br />word: zatoichi","X: -23.72636852<br />Y:  -4.00322295<br />word: bannister","X:  19.21187114<br />Y:   6.42898262<br />word: anniversaries","X:  15.45253942<br />Y:  -2.99421582<br />word: helm's","X:   0.67823461<br />Y: -21.11269136<br />word: 'work'","X: -11.64796071<br />Y:   5.77107142<br />word: exclaimed","X:  -5.08511232<br />Y:  19.28554431<br />word: 'unfunny'","X:  -2.68515459<br />Y:   0.13112014<br />word: 274","X:   4.37478040<br />Y: -18.21382793<br />word: feeling","X:  17.44138837<br />Y:  -7.21289726<br />word: wanda's","X:  17.08228084<br />Y:  12.49072288<br />word: dolan","X:   9.31941832<br />Y:  18.95207756<br />word: 278","X:  -7.27079895<br />Y: -20.17347037<br />word: peacoat","X: -11.54115439<br />Y:   5.18071593<br />word: brawny","X:  20.79787770<br />Y: -10.58204576<br />word: mishra","X:  -6.55278926<br />Y:  -0.66433486<br />word: worlders","X: -22.35447041<br />Y:  -5.74191634<br />word: protags","X:   2.70688926<br />Y:  -4.09881375<br />word: skullcap","X:  -7.14225427<br />Y:   1.02063453<br />word: dastagir","X:  -9.56603510<br />Y:  15.03746677<br />word: affairs","X:   2.07952025<br />Y:  20.26680336<br />word: wholesome","X:  -0.77320417<br />Y:   0.94279199<br />word: hymen","X:  -5.77806992<br />Y: -21.47556909<br />word: paramedics","X:  -8.20814514<br />Y:  16.61206398<br />word: unpersons","X: -12.13039262<br />Y:  13.25034065<br />word: heavyarms","X: -10.02577560<br />Y: -17.87005978<br />word: affaire","X:  16.39713892<br />Y:   1.20409637<br />word: coulisses","X:  -7.70191023<br />Y: -20.00279635<br />word: hymer","X:  -1.10402203<br />Y:   0.29766337<br />word: kremlin","X:  15.83139827<br />Y:  -3.69917348<br />word: shipments","X: -24.82265864<br />Y:  -1.95688492<br />word: pixilated","X:  -0.44411968<br />Y:  20.75880640<br />word: '00s","X:   1.49972821<br />Y:  20.74794261<br />word: diminishing","X:  -6.67115466<br />Y:  -0.55254217<br />word: cinematic","X:  -6.76592603<br />Y: -20.98901062<br />word: resonates","X:  16.71916935<br />Y:  -5.87384702<br />word: simplify","X: -18.73433988<br />Y:  -9.70819536<br />word: nature'","X:  -9.94084103<br />Y:  15.17365159<br />word: temptresses","X:  15.97413802<br />Y:  13.52398951<br />word: reverence","X:   2.58680828<br />Y: -18.79647507<br />word: resonated","X:  16.06942775<br />Y:  -0.14709296<br />word: dailey","X:  12.90158462<br />Y:  15.14878305<br />word: 2","X:  -4.41627295<br />Y:  19.39195388<br />word: treize","X:  15.98317076<br />Y:   0.62628734<br />word: majo","X:   1.75433289<br />Y:  19.81059520<br />word: kiya","X:   4.73571689<br />Y:  -8.39082902<br />word: woolnough","X:   4.00921113<br />Y: -17.20389878<br />word: thanatos","X:  23.11263693<br />Y: -11.56498559<br />word: sandoval","X: -12.31146949<br />Y:  11.20360469<br />word: dorama","X:  18.98720695<br />Y:   5.61591828<br />word: o'shaughnessy","X:   0.25459927<br />Y:   0.35113827<br />word: tech","X:  16.58007979<br />Y:  -5.56349608<br />word: fugitives","X: -13.53572507<br />Y:   5.71606832<br />word: teck","X:  -9.83537851<br />Y:   1.23399942<br />word: 'e'","X:  15.54186107<br />Y:   0.16088100<br />word: doesn’t","X:  -4.35474208<br />Y: -22.13368512<br />word: purged","X: -13.16685236<br />Y:   8.06575231<br />word: saying","X:   3.77635209<br />Y:  19.74757901<br />word: martians'","X:   5.19992586<br />Y:  -6.58570791<br />word: norliss","X: -17.55388423<br />Y: -11.01765290<br />word: dickey","X:  -9.29976412<br />Y:   0.55231394<br />word: dicker","X:  -8.09633601<br />Y:  -1.03454388<br />word: 'sependipity","X:  10.26095136<br />Y:  18.26853943<br />word: padded","X: -20.00230986<br />Y:  -8.39437703<br />word: ordell","X:  15.62680592<br />Y:  -2.48340663<br />word: sturges'","X: -19.96257425<br />Y:  -8.42895983<br />word: independentcritics","X:  23.63475755<br />Y: -11.78791835<br />word: tempted","X: -23.29423010<br />Y:  -4.59220829<br />word: atkinson's","X:  -9.70639250<br />Y:  15.92868874<br />word: hounded","X:  17.05346402<br />Y:  12.75318226<br />word: apace","X:  -6.02715183<br />Y:  19.21027953<br />word: clicked","X:   5.95070724<br />Y:  19.47678947<br />word: 'humor'","X:   2.94069951<br />Y:  -2.95408008<br />word: martino's","X:  16.99710156<br />Y:  13.70159451<br />word: 'supporting","X:  19.18686676<br />Y:   8.56323552<br />word: warmongering","X:   4.85488886<br />Y:  -6.05536013<br />word: zemeckis's","X: -15.15501179<br />Y: -13.42193673<br />word: lube","X:   4.50412284<br />Y: -15.17814821<br />word: shocky","X: -12.53788855<br />Y: -16.00778403<br />word: plate","X:  15.93937873<br />Y:  -2.17089587<br />word: plata","X: -18.38314742<br />Y: -10.10240282<br />word: sturgess","X:  16.92240170<br />Y:  12.87981572<br />word: nerds'","X:  24.20118930<br />Y: -12.01374459<br />word: plato","X:   2.25615435<br />Y:  19.98993656<br />word: plath","X:   4.18609014<br />Y: -17.60163963<br />word: platt","X:  -8.41631511<br />Y:  -0.22314863<br />word: mcnab","X:  -9.08732270<br />Y: -19.22055317<br />word: clumsiness","X:  18.36996327<br />Y:  10.26459753<br />word: altogether","X:  20.98814043<br />Y: -10.68394074<br />word: massacring","X:  13.53583857<br />Y:  15.57942764<br />word: bicenntinial","X: -12.49622987<br />Y:   5.37556191<br />word: skaal","X:  -2.98999140<br />Y:   1.17579361<br />word: droning","X:  11.77780963<br />Y:  17.07983008<br />word: lds","X:  16.89001582<br />Y:   1.97816285<br />word: jaguar","X: -10.74954918<br />Y: -17.59437421<br />word: cale's","X: -17.55196259<br />Y: -10.92977411<br />word: nicely","X:   3.93392288<br />Y:  20.28311116<br />word: mummy","X: -12.91954781<br />Y:   9.57320412<br />word: lot's","X: -24.68770070<br />Y:  -2.42480440<br />word: patch","X: -12.67639598<br />Y: -15.23417931<br />word: kerkhof","X:   3.18800822<br />Y: -16.97160867<br />word: leader's","X:  -9.07263344<br />Y: -18.91569483<br />word: 'movie","X: -12.47108018<br />Y:   5.26616909<br />word: uncomfirmed","X:  23.34776123<br />Y: -11.68090618<br />word: heirloom","X:   2.89875929<br />Y:  20.90415540<br />word: wrangle","X:   5.64464042<br />Y:  -5.72527102<br />word: emotion","X:   9.17287767<br />Y:  18.23868174<br />word: 'stargate'","X: -13.93611892<br />Y:   5.32499061<br />word: pinoy","X:  -2.79366122<br />Y:  20.95091647<br />word: conchatta","X: -20.96645567<br />Y:  -7.34992283<br />word: broeke","X:   3.13297421<br />Y: -18.35574462<br />word: advisedly","X:   5.26042446<br />Y: -15.56044195<br />word: barker's","X:  16.98201440<br />Y:   2.12448271<br />word: descours","X: -24.82481920<br />Y:  -1.94037004<br />word: lots","X:   4.91378715<br />Y:  -8.67130858<br />word: lotr","X: -21.64807561<br />Y:  -6.57619746<br />word: irs","X: -23.71572307<br />Y:  -4.02192364<br />word: lott","X: -12.70860582<br />Y: -15.54997444<br />word: xvi","X: -15.59741509<br />Y: -12.88632234<br />word: irk","X:  -0.21192141<br />Y:  20.99121340<br />word: irl","X:  18.28745438<br />Y:  10.43921623<br />word: ira","X:   4.40853613<br />Y:  -5.54389597<br />word: belzer","X:   4.81007849<br />Y:  -5.00244007<br />word: irc","X:  15.74319679<br />Y:  14.37615469<br />word: ire","X: -13.28370056<br />Y:   9.15746733<br />word: requisites","X:   8.55863413<br />Y:  17.28909026<br />word: discipline","X:  -1.15555431<br />Y:   0.59352025<br />word: lyoko","X:  19.13455866<br />Y:   6.54432682<br />word: extend","X: -14.38218199<br />Y:   8.05685054<br />word: nature","X:   5.81520415<br />Y:  -6.31229812<br />word: 'dickie'","X:   9.92798915<br />Y:  17.08075377<br />word: optimist","X:  -3.73029036<br />Y: -22.49313360<br />word: lapping","X: -22.88503899<br />Y:  -5.13533469<br />word: superficial","X:  20.75972766<br />Y: -10.55637887<br />word: vestment","X:   2.75328108<br />Y:  20.29620290<br />word: extent","X:  18.86141022<br />Y:  -9.08920896<br />word: tendons","X:   8.23198607<br />Y:  19.03415353<br />word: heller's","X:   0.48490383<br />Y:   0.90179853<br />word: quagmires","X:   5.42076235<br />Y: -12.53793183<br />word: miyako","X:   4.37555807<br />Y:  -7.33714062<br />word: moocow","X: -10.47760234<br />Y:  16.16609879<br />word: coles'","X:  17.11751385<br />Y:  12.03043403<br />word: lookit","X:  23.29190217<br />Y: -11.65182236<br />word: ravenously","X:   2.40312105<br />Y:  -2.31037275<br />word: levitating","X:  -7.65365461<br />Y:   0.25228744<br />word: perfunctorily","X:  15.61566520<br />Y:  -2.28649805<br />word: lookin","X:  24.34075578<br />Y: -12.07151499<br />word: lot'","X:   5.67839334<br />Y: -15.28841298<br />word: lookie","X:  19.37112256<br />Y:  -9.60600183<br />word: fearlessly","X:   1.00038544<br />Y: -20.95432617<br />word: libyan","X: -22.74125947<br />Y:  -5.29980986<br />word: fondles","X:   4.99159280<br />Y: -10.52292677<br />word: gopher","X: -11.31348543<br />Y:  12.66397650<br />word: wearying","X: -12.83503818<br />Y: -15.56721165<br />word: nz's","X:  -4.14054549<br />Y:  20.06218789<br />word: minuses","X: -14.14889463<br />Y:  10.02368494<br />word: puposelessly","X: -24.41796381<br />Y:  -2.94012588<br />word: shandling","X:   1.45619452<br />Y:  -0.43929524<br />word: decapitates","X:  21.11777949<br />Y: -10.73828003<br />word: humming","X:   4.41135636<br />Y: -16.40412610<br />word: 'nother","X:  -3.99523511<br />Y: -22.07664194<br />word: smackdown","X:  16.71845292<br />Y:   1.47343887<br />word: underdone","X:   4.52296921<br />Y: -17.73416879<br />word: frf","X:  -4.21433229<br />Y: -22.04698389<br />word: triviality","X:  14.48507987<br />Y:  14.92287637<br />word: fro","X:  -0.09011116<br />Y: -21.55996993<br />word: bothers","X:   3.31423105<br />Y: -16.17352954<br />word: 'kensington","X:  16.19555977<br />Y:   0.08972201<br />word: much","X:  15.96527205<br />Y:  -0.11744092<br />word: muco","X:  11.24244124<br />Y:  16.38795076<br />word: wiseguy","X:   8.58351069<br />Y:  18.03028965<br />word: richie's","X:   2.49500634<br />Y: -17.49536747<br />word: tonino","X:  20.10157727<br />Y:   6.71570376<br />word: unleavened","X:   4.64029844<br />Y: -12.31859415<br />word: fry","X: -11.98436655<br />Y:   8.61793019<br />word: 'tv'","X:  -3.25578946<br />Y:  19.56333292<br />word: toning","X:   5.50993213<br />Y: -12.90622756<br />word: obese","X:  15.48852165<br />Y:  -2.34969532<br />word: sensationalized","X:  -8.91014904<br />Y: -19.46292700<br />word: spiv","X:  21.05987276<br />Y: -10.72555026<br />word: spit","X:   3.20737751<br />Y:  20.59837382<br />word: arkin","X:  21.84295519<br />Y: -11.03923805<br />word: charleton","X:  17.63252636<br />Y:   3.07949112<br />word: jeon","X:  -2.18673139<br />Y: -21.36703169<br />word: boardroom","X: -14.01549828<br />Y:   8.47172661<br />word: doubts","X: -12.57676343<br />Y:   4.18111797<br />word: spin","X:   3.57205145<br />Y:  -3.11735347<br />word: hepo","X: -17.35272507<br />Y: -11.14119928<br />word: wildcat","X:  -5.08484566<br />Y: -21.38348326<br />word: venoms","X: -24.55055392<br />Y:  -2.75227583<br />word: misconstrues","X:  -3.39204867<br />Y:  19.77441286<br />word: mesmerising","X:  16.91982046<br />Y:  -6.26312754<br />word: misconstrued","X: -23.04896482<br />Y:  -4.90938558<br />word: rescinds","X:  17.87814269<br />Y:  11.15861613<br />word: prostrate","X:  -3.29976456<br />Y:  19.97292694<br />word: majid","X: -17.95935855<br />Y: -10.53413841<br />word: climbed","X:  15.74104725<br />Y:  -2.00336930<br />word: canoeing","X:   3.92928499<br />Y:  -6.26687775<br />word: majin","X:   4.51894661<br />Y:  20.32811596<br />word: animie","X:   2.80626784<br />Y:  -0.23252855<br />word: sylke","X:   1.26966225<br />Y: -20.37851621<br />word: conditioned","X:  -7.24867798<br />Y:  18.67921396<br />word: waddell","X: -15.99549102<br />Y: -12.62301345<br />word: 3","X:  -9.19765884<br />Y:   0.28503494<br />word: hyperdrive","X: -11.67653241<br />Y: -16.33797492<br />word: conditioner","X: -10.50318450<br />Y:  15.69380451<br />word: bricklayer","X:  18.71901350<br />Y:  -8.94349569<br />word: hong","X:   0.92455906<br />Y:  -0.36925100<br />word: memoriam","X: -10.41427764<br />Y: -18.43791924<br />word: inventively","X:  -9.55509566<br />Y: -18.48552741<br />word: levant's","X:   4.44313891<br />Y:  -5.37216477<br />word: portobello","X: -16.94937281<br />Y: -11.60821837<br />word: remand","X:  -2.28755609<br />Y:  20.76943331<br />word: mummified","X:   3.73856912<br />Y: -17.79977330<br />word: honk","X:  -9.04252000<br />Y:  18.08831382<br />word: spews","X:   7.69676332<br />Y:  18.15351907<br />word: visitations","X:  -8.96702761<br />Y:  15.80110745<br />word: mummifies","X:  14.00960865<br />Y:  15.46874129<br />word: cavanaugh","X:  14.71592122<br />Y:  15.22840082<br />word: zeon","X: -24.25749113<br />Y:  -3.24688239<br />word: jungle's","X:   9.79711560<br />Y:  17.48344252<br />word: viertel","X: -15.69733363<br />Y: -12.78996466<br />word: frenchmen","X:  -3.62673864<br />Y:   0.65461446<br />word: torpedoes","X: -24.69856818<br />Y:  -2.38645822<br />word: schlessinger","X:   4.98684160<br />Y:  -6.27680202<br />word: torpedoed","X:   8.75931163<br />Y:  19.25865800<br />word: blister","X:  18.33764867<br />Y:   4.07780558<br />word: cinefest","X:  -8.43968151<br />Y: -19.62775185<br />word: furlough","X:  15.19071179<br />Y:  15.56486427<br />word: mainsequence","X:   8.55158960<br />Y:  17.85893345<br />word: mentors","X:   5.93898904<br />Y:  19.94811047<br />word: academic","X:  -4.03986785<br />Y: -21.57141436<br />word: stillness","X: -11.34254951<br />Y: -17.16539021<br />word: academia","X:   5.91399341<br />Y:  18.87741664<br />word: lonelier","X:  -4.32893798<br />Y:  20.18467638<br />word: nibby","X:  -5.49450493<br />Y:  19.46335858<br />word: losers'","X:  22.89763245<br />Y: -11.48159219<br />word: cineastes","X:   3.67400543<br />Y:  -5.94750503<br />word: corporate","X:   4.04367430<br />Y:  -5.08347279<br />word: massaging","X: -23.81033733<br />Y:  -3.89591821<br />word: bellow","X:  -7.57378105<br />Y: -20.38161227<br />word: absurdities","X:  19.85867532<br />Y:   7.65415311<br />word: expetations","X:  -1.16398625<br />Y:   0.43106771<br />word: nyfiken","X:  19.59555986<br />Y:   8.76273671<br />word: mehras","X:  -7.85692467<br />Y: -20.01528774<br />word: lasse","X:  18.36888641<br />Y:  10.98279967<br />word: visability","X:  -8.83222784<br />Y:   1.69971324<br />word: militarily","X:   1.91377024<br />Y:   0.13342169<br />word: elder'","X:  -8.20823448<br />Y:  17.98992992<br />word: gainsbourg","X:   9.61493933<br />Y:  19.02037234<br />word: hah","X:  11.09820812<br />Y:  17.27559893<br />word: hai","X:  15.99048031<br />Y:   0.10069713<br />word: haj","X:  -1.22368893<br />Y:   0.20384388<br />word: hak","X:  -0.84530924<br />Y:  -0.46133984<br />word: hal","X: -24.56453549<br />Y:  -2.72434090<br />word: ham","X:  -0.40241340<br />Y:  20.45354792<br />word: duffer","X: -12.31331304<br />Y:   3.76878711<br />word: haa","X:   5.34263680<br />Y: -10.20074557<br />word: had","X:  18.15048326<br />Y:  -8.26335715<br />word: advancement","X:  17.70192666<br />Y:  -7.63018507<br />word: hag","X:   4.18281752<br />Y: -14.52655041<br />word: hand'","X:   4.23853697<br />Y: -16.06215606<br />word: hay","X: -12.41016125<br />Y:   2.34051865<br />word: mcnamara","X:  17.38016672<br />Y:  11.79264077<br />word: mozart's","X:  -2.57639213<br />Y:   1.72192362<br />word: duffel","X:   7.24795590<br />Y:  19.27629195<br />word: haq","X:   3.43767942<br />Y: -17.87710230<br />word: har","X:  17.41378594<br />Y:  12.46037509<br />word: has","X: -14.31744032<br />Y: -14.24502472<br />word: hat","X: -13.27351937<br />Y:   7.83615416<br />word: hav","X:   3.89053219<br />Y:  -2.76533040<br />word: haw","X: -13.83426342<br />Y:   7.97738230<br />word: figtings","X: -11.87653407<br />Y:  15.62590762<br />word: elders","X: -10.71404137<br />Y:  14.87330956<br />word: underpanted","X: -21.15843803<br />Y:  -7.13481336<br />word: pninson","X:   4.20638358<br />Y:  20.21937316<br />word: unequivocally","X: -12.28237902<br />Y:   3.72084288<br />word: barbara's","X:   1.87609983<br />Y:  -0.91030100<br />word: bello'","X:  -7.79766694<br />Y: -20.09144068<br />word: indicative","X:   1.99083884<br />Y:   0.26524783<br />word: yawnfest","X:  18.55875863<br />Y:   4.55184949<br />word: hexploitation","X:  -6.83938726<br />Y:  18.55905989<br />word: loder's","X:  -2.82033191<br />Y: -21.90664488<br />word: sleuthing","X:   4.19570181<br />Y:  20.34390371<br />word: justin's","X: -13.50646393<br />Y:   3.94327898<br />word: 'ball","X:   9.55818420<br />Y:  17.37072982<br />word: 'summer","X:  18.04168618<br />Y:   3.74222819<br />word: 'demons'","X:  16.29567671<br />Y:  -4.86988834<br />word: mormon's","X:   2.05823695<br />Y:  -1.78341726<br />word: laughton's","X: -16.91430785<br />Y: -11.71530553<br />word: debell","X:  -7.90732915<br />Y: -20.42295730<br />word: shipyard","X:   1.24629477<br />Y:  -0.85960076<br />word: unabashedly","X:  16.20612679<br />Y:  -4.63016290<br />word: disks","X:  -6.70749420<br />Y:  19.36125370<br />word: crowd","X: -12.55104630<br />Y: -15.68556608<br />word: crowe","X:  15.78500337<br />Y:  -3.00965122<br />word: vancouver's","X:   0.07144592<br />Y: -20.71501163<br />word: mosques","X:   5.18137848<br />Y: -12.48310685<br />word: crown","X:  18.84315850<br />Y:  -9.09479695<br />word: culpas","X:  -1.88095081<br />Y:  20.92846243<br />word: crows","X:  18.85314253<br />Y:  10.44609533<br />word: surrell","X:  -9.97005003<br />Y:  16.68807675<br />word: flowless","X:  -5.00718696<br />Y: -21.89748585<br />word: sheirk","X:  19.77788768<br />Y:  -9.91361095<br />word: 'three","X:  20.86633371<br />Y: -10.61998428<br />word: peterson'","X: -14.98627183<br />Y: -13.60535349<br />word: ooverall","X:   5.04289650<br />Y: -15.00641499<br />word: perchance","X:  -4.87580392<br />Y:  19.93491902<br />word: bottom","X:  18.96454359<br />Y:   9.62184337<br />word: chabert","X:  19.18385253<br />Y:  -9.45184367<br />word: sneha","X:  19.48350948<br />Y:   8.99466728<br />word: inhuman","X:  18.08856593<br />Y:  -8.18383307<br />word: ichii","X:   3.96170574<br />Y: -18.14957987<br />word: ursla","X:  19.54788525<br />Y:   6.48598060<br />word: completly","X: -11.77176232<br />Y:  13.46016978<br />word: moviedom","X: -23.64329354<br />Y:  -4.10738499<br />word: raddick","X:  22.57709721<br />Y: -11.27060858<br />word: brundage","X:  17.68184190<br />Y:  -7.58316645<br />word: brigades","X:  -5.78911156<br />Y:  18.77299083<br />word: starring","X:  17.66863629<br />Y:  -7.57479248<br />word: 'goal'","X:   6.85416748<br />Y:  18.77066088<br />word: caskets","X:   3.73607252<br />Y: -14.97100847<br />word: willcock","X:  -1.92522362<br />Y:  -0.23877063<br />word: threesome's","X:   8.70587849<br />Y:  17.79345396<br />word: mosque'","X:  18.46035631<br />Y:  11.98841202<br />word: cover's","X:  22.56514235<br />Y: -11.27968998<br />word: spaceships","X:  -9.06650452<br />Y: -18.73478042<br />word: anomalous","X: -12.56927999<br />Y:   4.53032602<br />word: ptsd","X:  20.03043693<br />Y:   7.24968346<br />word: shirdan","X:   1.05540138<br />Y:  19.91582540<br />word: obscenity","X: -11.79278274<br />Y:   6.65207777<br />word: lemmings","X:  -9.75022772<br />Y:   0.55767664<br />word: duccio","X:   1.92699729<br />Y:  -1.15979675<br />word: levene's","X:  13.38794935<br />Y:  15.77079126<br />word: 'gorby'","X:   4.34728473<br />Y: -13.52098117<br />word: teenager's","X:  -7.54329582<br />Y: -20.68195455<br />word: marshall","X:   6.54150887<br />Y:  18.86880520<br />word: honeymoon","X: -11.09581936<br />Y:  16.98300454<br />word: shoots","X:   2.01103218<br />Y:  19.77234235<br />word: despised","X:  18.16864229<br />Y:  10.68408420<br />word: okabasho","X:  -4.13245715<br />Y:   0.80853475<br />word: fabric","X:  17.20271507<br />Y:  11.59970173<br />word: cannavale","X:  -3.46845151<br />Y:  20.61798830<br />word: raped","X:   6.21034805<br />Y:  19.70015912<br />word: tutt's","X:  -5.84270322<br />Y: -21.32144575<br />word: grasping","X: -11.00504322<br />Y:   2.69889168<br />word: despises","X:   5.69483188<br />Y:  19.63241538<br />word: thief's","X: -10.12397755<br />Y:   1.94835387<br />word: rapes","X: -24.15136250<br />Y:  -3.37952428<br />word: raper","X:  -8.51638202<br />Y:  16.19334828<br />word: eyre'","X:  -8.69881303<br />Y: -19.16004043<br />word: walchek","X: -22.41811347<br />Y:  -5.69544225<br />word: elmo's","X:   1.72478569<br />Y: -20.06529940<br />word: perfumes","X: -11.73878651<br />Y:  16.03463692<br />word: spurting","X:  16.87078350<br />Y:  12.12922276<br />word: exposition'","X: -14.95304165<br />Y: -13.86409306<br />word: denoting","X:  22.64474535<br />Y: -11.38642909<br />word: thesaurus","X:   3.02583421<br />Y:  19.93909821<br />word: shoot'","X: -11.58346002<br />Y: -16.56990569<br />word: bonejack","X:  -9.37820028<br />Y:   1.98191406<br />word: simpsonian","X: -12.86374386<br />Y:   6.54521408<br />word: hebetude","X:  -1.30085375<br />Y:  -0.29027140<br />word: hallow's","X:  -6.69879693<br />Y: -20.48854939<br />word: desperation","X: -16.57635376<br />Y: -11.91972547<br />word: incinerator","X: -10.51136070<br />Y:   0.58603258<br />word: congratulations","X:   2.18819933<br />Y:  -0.41192023<br />word: humbled","X:  -0.45490339<br />Y: -21.87679701<br />word: else's","X:   8.40656576<br />Y:  17.65658032<br />word: trelkovski","X:  -5.18634753<br />Y:   0.81102824<br />word: rape'","X:  19.80974894<br />Y:   7.50846744<br />word: 'chapters'","X: -13.00799953<br />Y:   8.49146142<br />word: 1600s","X:  18.50022348<br />Y:  10.26193609<br />word: martian","X:   4.09518036<br />Y:  -2.79508175<br />word: nicest","X:   4.16266233<br />Y:  -6.62675418<br />word: eyred","X:   6.52741966<br />Y:  19.44290727<br />word: passenger","X:  17.29370250<br />Y:  11.86589109<br />word: disgrace","X: -10.13314883<br />Y:  16.53313772<br />word: moderne","X:  -6.36009448<br />Y:  17.77437064<br />word: barrymore","X:  -7.73445453<br />Y:  17.34304552<br />word: yankovich","X:   6.76681498<br />Y:  18.45667116<br />word: moderns","X: -11.92025949<br />Y:   5.55647823<br />word: studliest","X: -20.79289421<br />Y:  -7.54024026<br />word: bedsheet","X:  -2.93321011<br />Y:   0.72924891<br />word: decapitation","X:   5.28362351<br />Y: -15.78492048<br />word: slurring","X:   5.06579374<br />Y:  19.72108227<br />word: 'nunsploitation'","X:  17.74106095<br />Y:   3.21831825<br />word: 'character'","X:  16.49071326<br />Y:   1.40067816<br />word: cambodia","X:  16.36735463<br />Y:  -0.29150161<br />word: rebelious","X:  13.46317818<br />Y:  15.98135530<br />word: pasadena","X:   5.57468227<br />Y:  -7.67026670<br />word: crowne","X: -14.17098884<br />Y:   6.62229511<br />word: 'bedchamber","X:   4.31611696<br />Y:  -5.41770805<br />word: conjectural","X:  14.62253214<br />Y:  15.04667958<br />word: appologize","X:  15.65605412<br />Y:  -2.91790916<br />word: halfassing","X:  18.78524387<br />Y:  -9.05539388<br />word: paycheque","X:  16.82381452<br />Y:  12.57294835<br />word: palms","X:   3.06443357<br />Y: -17.90600363<br />word: 'islands","X: -15.15812623<br />Y: -13.38792423<br />word: hawked","X:  17.70365781<br />Y:  10.80149947<br />word: palme","X:   0.02284374<br />Y:  21.43460540<br />word: conservatively","X:  19.58901588<br />Y:  -9.77468316<br />word: larp","X: -18.80450990<br />Y:  -9.65416441<br />word: palma","X: -24.79675299<br />Y:  -2.02994364<br />word: smelling","X:  -6.61000072<br />Y: -20.77082918<br />word: aragorn","X: -10.69805217<br />Y:  15.20104084<br />word: hawker","X:   2.91433776<br />Y:   0.17320240<br />word: hawkes","X:  -7.76099157<br />Y: -20.34816882<br />word: explosions","X:   5.53130423<br />Y:  -9.81897637<br />word: loren","X:   5.14784159<br />Y:  -5.78597943<br />word: pyle's","X: -10.83986974<br />Y: -17.56237342<br />word: shootout","X:   6.29805937<br />Y:  20.00210929<br />word: mike's","X: -12.74142881<br />Y:   7.71885229<br />word: driscoll's","X:  13.62595677<br />Y:  15.70608310<br />word: cogsworth","X:   0.24081362<br />Y:  20.82980295<br />word: britian's","X: -18.81482596<br />Y:  -9.65475045<br />word: childs","X:  20.26684717<br />Y: -10.24030080<br />word: portrait's","X:  -8.30307142<br />Y:  17.32157970<br />word: chain","X:   4.87490877<br />Y: -15.04459545<br />word: whoever","X: -24.66161382<br />Y:  -2.49918261<br />word: puttered","X:  18.24240575<br />Y:  -8.36561098<br />word: childe","X:  -6.50970827<br />Y:  19.18805561<br />word: maywether","X:   5.20128946<br />Y: -11.74442389<br />word: chair","X:  12.75866260<br />Y:  16.09531487<br />word: rance's","X: -13.20397810<br />Y: -15.98862943<br />word: machu","X:  -2.77136336<br />Y: -22.33462871<br />word: ballet","X: -20.17332122<br />Y:  -8.21098260<br />word: grapples","X:   1.44043904<br />Y: -20.25138694<br />word: summerize","X: -18.52595751<br />Y:  -9.94900064<br />word: freelance","X:  -6.24023462<br />Y:  18.97068243<br />word: andrea's","X:   4.40266146<br />Y: -15.63485729<br />word: very","X: -12.79255500<br />Y:   9.90504363<br />word: coolidge","X:  -1.74045733<br />Y: -21.45287981<br />word: mache","X: -16.74459695<br />Y: -11.76231614<br />word: balled","X:   1.04719010<br />Y:  20.22591214<br />word: grappled","X:   3.89600431<br />Y:  21.17913219<br />word: macha","X: -12.64628796<br />Y:   5.17625294<br />word: underlining","X:  22.06116232<br />Y: -11.12525559<br />word: macho","X: -22.38863333<br />Y:  -5.71475170<br />word: oversight","X:   5.32175266<br />Y: -14.17310542<br />word: machi","X: -13.12974021<br />Y:  12.37436140<br />word: verbally","X:  -2.51741498<br />Y: -22.61791106<br />word: tenacious","X: -13.06899403<br />Y:   8.74615305<br />word: windshields","X:  10.01938488<br />Y:  18.48840893<br />word: paychecks","X:  18.27450161<br />Y:  -8.40579132<br />word: jerk","X: -14.05725411<br />Y: -14.04358113<br />word: good'","X:   5.64912145<br />Y:  -7.40180420<br />word: prancer","X: -23.53423581<br />Y:  -4.20329782<br />word: prances","X:   3.73688012<br />Y:  -4.28495257<br />word: olympus","X:  17.47409473<br />Y:  -7.26792545<br />word: lark","X: -11.65480018<br />Y:  15.07904543<br />word: embark","X: -10.79921386<br />Y: -17.64897111<br />word: gloomy","X:  15.16308165<br />Y:  13.38568945<br />word: jehaan","X:  -1.08011894<br />Y:  20.04030573<br />word: turaqui","X:  -0.28207935<br />Y: -21.28245010<br />word: child'","X: -11.35242827<br />Y:  15.51159841<br />word: locked","X:   2.09665336<br />Y:  -1.20255570<br />word: pranced","X:  -8.61949315<br />Y:   0.56265329<br />word: exact","X:   0.14258837<br />Y:  -0.66790109<br />word: unattuned","X:   3.49286081<br />Y: -18.46297854<br />word: minute","X:  16.08412884<br />Y:  12.99174916<br />word: skewed","X:  -7.14285662<br />Y:   0.42760517<br />word: hodgins","X:   3.45456763<br />Y: -15.91454046<br />word: skewer","X:  23.54551464<br />Y: -11.75964141<br />word: think","X:  -2.61360412<br />Y:   0.63764387<br />word: rosenstein","X:  16.89032733<br />Y:   1.96471355<br />word: helmit","X:   1.73444366<br />Y:  -0.12315383<br />word: wrestlemanias","X:  -3.68271935<br />Y:   0.72846866<br />word: hindered","X:   8.78846103<br />Y:  18.06035331<br />word: martha's","X:   0.09837440<br />Y: -20.38512106<br />word: cheree","X:  -5.75675810<br />Y:  18.36965799<br />word: pluckin'","X:  -7.43069723<br />Y:   0.97467486<br />word: ogles","X:  19.03359773<br />Y:  -9.30928920<br />word: heavyweight","X:  14.49527970<br />Y:  14.34086392<br />word: aada","X:   5.30363116<br />Y:  19.82314974<br />word: chopping","X: -16.14805559<br />Y: -12.37399536<br />word: strongboy","X: -19.96941210<br />Y:  -8.40695480<br />word: hegemonic","X:   3.09843370<br />Y:  -4.75395137<br />word: adorns","X: -10.49846628<br />Y: -17.52771424<br />word: xxth","X:  16.22221344<br />Y:  -4.59123942<br />word: nobuhiro","X: -23.72430742<br />Y:  -4.00622876<br />word: capitães","X: -12.12050276<br />Y: -16.44412668<br />word: kavogianni","X:  10.38516708<br />Y:  17.97030079<br />word: antwerp","X:   8.15739843<br />Y:  17.45051012<br />word: celebrated","X:  -9.35536969<br />Y: -18.96135996<br />word: roarke","X:   1.52173510<br />Y:   0.41444483<br />word: baggins","X: -23.66739824<br />Y:  -4.09849263<br />word: cheeseburgers","X: -24.35949136<br />Y:  -3.05166535<br />word: matras","X: -11.35168079<br />Y:   3.72933452<br />word: nineties'","X: -13.33764481<br />Y:  10.06584355<br />word: 'craig'","X:   0.49934886<br />Y: -21.30222820<br />word: celebrates","X:  19.74971332<br />Y:  -9.87617765<br />word: unintentionally","X:  -3.95453748<br />Y:  20.05286580<br />word: drafted","X:   9.86184803<br />Y:  18.36477244<br />word: climby","X:   5.33698497<br />Y:  -6.68170287<br />word: 303","X:  -0.41971643<br />Y: -21.03044767<br />word: oldies","X:  -9.16317238<br />Y:  16.10492154<br />word: climbs","X:   6.14295135<br />Y: -11.60883330<br />word: honour","X:  -2.71601179<br />Y:  19.92708177<br />word: plucking","X:  16.00500743<br />Y:  -1.85851540<br />word: 305","X: -22.69166122<br />Y:  -5.39628277<br />word: address","X:  -4.10823474<br />Y:  -0.30641021<br />word: menjou","X:   0.50779064<br />Y: -19.88010609<br />word: 'freak'","X:   0.29176950<br />Y: -21.12309692<br />word: dwindling","X:  -2.17218020<br />Y: -22.01436505<br />word: benson","X: -13.02510881<br />Y: -16.01587163<br />word: white’s","X:  18.64046489<br />Y:   9.81435742<br />word: shamelessness","X:   0.77091134<br />Y: -20.63268783<br />word: impacted","X:  23.48010011<br />Y: -11.73114365<br />word: upatz","X: -10.57300839<br />Y:   2.29719425<br />word: cusack","X:  -0.43508266<br />Y: -20.49978485<br />word: flavia's","X:   5.00195251<br />Y: -13.17779165<br />word: effette","X:  16.19365989<br />Y:   0.99269746<br />word: influx","X:  17.75560101<br />Y:   3.23422096<br />word: boooooooo","X:  -7.41371327<br />Y: -20.09573255<br />word: dimitrova","X:  16.29421690<br />Y:   1.11120738<br />word: houseman","X:  19.52008363<br />Y:  -9.73340429<br />word: bigas","X:  16.41819846<br />Y:   0.66399782<br />word: boylen","X:   2.25975641<br />Y: -19.26449200<br />word: phillipenes","X:  -7.59860011<br />Y:  18.78500119<br />word: fakery","X:  19.95893401<br />Y:   6.99607818<br />word: grandpa's","X: -17.07346154<br />Y: -11.46925956<br />word: darnell","X: -12.66298545<br />Y:   5.75837198<br />word: undergone","X:  -4.37155509<br />Y: -21.93503278<br />word: handbags","X: -10.39897109<br />Y:  16.60312400<br />word: perished","X:  21.04620558<br />Y: -10.71823067<br />word: pooped","X: -20.14529410<br />Y:  -8.22890141<br />word: vigour","X:   2.12728059<br />Y: -19.06028519<br />word: opposed","X: -14.37083245<br />Y: -14.15939588<br />word: etude","X:  17.30402972<br />Y:  -6.98186852<br />word: caine's","X:  14.92634620<br />Y:  14.98928887<br />word: doozers","X: -22.52873005<br />Y:  -5.51234945<br />word: photojournals","X: -12.05468549<br />Y:   7.37758590<br />word: perishes","X: -11.92565838<br />Y: -16.30323903<br />word: constrains","X:  -6.06811385<br />Y:  -0.56258822<br />word: migenes","X:   3.24211761<br />Y: -16.33423103<br />word: consoled","X: -11.84541705<br />Y:  10.26783209<br />word: alastair","X:   2.18442334<br />Y:  -2.33486885<br />word: wvs","X: -10.27334629<br />Y:  14.98060675<br />word: ooooooh","X: -13.43271852<br />Y: -14.91235475<br />word: approving","X:  19.19920298<br />Y:   6.24914013<br />word: consoles","X:  18.11601963<br />Y:  10.48810534<br />word: disparagement","X:   2.02209151<br />Y:  -1.45831816<br />word: futureistic","X: -19.97978599<br />Y:  -8.42027315<br />word: rebounding","X: -14.05026463<br />Y:   8.31937815<br />word: 'date","X:  22.12913002<br />Y: -11.14870990<br />word: gregoire","X:  -1.66211782<br />Y: -21.40599989<br />word: rutherford","X:  -3.61283579<br />Y:   0.59288843<br />word: americanised","X: -10.69961614<br />Y:  14.19267344<br />word: novikov","X:   0.40414251<br />Y: -21.57815205<br />word: following","X: -11.63808903<br />Y:  12.38705482<br />word: munroe","X: -22.64225432<br />Y:  -5.44646052<br />word: morita'","X:  -5.68405581<br />Y:  19.06206103<br />word: christenssen","X:   2.00917078<br />Y: -19.67313321<br />word: oatmeal","X:   3.00002784<br />Y:  -1.81270385<br />word: fossey","X:   5.04809929<br />Y:  19.90252779<br />word: livered","X:  -3.07639563<br />Y: -22.18592523<br />word: listens","X:  13.50268344<br />Y:  14.80860524<br />word: 'marci","X:  15.93766034<br />Y:  -2.61429771<br />word: otis's","X:   2.39439477<br />Y: -18.83777296<br />word: thanking","X:  -5.10307815<br />Y: -21.87833691<br />word: maude","X:  16.48277576<br />Y:   0.68391458<br />word: extensions","X: -12.01002335<br />Y:   6.70162513<br />word: ameteurish","X: -11.10297615<br />Y:  16.83235852<br />word: commender's","X:  -3.87442876<br />Y:   1.34291614<br />word: agricultural","X: -13.17006106<br />Y: -15.48248950<br />word: convincingly","X: -13.10594699<br />Y:  10.34269404<br />word: fueled","X:   1.59700090<br />Y:  -1.27513819<br />word: mahattan","X: -14.26128145<br />Y:   9.31207084<br />word: paris's","X:   3.91516968<br />Y:  -6.57208975<br />word: vulkan","X:   4.68299832<br />Y:  -4.56488940<br />word: stapes","X: -12.30644494<br />Y:   4.97027859<br />word: odysessy","X:  23.97393841<br />Y: -11.92191616<br />word: harmon","X:  19.24916202<br />Y:  -9.45719622<br />word: surfing","X:  19.03348684<br />Y:  -9.29002697<br />word: halloran","X: -13.39260270<br />Y:  12.35810186<br />word: unbelieveably","X: -11.28471776<br />Y: -17.03535708<br />word: 'offed'","X: -20.04483276<br />Y:  -8.33237690<br />word: quadrant","X: -11.07074114<br />Y:   1.55776661<br />word: inhabiting","X:  19.54836677<br />Y:   7.73075819<br />word: nebbish","X:  19.36381995<br />Y:   8.28887200<br />word: forebears","X:  -3.25168790<br />Y: -21.99847653<br />word: skirmish","X:   6.41626388<br />Y:  19.02556668<br />word: ocassionally","X: -11.99910658<br />Y:   2.30053200<br />word: 'resist","X: -14.98071332<br />Y: -13.83655968<br />word: impactful","X: -10.63893068<br />Y:  16.31048921<br />word: spicier","X: -14.84184555<br />Y: -13.64468008<br />word: touristy","X:   5.15945340<br />Y: -12.59751187<br />word: 'football'","X:   3.06859083<br />Y:  21.03959929<br />word: webpage","X:  19.36060672<br />Y:   8.19179056<br />word: exurbia","X:  -2.01912398<br />Y:  20.46738397<br />word: jucier","X:  15.95491915<br />Y:  -2.84274157<br />word: professors","X:  -9.00784043<br />Y:   1.76182798<br />word: structuring","X: -12.90801996<br />Y:   7.39244055<br />word: jig","X:   5.58786047<br />Y:  20.13937569<br />word: overlord","X:   0.13025730<br />Y:  20.28554539<br />word: disconnect","X:   2.90726685<br />Y:  -2.47076297<br />word: sniffle","X:  -3.32242850<br />Y:  19.75283388<br />word: slimeball","X:  -3.27235755<br />Y:  19.32839883<br />word: jia","X:   1.24036329<br />Y: -20.57953423<br />word: milked","X:  -4.15627036<br />Y:  -0.33142776<br />word: banjoes","X:  -7.29910949<br />Y:  17.96104836<br />word: jim","X:  -2.20134707<br />Y: -22.39398711<br />word: workforces","X: -16.59288613<br />Y: -11.97226661<br />word: jip","X:  22.22044079<br />Y: -11.19058216<br />word: rotweiller","X:  17.40582826<br />Y:  11.66335423<br />word: mundaneness","X:  -6.02965723<br />Y:  19.13515937<br />word: 'ninja'","X: -24.68618077<br />Y:  -2.44968364<br />word: dead'","X:  -2.76872324<br />Y:  20.19596391<br />word: cipriani's","X:  10.04483577<br />Y:  17.83936880<br />word: modestly","X:  15.90958633<br />Y:  -2.18312455<br />word: professor'","X:  16.33731226<br />Y:  -4.89104550<br />word: shacked","X:  18.64645243<br />Y:  -8.86375696<br />word: bashful","X:  18.39969675<br />Y:  11.30272847<br />word: sorter","X:   4.86987295<br />Y:  -5.39091950<br />word: overpowering","X:   3.06640005<br />Y:  -3.26517303<br />word: workmanlike","X: -17.00439140<br />Y: -11.52878196<br />word: henpecked","X:   0.52730709<br />Y:  20.79523189<br />word: sorted","X:   4.95964968<br />Y: -12.67925764<br />word: jōb's","X:   2.14303315<br />Y:  21.47420188<br />word: 'always","X: -12.52428393<br />Y:   5.22693105<br />word: 'baptists","X:   5.56126473<br />Y: -13.18999959<br />word: dreamcatchers","X: -13.15116628<br />Y:   5.00924507<br />word: 'silence'","X:  22.79498784<br />Y: -11.45087926<br />word: hickory","X:   0.72387008<br />Y:  21.37840908<br />word: funyet","X: -13.04270668<br />Y:  11.35865417<br />word: breakumentary","X:  -0.83965757<br />Y: -20.45150068<br />word: didn","X: -12.80760388<br />Y:   8.87481705<br />word: didi","X:  14.43365413<br />Y:  15.68976698<br />word: pealing","X:  14.95942959<br />Y:  13.93958750<br />word: dispite","X:  -6.77697604<br />Y:   0.26504082<br />word: italy's","X:  -9.49182930<br />Y: -19.32146437<br />word: instability","X: -12.95864118<br />Y:   2.75638101<br />word: quarter","X:  -0.24815916<br />Y:   0.46267362<br />word: quartet","X:  -1.53459239<br />Y:   0.97351672<br />word: padmé","X:  -0.89023727<br />Y: -21.76439758<br />word: 'bleedmedry","X: -13.91128639<br />Y: -14.53642127<br />word: pahalniuk","X:   9.47663235<br />Y:  18.01814571<br />word: honduras","X:  -1.92093240<br />Y: -21.52828654<br />word: bursting","X:  -8.16225632<br />Y:  16.73837920<br />word: pablo's","X:  16.46533568<br />Y:  -5.18398612<br />word: irremediably","X:  -0.45941812<br />Y: -20.31324977<br />word: presages","X: -13.22109848<br />Y:   5.14368072<br />word: bowlegged","X: -13.27873314<br />Y: -15.27534239<br />word: dalip","X:  17.99354590<br />Y:   3.60258811<br />word: entering","X: -11.17200639<br />Y:   3.01440812<br />word: newsradio","X: -20.20138826<br />Y:  -8.16013202<br />word: presaged","X:  -0.66244657<br />Y:  21.32583515<br />word: giallo's","X:   3.64807982<br />Y: -18.18625438<br />word: bouyant","X:  -8.42692577<br />Y: -19.54060416<br />word: amerterish","X:  -0.43130520<br />Y:  19.81836728<br />word: rajni","X: -16.46636446<br />Y: -11.92770688<br />word: leeves","X:  -6.85017812<br />Y:  17.09987343<br />word: macauley","X:  16.14521654<br />Y:   0.11628871<br />word: seriously","X:   5.73376653<br />Y: -10.94084365<br />word: sugercoma","X: -11.54396907<br />Y:  15.81339377<br />word: grimstead","X:  20.11653492<br />Y:   6.43819721<br />word: 'fairy'","X:  23.15463381<br />Y: -11.58069023<br />word: zenda","X:  -1.78324145<br />Y:   0.66221124<br />word: 'twins'","X:   4.72641826<br />Y: -14.14499943<br />word: realisation","X: -24.15168248<br />Y:  -3.37913105<br />word: highsmith","X: -13.22038010<br />Y:   8.98580195<br />word: raunchy","X:  -5.90983188<br />Y:  18.56317424<br />word: incentives","X:  19.97904817<br />Y:   7.10837656<br />word: flatson","X:   4.96428896<br />Y:  20.02924335<br />word: snooker","X: -22.73532695<br />Y:  -5.31426404<br />word: crazies","X: -11.40452727<br />Y:  12.28798523<br />word: crazier","X:  13.18804177<br />Y:  16.09550177<br />word: grandma","X: -19.47380765<br />Y:  -8.94671887<br />word: napunsaktha","X:  18.15955613<br />Y:  -8.26560574<br />word: workmanship","X:  -7.88709518<br />Y:   1.02480536<br />word: reisner","X: -17.51110336<br />Y: -10.98659722<br />word: sanford's","X:  -7.60236609<br />Y:   1.49607712<br />word: doña","X: -12.03314867<br />Y:  12.99270180<br />word: modest","X:  16.02235304<br />Y:  -0.31555435<br />word: everything's","X:  -0.11261230<br />Y:  -0.50957444<br />word: hamer","X:  -2.01187912<br />Y:  19.97536364<br />word: couldn't'","X:  -9.13426718<br />Y:   1.26522294<br />word: quibble","X: -14.96826106<br />Y:   7.56044504<br />word: socking","X:   0.85611531<br />Y:  19.15091932<br />word: tingler","X:   4.97769829<br />Y: -14.03249165<br />word: gutman","X:  14.71844114<br />Y:  13.98244911<br />word: lachlan","X:  -2.30876947<br />Y:  20.56014815<br />word: tableaus","X:  -4.12189432<br />Y:  19.49556576<br />word: headbanger","X:  -8.26781472<br />Y:   0.70764417<br />word: spoken","X:  17.32626598<br />Y:  -7.02072584<br />word: cerebrally","X: -22.64701077<br />Y:  -5.43935497<br />word: 'road","X:  -0.15394154<br />Y:  20.05379236<br />word: tableaux","X:  -3.51650128<br />Y:  -0.25451961<br />word: proust's","X:   8.97145923<br />Y:  17.25960662<br />word: periodical","X:  18.21801867<br />Y:  10.47352714<br />word: shoveller's","X:  -9.35697599<br />Y:  17.33309417<br />word: tamara","X:  16.57256677<br />Y:   0.31475389<br />word: affords","X:  18.42121825<br />Y:   4.35640473<br />word: concert","X: -15.14244649<br />Y: -13.31777410<br />word: yara's","X:   3.84543461<br />Y:  -2.90372628<br />word: someome","X:  16.23273965<br />Y:  -4.57384181<br />word: lingering","X: -11.67332923<br />Y:  15.63844073<br />word: abraham's","X:   3.97946308<br />Y: -16.74745614<br />word: beesley","X:  -9.10685009<br />Y:  17.44652030<br />word: cherbourg","X:   0.03903607<br />Y:   1.16239277<br />word: kagan","X: -22.61657941<br />Y:  -5.46105414<br />word: snatch","X:  18.43331865<br />Y:   4.26335731<br />word: miyazaki's","X:   5.42520123<br />Y:  -9.59746162<br />word: absorbs","X: -18.64303523<br />Y:  -9.83663124<br />word: koltai's","X:  17.10057883<br />Y:  -6.62091129<br />word: tingled","X:  22.57654449<br />Y: -11.28836888<br />word: crossroads","X: -13.31741844<br />Y:   4.42680529<br />word: rehab","X:   5.47097940<br />Y:  -8.15595468<br />word: falworth","X:   3.52837921<br />Y:  -4.22366244<br />word: sequals"],"textfont":{"size":11.338582677165356,"color":"rgba(0,0,0,0.7)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":44.493150684931507,"r":7.3059360730593621,"b":40.913242009132432,"l":43.105022831050235},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"t-SNE Visualization of Word Embeddings","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-27.283667843005169,26.81100240335935],"tickmode":"array","ticktext":["-20","-10","0","10","20"],"tickvals":[-20,-10,0,10,20],"categoryorder":"array","categoryarray":["-20","-10","0","10","20"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"t-SNE Dimension 1","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-25.050410376221226,23.689659606251411],"tickmode":"array","ticktext":["-20","-10","0","10","20"],"tickvals":[-20,-10,0,9.9999999999999964,19.999999999999996],"categoryorder":"array","categoryarray":["-20","-10","0","10","20"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"t-SNE Dimension 2","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"903b4b476c2e":{"x":{},"y":{},"label":{},"type":"scatter"}},"cur_data":"903b4b476c2e","visdat":{"903b4b476c2e":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>In the context of word embeddings, t-SNE visualisation helps to understand the relationships between words and their meanings by representing them in a 2D space. It maintains the relative distances between high-dimensional data points as much as possible while mapping them onto a lower-dimensional space. As a result, words with similar meanings or usage tend to be placed close to each other in the 2D space, while words that are unrelated or have different meanings will be placed further apart.</p>
+</section><section id="pre-trained-word-embeddings" class="level2" data-number="23.3"><h2 data-number="23.3" class="anchored" data-anchor-id="pre-trained-word-embeddings">
+<span class="header-section-number">23.3</span> Pre-trained word embeddings</h2>
+<p>Pre-computed embeddings are designed to capture general aspects of language structure by considering the co-occurrence of words in sentences and documents within extensive corpora of text. These embeddings are beneficial because they already encapsulate semantic and syntactic information, which can be utilised for various natural language processing tasks.</p>
+<p>There are two primary and widely-used pre-trained word embedding models: Word2Vec and GloVe. These models have been trained on massive datasets, enabling them to effectively represent words in a high-dimensional vector space, where semantically similar words are positioned close to one another.</p>
+<ul>
+<li><p><strong>Word2Vec</strong>: Developed by Google, the Word2Vec model employs neural networks to learn word embeddings. It operates by predicting a word’s context (surrounding words) or by predicting a target word given its context. Two popular architectures for Word2Vec are Continuous Bag of Words (CBOW) and Skip-Gram.</p></li>
+<li><p><strong>GloVe</strong>: An acronym for Global Vectors for Word Representation, GloVe is a model developed by researchers at Stanford University. It combines the benefits of both global matrix factorisation methods and local context window methods. GloVe generates word embeddings by leveraging the global co-occurrence matrix of words in a corpus, focusing on the word-word co-occurrence probability ratios.</p></li>
+</ul>
+<p>Both Word2Vec and GloVe have proven their effectiveness in various NLP tasks and are widely adopted in the field, offering a solid starting point for leveraging pre-trained word embeddings.</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Install and load the required packages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-text.org/">text</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load the pre-trained Word2Vec model</span></span>
+<span><span class="va">word2vec_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-text.org/reference/textEmbed.html">textEmbed</a></span><span class="op">(</span><span class="st">"path/to/word2vec_model.bin"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get the word embeddings for a specific word</span></span>
+<span><span class="va">word_embedding</span> <span class="op">&lt;-</span> <span class="va">word2vec_model</span><span class="op">$</span><span class="va">wordEmbeddings</span><span class="op">[</span><span class="st">"word"</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Get the most similar words to a given word</span></span>
+<span><span class="va">similar_words</span> <span class="op">&lt;-</span> <span class="va">word2vec_model</span><span class="op">$</span><span class="fu">nearest_neighbors</span><span class="op">(</span>words <span class="op">=</span> <span class="st">"word"</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Perform word analogy tasks</span></span>
+<span><span class="va">word_analogy</span> <span class="op">&lt;-</span> <span class="va">word2vec_model</span><span class="op">$</span><span class="fu">analogies</span><span class="op">(</span><span class="st">"king"</span>, <span class="st">"man"</span>, <span class="st">"woman"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate the cosine similarity between two words</span></span>
+<span><span class="va">similarity_score</span> <span class="op">&lt;-</span> <span class="va">word2vec_model</span><span class="op">$</span><span class="fu">similarity</span><span class="op">(</span><span class="st">"word1"</span>, <span class="st">"word2"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the example, above you first need to install the <code>text</code> package if you haven’t already done so. You can install it using <code>install.packages("text")</code>.</p>
+<p>Once the package is installed, you load it using <code><a href="https://r-text.org/">library(text)</a></code>. Then, you can load the pre-trained Word2Vec model by providing the path to the binary file (<code>.bin</code>) of the Word2Vec model. Replace <code>"path/to/word2vec_model.bin"</code> with the actual path to your pre-trained Word2Vec model file.</p>
+<p>After loading the model, you can access various functionalities. For example, you can retrieve the word embeddings for a specific word using <code>word2vec_model$wordEmbeddings["word"]</code>, where <code>"word"</code> is the word you want to get the embeddings for.</p>
+<p>You can also find the most similar words to a given word using <code>word2vec_model$nearest_neighbors(words = "word", k = 5)</code>, where <code>"word"</code> is the word you want to find similar words for, and <code>k</code> is the number of similar words to retrieve.</p>
+<p>The <code>word2vec_model$analogies</code> function allows you to perform word analogy tasks. In the example, it is used to find the word that is to “king” what “man” is to “woman”.</p>
+<p>Finally, you can calculate the cosine similarity between two words using <code>word2vec_model$similarity("word1", "word2")</code>, where <code>"word1"</code> and <code>"word2"</code> are the words for which you want to calculate the similarity score.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/e2e-ds-r\.franckess\.com");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./basics-nlp.html" class="pagination-link" aria-label="Basics of NLP">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Basics of NLP</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./apply-nlp.html" class="pagination-link" aria-label="Apply NLP Techniques to Real World Data">
+        <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Apply NLP Techniques to Real World Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>End to End Data Science with R was written by Rene Essomba.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/edit/main/understanding-nlp.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://www.github.com/franckess/QMD_E2E_DataScience_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

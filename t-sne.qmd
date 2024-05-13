@@ -1,4 +1,4 @@
-# t-Distributed Stochastic Neighbour Embedding {#sec-t-sne}
+# t-Distributed Stochastic Neighbor Embedding {#sec-t-sne}
 
 ```{r}
 #| echo: false
@@ -16,11 +16,7 @@ The algorithm involves a stochastic optimisation process, which means that the f
 
 ## The Mathematics of t-SNE
 
-To provide a faithful lower-dimensional representation, we have one main goal in mind: close points should remain tight, distant points shall stay far.
-
-t-SNE achieves this by modeling the dataset with a dimension-agnostic probability distribution, finding a lower-dimensional approximation with a closely matching distribution. It was introduced by Laurens van der Maaten and Geoffrey Hinton in their paper Visualizing High-Dimensional Data Using t-SNE.
-
-Since we also want to capture a possible underlying cluster structure, we define a probability distribution on the $\mathbf{x}_i$-s that reflect this. For each data point $\mathbf{x}_j$, we model the probability of $\mathbf{x}_i$ belonging to the same class ("being neighbors") with a Gaussian distribution:
+Data in real-life applications can have thousands of dimensions. However, very often, the points lie around a lower-dimensional manifold. In practice, this means that not all features are necessary to represent the data faithfully: by cleverly combining some features, others can be closely approximated.
 
 ```{r}
 #| label: t-sne
@@ -29,7 +25,81 @@ Since we also want to capture a possible underlying cluster structure, we define
 #| fig-cap: |
 #| fig-alt: |
 #| out.width: NULL
-knitr::include_graphics("images/t-sne.png", dpi = 170)
+knitr::include_graphics("images/2021_08_tsne_02_manifold_6353d44a80.png", dpi = 170)
+```
+
+The problem is, finding this is extremely difficult. There are two main issues. One issue is nonlinearity; the other is the inexact nature of this problem. Putting this into mathematical form, suppose that we have a dataset $$
+\mathbf{X} = x_{i=1}^{n}, x_i \in \mathbb{R}^n
+$$ and our goal is to find a lower-dimensional representation $$
+\mathbf{Y} = y_{i=1}^{n}, y_i \in \mathbb{R}^m
+$$ where $n$ is the number of raw features and $m$ is the number of features after dimensionality reduction ($m <<< n$). Popular methods like PCA only work if new features are linear combinations of the old ones. How can this be done for more complex problems? To provide a faithful lower-dimensional representation, we have one main goal in mind: close points should remain tight, distant points shall stay far.
+
+t-SNE achieves this by modeling the dataset with a dimension-agnostic probability distribution, finding a lower-dimensional approximation with a closely matching distribution. It was introduced by Laurens van der Maaten and Geoffrey Hinton in their paper Visualizing High-Dimensional Data Using t-SNE.
+
+Since we also want to capture a possible underlying cluster structure, we define a probability distribution on the $\mathbf{x}_i$-s that reflect this. For each data point $\mathbf{x}_j$, we model the probability of $\mathbf{x}_i$ belonging to the same class ("being neighbors") with a Gaussian distribution:
+
+```{r}
+#| label: t-sne1
+#| echo: false
+#| fig-align: 'center'
+#| fig-cap: |
+#| fig-alt: |
+#| out.width: NULL
+knitr::include_graphics("images/Screenshot 2024-05-13 at 9.31.17 pm.png", dpi = 170)
+```
+
+The variance $\sigma_j$ is a parameter that is essentially given as an input. We don't set this directly. Instead, we specify the expected number of neighbors, called perplexity.
+
+To make the optimization easier, these probabilities are symmetrized. With these symmetric probabilities, we form the distribution $\mathcal{P}$ that represents our high-dimensional data:
+
+```{r}
+#| label: t-sne2
+#| echo: false
+#| fig-align: 'center'
+#| fig-cap: |
+#| fig-alt: |
+#| out.width: NULL
+knitr::include_graphics("images/t-sne_2.png", dpi = 170)
+```
+
+Similarly, we define the distribution $\mathcal{Q}$ for the $\mathbf{y}_i$-s, our (soon to be identified) lower-dimensional representation by
+
+```{r}
+#| label: t-sne3
+#| echo: false
+#| fig-align: 'center'
+#| fig-cap: |
+#| fig-alt: |
+#| out.width: NULL
+knitr::include_graphics("images/t-sne_3.png", dpi = 170)
+```
+
+Here, we model the "neighborhood-relation" with the Student t-distribution. This is where the `t` in t-SNE comes from.
+
+Our goal is to find the $\mathbf{y}_i$-s through optimization such that $\mathcal{P}$ and $\mathcal{Q}$ are as close together as possible. (In a distributional sense.) This closeness is expressed with the Kullback-Leibler divergence, defined by:
+
+```{r}
+#| label: t-sne4
+#| echo: false
+#| fig-align: 'center'
+#| fig-cap: |
+#| fig-alt: |
+#| out.width: NULL
+knitr::include_graphics("images/t-sne_4.png", dpi = 170)
+```
+
+We have successfully formulated the dimensionality reduction problem as optimization!
+
+From here, we calculate the gradient of KL divergence with respect to the $\mathbf{y}_i$-s and find an optimum with gradient descent. Fortunately, we can calculate the gradient simply:
+
+```{r}
+#| label: t-sne5
+#| echo: false
+#| fig-align: 'center'
+#| fig-cap: |
+#| fig-alt: |
+#| out.width: NULL
+knitr::include_graphics("images/t-sne_5.png", dpi = 170)
 ```
 
 ## An R Example

@@ -1,0 +1,172 @@
+# Understand a simple NLP model {#sec-understanding-nlp}
+
+```{r}
+#| echo: false
+
+source("_common.R")
+```
+
+## NLP with `R`
+
+`R` offers a rich ecosystem of packages and tools for Natural Language Processing (NLP) tasks, making it an excellent choice for text analysis and processing. In this section, we will describe and explain the basic building blocks of a simple NLP model for text classification. The example provided will help you understand the fundamental steps involved in building an NLP model for various tasks.
+
+1. **Data Collection**: The first step is collecting a dataset relevant to the problem you are trying to solve. For text classification tasks, the dataset should consist of text documents along with their corresponding labels or categories. This labeled dataset will be used for training and testing the model.
+
+2. **Text Preprocessing**: Text data is often unstructured, noisy, and contains irrelevant information. Text preprocessing is the process of cleaning and preparing the text data for analysis. Common preprocessing techniques include:
+   - Lowercasing: Converting all text to lowercase to maintain consistency.
+   - Removing punctuation: Eliminating punctuation marks to reduce noise.
+   - Tokenization: Breaking the text into individual words or tokens.
+   - Stop word removal: Removing common words that do not provide meaningful information (e.g., "the," "is," "and").
+   - Stemming or Lemmatization: Reducing words to their root forms to normalise the text and group similar words together.
+
+3. **Feature Extraction**: After preprocessing, the text data needs to be converted into a structured, numerical format that can be used as input for the classification model. Feature extraction is the process of transforming the text data into a numerical representation. Common techniques include:
+   - Bag-of-words: A representation where text documents are described by the frequency of words, disregarding the order in which they appear.
+   - Term frequency-inverse document frequency (TF-IDF): A representation that weighs the importance of words based on their frequency within a document and across the entire dataset.
+   - Word embeddings: Dense vector representations of words that capture their semantic meaning and relationships with other words (e.g., `Word2Vec` or `GloVe`).
+
+4. **Model Selection**: Choose a suitable classification model for the task at hand. For simple NLP models, common choices include logistic regression, Naïve Bayes, decision trees, or support vector machines. These models are relatively easy to interpret and require less computational power compared to deep learning models.
+
+5. **Model Training**: Train the selected model using the preprocessed text data and extracted features. This involves adjusting the model's parameters to minimise the classification error on the training dataset. The model learns to recognise patterns and relationships in the text data that can be used to predict the labels or categories of the documents.
+
+6. **Model Evaluation**: Evaluate the performance of the trained model on a separate test dataset. Common evaluation metrics for text classification tasks include accuracy, precision, recall, and F1 score. The goal is to assess how well the model generalises to new, unseen data and determine whether it is suitable for deployment or requires further refinement.
+
+7. **Model Deployment**: Once the model has been trained and evaluated, deploy it to a production environment to process and classify new text data.
+
+These building blocks provide a foundation for developing a simple NLP model for text classification tasks. By understanding these fundamental steps, you can adapt and customise the process for various NLP tasks and problems.
+
+It is the process of transforming text into numeric tensors. It consists of applying some tokenisation scheme and then associating numeric vectors with the generated tokens. The generated vector are packed into sequence tensors and fed into deep neural network. There are different ways to associate a vector within a token such as one-hot encoding and token embedding (typically used for words and called word embedding).
+
+## Word embeddings
+
+Word embeddings are dense vector representations of words that capture their semantic meaning and relationships with other words. These representations are learned by training algorithms on large text corpora, enabling more effective and accurate text analysis. In this introduction, we will explore two popular word embedding techniques - `Word2Vec`, using the `R` programming language with the `Keras` deep learning library.
+
+For this example, we'll use the IMDB movie review dataset, which is available in `Keras`. Let's download and preprocess the data:
+```{r}
+library(keras)
+imdb <- dataset_imdb(num_words = 10000) #will take around 30 seconds to download 
+x_train <- imdb$train$x
+y_train <- imdb$train$y
+x_test <- imdb$test$x
+y_test <- imdb$test$y
+
+# Pad sequences to the same length
+maxlen <- 500
+x_train <- pad_sequences(x_train, maxlen = maxlen)
+x_test <- pad_sequences(x_test, maxlen = maxlen)
+```
+
+In this step, we'll create an embedding layer using `Keras`, which will learn the word embeddings as part of the neural network training process:
+```{r}
+vocab_size <- 10000
+embedding_dim <- 50
+
+embedding_layer <- layer_embedding(input_dim = vocab_size,
+                                   output_dim = embedding_dim,
+                                   input_length = maxlen)
+```
+
+Now, we'll build a neural network with the embedding layer for a sentiment analysis task. We'll use a simple architecture with an embedding layer, a global average pooling layer, and a dense output layer with a sigmoid activation function:
+```{r}
+model <- keras_model_sequential() %>%
+  embedding_layer %>%
+  layer_global_average_pooling_1d() %>%
+  layer_dense(units = 1, activation = "sigmoid")
+
+model %>% compile(optimizer = "adam",
+                  loss = "binary_crossentropy",
+                  metrics = c("accuracy"))
+
+history <- model %>% fit(x_train, y_train,
+                         epochs = 10,
+                         batch_size = 32,
+                         validation_split = 0.2)
+
+```
+
+Once the model is trained, we can access the word embeddings from the embedding layer and visualise them using t-SNE or PCA:
+```{r}
+library(tsne)
+library(tidyverse)
+
+word_embeddings <- get_weights(model)[[1]]
+
+#Load the IMDB dataset:
+imdb <- dataset_imdb(num_words = 5000)
+x_train <- imdb$train$x
+y_train <- imdb$train$y
+x_test <- imdb$test$x
+y_test <- imdb$test$y
+
+# word_index is a named list mapping words to an integer index
+word_index <- dataset_imdb_word_index()
+index_to_word <- names(word_index)
+names(index_to_word) <- word_index
+
+words <- index_to_word[1:1000]
+embeddings <- word_embeddings[1:1000, ]
+```
+Finally, we'll use t-SNE to reduce the dimensionality of the embeddings and visualise them:
+```{r}
+library(Rtsne)
+library(plotly)
+
+# Run t-SNE on the embeddings
+tsne_model <- Rtsne(embeddings, dims = 2, perplexity = 30, verbose = TRUE, max_iter = 500)
+#Create a data frame with the t-SNE results and the corresponding words:
+tsne_data <- data.frame(tsne_model$Y)
+colnames(tsne_data) <- c("X", "Y")
+tsne_data$word <- words        
+
+#Visualize the t-SNE results using ggplot2:
+p <- ggplot(tsne_data, aes(x = X, y = Y)) +
+  geom_text(aes(label = word), size = 3, alpha = 0.7, vjust = 1, hjust = 1, angle = 45) +
+  theme_minimal() +
+  labs(title = "t-SNE Visualization of Word Embeddings",
+       x = "t-SNE Dimension 1",
+       y = "t-SNE Dimension 2")
+ggplotly(p)
+```
+
+In the context of word embeddings, t-SNE visualisation helps to understand the relationships between words and their meanings by representing them in a 2D space. It maintains the relative distances between high-dimensional data points as much as possible while mapping them onto a lower-dimensional space. As a result, words with similar meanings or usage tend to be placed close to each other in the 2D space, while words that are unrelated or have different meanings will be placed further apart.
+
+## Pre-trained word embeddings
+
+Pre-computed embeddings are designed to capture general aspects of language structure by considering the co-occurrence of words in sentences and documents within extensive corpora of text. These embeddings are beneficial because they already encapsulate semantic and syntactic information, which can be utilised for various natural language processing tasks.
+
+There are two primary and widely-used pre-trained word embedding models: Word2Vec and GloVe. These models have been trained on massive datasets, enabling them to effectively represent words in a high-dimensional vector space, where semantically similar words are positioned close to one another.
+
+- **Word2Vec**: Developed by Google, the Word2Vec model employs neural networks to learn word embeddings. It operates by predicting a word's context (surrounding words) or by predicting a target word given its context. Two popular architectures for Word2Vec are Continuous Bag of Words (CBOW) and Skip-Gram.
+
+- **GloVe**: An acronym for Global Vectors for Word Representation, GloVe is a model developed by researchers at Stanford University. It combines the benefits of both global matrix factorisation methods and local context window methods. GloVe generates word embeddings by leveraging the global co-occurrence matrix of words in a corpus, focusing on the word-word co-occurrence probability ratios.
+
+Both Word2Vec and GloVe have proven their effectiveness in various NLP tasks and are widely adopted in the field, offering a solid starting point for leveraging pre-trained word embeddings.
+```{r, eval=FALSE}
+# Install and load the required packages
+library(text)
+
+# Load the pre-trained Word2Vec model
+word2vec_model <- textEmbed("path/to/word2vec_model.bin")
+
+# Get the word embeddings for a specific word
+word_embedding <- word2vec_model$wordEmbeddings["word"]
+
+# Get the most similar words to a given word
+similar_words <- word2vec_model$nearest_neighbors(words = "word", k = 5)
+
+# Perform word analogy tasks
+word_analogy <- word2vec_model$analogies("king", "man", "woman")
+
+# Calculate the cosine similarity between two words
+similarity_score <- word2vec_model$similarity("word1", "word2")
+```
+In the example, above you first need to install the `text` package if you haven't already done so. You can install it using `install.packages("text")`.
+
+Once the package is installed, you load it using `library(text)`. Then, you can load the pre-trained Word2Vec model by providing the path to the binary file (`.bin`) of the Word2Vec model. Replace `"path/to/word2vec_model.bin"` with the actual path to your pre-trained Word2Vec model file.
+
+After loading the model, you can access various functionalities. For example, you can retrieve the word embeddings for a specific word using `word2vec_model$wordEmbeddings["word"]`, where `"word"` is the word you want to get the embeddings for.
+
+You can also find the most similar words to a given word using `word2vec_model$nearest_neighbors(words = "word", k = 5)`, where `"word"` is the word you want to find similar words for, and `k` is the number of similar words to retrieve.
+
+The `word2vec_model$analogies` function allows you to perform word analogy tasks. In the example, it is used to find the word that is to "king" what "man" is to "woman".
+
+Finally, you can calculate the cosine similarity between two words using `word2vec_model$similarity("word1", "word2")`, where `"word1"` and `"word2"` are the words for which you want to calculate the similarity score.

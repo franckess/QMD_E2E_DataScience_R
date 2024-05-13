@@ -1,0 +1,17 @@
+# Other Topics in Data Science {#sec-other-topic-ds .unnumbered}
+
+```{r}
+#| results: "asis"
+#| echo: false
+source("_common.R")
+```
+
+In this fifth part of the book, our focus will be on the the following chapters:
+
+-   In @sec-time-series we will get to understand the basics of the time series.
+
+-   In @sec-svm we will dive into support vector machine.
+
+-   In @sec-semi-sup we will understand semi-supervised learning.
+
+-   In @sec-basics-nn we will dive into neural networks.

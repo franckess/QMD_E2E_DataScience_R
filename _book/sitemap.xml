@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://e2e-ds-r.franckess.com/index.html</loc>
-    <lastmod>2024-05-09T03:05:07.042Z</lastmod>
+    <lastmod>2024-05-13T03:46:17.922Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/intro.html</loc>
-    <lastmod>2024-05-10T13:33:53.577Z</lastmod>
+    <lastmod>2024-05-13T03:51:22.532Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/introduction.html</loc>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/r-objects-and-variables.html</loc>
-    <lastmod>2024-05-10T07:29:18.967Z</lastmod>
+    <lastmod>2024-05-13T05:14:25.716Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/data-exploration-vis.html</loc>
@@ -50,7 +50,7 @@
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/supervised-learning.html</loc>
-    <lastmod>2024-05-10T12:13:31.849Z</lastmod>
+    <lastmod>2024-05-13T10:20:29.159Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/basic-supervised-learning.html</loc>
@@ -82,10 +82,58 @@
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/pca.html</loc>
-    <lastmod>2024-05-12T22:40:10.274Z</lastmod>
+    <lastmod>2024-05-13T02:58:35.766Z</lastmod>
   </url>
   <url>
     <loc>https://e2e-ds-r.franckess.com/t-sne.html</loc>
-    <lastmod>2024-05-12T14:57:27.452Z</lastmod>
+    <lastmod>2024-05-13T11:32:30.015Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/other-topic-ds.html</loc>
+    <lastmod>2024-05-13T10:19:43.875Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/time-series.html</loc>
+    <lastmod>2024-05-13T06:39:45.008Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/svm.html</loc>
+    <lastmod>2024-05-13T06:50:20.098Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/semi-sup.html</loc>
+    <lastmod>2024-05-13T07:20:09.973Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/basics-nn.html</loc>
+    <lastmod>2024-05-13T07:50:30.552Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/nlp.html</loc>
+    <lastmod>2024-05-13T10:20:53.879Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/basics-nlp.html</loc>
+    <lastmod>2024-05-13T07:55:31.314Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/understanding-nlp.html</loc>
+    <lastmod>2024-05-13T09:35:21.795Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/apply-nlp.html</loc>
+    <lastmod>2024-05-13T12:42:30.919Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/img-proc.html</loc>
+    <lastmod>2024-05-13T10:23:12.359Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/intro-img-proc.html</loc>
+    <lastmod>2024-05-13T12:57:22.528Z</lastmod>
+  </url>
+  <url>
+    <loc>https://e2e-ds-r.franckess.com/img-seg.html</loc>
+    <lastmod>2024-05-13T10:41:02.575Z</lastmod>
   </url>
 </urlset>
