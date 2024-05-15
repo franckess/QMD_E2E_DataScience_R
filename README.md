@@ -16,11 +16,7 @@ This book was primarily a volunteer effort that took thousands of hours to creat
 
 <img src="https://github.com/franckess/QMD_E2E_DataScience_R/blob/main/images/coffee.jpeg" width="400" height="300">
 
-<form action="https://www.paypal.com/donate" method="post" target="_top">
-
-<input type="hidden" name="hosted_button_id" value="XYBAK562BSSQY" /> <input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" /> <img src="https://www.paypal.com/en_AU/i/scr/pixel.gif" border="0" width="1" height="1"/>
-
-</form>
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=XYBAK562BSSQY)
 
 ## Code of Conduct
 
