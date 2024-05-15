@@ -1,4 +1,4 @@
-<img align="right" width="100" height="75" src="https://github.com/franckess/QMD_E2E_DataScience_R/blob/main/cover_new.png">
+<img align="right" width="100" height="100" src="https://github.com/franckess/QMD_E2E_DataScience_R/blob/main/cover_new.png">
 
 # End to End Data Science with R
 
